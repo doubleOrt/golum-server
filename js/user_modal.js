@@ -1,4 +1,6 @@
 
+// the imagepath referred to by this variable will be used for the background image of users who have not uploaded a background image of their own yet.
+var DEFAULT_USER_PROFILE_BACKGROUND_IMAGE = "icons/default_user_profile_background_image.png";
 
 // this var will block any calls to the "userModalGet.php" file as soon as a call is made, and will re-allow these calls after the call succeeds.
 var userModalShouldServerSide = true;	
@@ -18,12 +20,15 @@ url:"components/userModalGet.php",
 data:{"user_id":userId},
 success:function(data,status){					  
 
-console.log(data);
-
 var dataArr = JSON.parse(data);
 
 // gives us an object called "info" that is populated with info about this user.
 eval(dataArr[0]);	
+
+
+// if the user has not uploaded a background image, set the "background" field to the default background image.
+(info["background"] == "" ? info["background"] = DEFAULT_USER_PROFILE_BACKGROUND_IMAGE : "");
+
 
 if(callback.length > 0) {
 // grab from the dataArr the info variable that contains this user's info.
