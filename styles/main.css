@@ -2,8 +2,6 @@
 
 /* let's import our css files */
 
-@import url(sidebar.css);
-
 @import url(chatPortal.css);
 
 @import url(chatModal.css);
@@ -155,15 +153,6 @@ display:inline-block;
 z-index:4;
 }
 
-/* the button that toggles the sidenav (hamburger button) */
-#sideNavCollapserButton {
-display:none !important;
-height:60px;
-padding:0 12px;
-font-size:32px;
-float:left;
-} 
-
 
 /* buttons and links on the right side of a bar that will be visible only on mobiles */
 .navRightItemsMobile {
@@ -202,22 +191,6 @@ right:0;
 line-height:0;
 }
 
-
-#sideNavCollapserButton, .showDeleteContactsButtons {
-display:block;
-background:none;
-color:#494949;	
-border:none;
-font-size:24px;
-width:auto;
-padding:0 11px;
-float:left;
-position:relative;
-}
-
-#sideNavCollapserButton:focus , .showDeleteContactsButtons:focus {
-background:none;	
-}
 
 .navButtons i {	
 font-size:100%;	
@@ -475,10 +448,6 @@ display:block;
 
 .navRightItems {
 display:none;	
-}
-
-#sideNavCollapserButton {
-display:inline-block !important;
 }
 
 

@@ -1,62 +1,3 @@
-/* this function will attach a scroll event to an element which will call the function passed as the function's second argument if the user is scrolling down, 
-and the function passed to its third parameter if they have scrolled +fourthArgument up continuously, however none of this will be done until the scrolltop is larger than the 
-activateEffectWhenScrollIsLargerThan argument. */
-var allScrollControllers = [];
-function scrollController(scrollTargetObject,scrollingDownCallback,scrollingUpCallback, continuouslyScrollingUpFor, activateEffectWhenScrollIsLargerThan) {
-
-allScrollControllers.push([scrollTargetObject,0,0,false]);
-scrollTargetObject.attr("data-scroll-controllers-index",allScrollControllers.length - 1);	
-
-scrollTargetObject.scroll(function(event){
-
-var st = $(this).scrollTop();
-
-if(st > activateEffectWhenScrollIsLargerThan) {
-
-var scrollControllers = allScrollControllers[parseInt($(this).attr("data-scroll-controllers-index"))]; 
-
-// user is scrolling up
-if (st > scrollControllers[1]){
-scrollControllers[3] = false;
-scrollControllers[2] = 0;
-scrollingDownCallback();
-} 
-// user is scrollling down
-else {
-if(scrollControllers[3] == false) {
-scrollControllers[2] = st;
-}
-// user scrolled +continuouslyScrollingUpFor up continuously, in which case we want to make a call to the callback function for scroll ups
-else if((scrollControllers[2] - st) > continuouslyScrollingUpFor || (scrollControllers[2] - ($(this).offset().top + activateEffectWhenScrollIsLargerThan)) < continuouslyScrollingUpFor) {
-scrollingUpCallback();
-}
-scrollControllers[3] = true;
-}
-scrollControllers[1] = st;
-}
-});	
-}
-
-/* call this function to get that nice effect when you scroll down or up and the action bar gets hidden or shown according to the direction of your scroll... anyways you have to pass 
-the element that has to be observed for the scrolling and the element you want to hide and show based on the scrolls, and you also have to pass a number that specifies the minimum
-number the scroll position has to be larger than to activate the effect */
-function actionBarAndTabsController(scrollTargetObject, hideAndShowTargetObject, activateEffectWhenScrollIsLargerThan) {
-scrollController(scrollTargetObject,
-function(){
-hideAndShowTargetObject.slideUp(400);
-},
-function(){
-hideAndShowTargetObject.slideDown(200);
-},
-150,
-activateEffectWhenScrollIsLargerThan
-);	
-}
-
-
-
-
-
 $(document).ready(function(){
  
 	 
@@ -75,16 +16,6 @@ $(".main_screen").removeClass("main_screen_active");
 $($(this).attr("data-open-main-screen")).addClass("main_screen_active");
 });
 
-
-
-	 
-	 
-$("[data-register-to-scroll-effect='true']").each(function(){
-var scrollTargetsArr = $(this).attr("data-scroll-targets").split(" ");
-for(var i = 0; i < scrollTargetsArr.length; i++) {
-actionBarAndTabsController($(scrollTargetsArr[i]),$(this),parseInt($(this).attr("data-minimum-scrolltop-to-activate")));	 		
-}	
-});
 
 // we got 284 emojis in our emojis file, we need to append them all to our emojisContainerChild element.
 for(var i = 0;i<285;i++) {
@@ -138,9 +69,6 @@ event.stopPropagation();
 // materialize initialize the select elements
 $('select').material_select();
 
-// initialize the sidenav collapser button. 
-$(".button-collapse").sideNav();
-
 //initialize tabs
 $('.tabs').tabs();
 
@@ -155,7 +83,6 @@ $(this).find(".tabs").tabs();
 
 /* components that require a loading circle to show until they are fully loaded, on clicking those, we hide all the pageContentComponents (these methods are used for them) and show the loading circle, then we have to manually show the div we want to after we know it has fully loaded */
 $(document).on("click",".showLoadingOnClick",function(){	
-$("#sideNavCollapserButton").sideNav("hide");	
 $(".pageContentComponents").hide();
 showLoading();
 });
@@ -363,20 +290,6 @@ $(".modalFooterButtonReverse.blockUser").html("Block");
 
 // we need to run these only once on page load.
 $.get({
-url:"components/sidebar.php",
-success:function(data) {
-$("#slide-out").html(data);
-$("#slide-out").find(".baseUserAvatarRotateDivs").each(function() {
-$(this).attr("data-rotate-degree",$(this).attr("data-rotate-degree"));
-$(this).css("transform","rotate(" + $(this).attr('data-rotate-degree') + "deg)");	
-adaptRotateWithMargin($(this).find("img"),$(this).attr('data-rotate-degree') ,false);
-});
-
-fitToParent("#userAvatar");
-}	
-
-});
-$.get({
 url:"components/user_modal_variables.php",
 success:function(data) {	
 eval(data);
@@ -406,27 +319,6 @@ adaptRotateWithMargin($(this).find("img"),$(this).attr("data-rotate-degree"),fal
 
 
 
-
-
-
-// show the number of new messages everytime the user opens the sidenav
-$("#sideNavCollapserButton").on("click",function(){
-
-$.get({
-url:"components/get_new_messages_num.php",
-success:function(data) {
-
-if(data > 0) { 	
-$("#sidebarChatPortalGetter").append("<span class='newMessagesNumContainer notificationNumContainer notificationNumContainerSmall' style='top:15px;right:20px;'><span class='notificationNum'>" + data + "</span></span>");
-}
-else {
-$("#sidebarChatPortalGetter").find(".notificationNumContainer").remove();	
-}
-
-}	
-});
-
-});
 
 
 
