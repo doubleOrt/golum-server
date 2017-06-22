@@ -1,0 +1,39 @@
+.avatarsHorizontalContainer {
+width:100%;
+height:auto;
+position:absolute;
+left:50%;
+bottom:10px;
+transform:translate(-50%,0);	
+overflow:hidden;
+overflow-x:auto;
+margin:0;
+z-index:1;
+}
+
+.singlePost[data-post-type="3"] .avatarsHorizontalContainer {
+bottom:5px;
+}
+
+.avatarsHorizontalContainerChild {
+display:flex;	
+flex-direction:row;
+justify-content:center;
+min-width:100%;
+height:auto;	
+margin:0;
+padding:6px 0;	
+box-sizing:border-box;
+}
+
+.avatarsHorizontalContainer .avatarContainer {
+float:left;
+}
+
+.avatarsHorizontalContainer .avatarContainerChild {
+box-shadow:0 3px 4px rgba(0,0,0,.4);	
+}
+
+.avatarsHorizontalContainer .avatarContainer:first-child {
+margin-left:0 !important;	
+}

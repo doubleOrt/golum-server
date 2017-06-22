@@ -1,0 +1,17 @@
+#tagsModal {
+height:45%;	
+}
+
+#tagsModal .modal-content {
+padding:0 !important;	
+width:100%;
+height:100%;
+overflow:hidden !important;
+}
+
+.tagFollowedBy {
+color:#aaaaaa;	
+font-size:80%;
+font-weight:bold; 
+margin-left:3px;
+}

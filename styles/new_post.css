@@ -1,0 +1,73 @@
+#shareNewModal .modal-content {
+padding:0;	
+width:100%;
+height:100%;
+}
+
+#postInputsContainer {
+display:inline-block;
+width:100%;
+height:auto;
+margin:0;
+}
+
+#postInputsContainerChild {
+position:relative;
+z-index:1;
+width:100%;
+margin:0;
+padding-top:40px;
+}
+
+#postInputsContainerChild input, #postInputsContainerChild select {
+-webkit-tap-highlight-color: rgba(255,255,255,0); 	
+}
+   
+#postInputsContainer  .input-field input[type=text]:focus,#postInputsContainer  .input-field input[type=password]:focus,#postInputsContainer  .input-field input[type=email]:focus {
+border-color:#f95462;
+box-shadow:0 1px 0 #f95462 !important;
+}
+   
+#postInputsContainer  .input-field input[type=text]:focus + label,#postInputsContainer .input-field input[type=email]:focus + label,#postInputsContainer .input-field input[type=password]:focus + label {
+color: #f95462 !important;
+box-shadow:none;
+}
+
+
+#shareNewImagesContainer {
+width:100%;
+height:calc(100% - 250px);
+position:absolute;
+bottom:0;
+margin:0;	
+padding:0;
+border-top:1px solid lightgrey;
+z-index:0;
+}
+
+#shareNewImagesContainer .col {
+height:100%;	
+padding:0;
+background-color:#f4f4f4;
+overflow:hidden;
+transition:all .1s ease-out;	
+}
+
+#shareNewImagesContainer .col:active  {
+background-color:#ebeaea;
+}
+
+.shareNewImagesImage {
+position:relative;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+display:inline-block;
+width:200px;
+height:200px;
+}
+
+
+#newPostInputs {
+display:none;	
+}

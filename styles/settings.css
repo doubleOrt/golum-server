@@ -1,0 +1,89 @@
+
+#settingsModal {
+width:600px;
+height:450px;
+}
+
+#settingsModal .modal-content {
+padding:0;	
+margin-top:60px;
+padding-bottom:80px !important;
+height:100%;
+width:100%;
+}
+
+#accountSettings {
+width:100%;	
+height:100%;
+}
+
+
+
+#accountContainerRow {
+padding-top:10px !important;	
+position:relative;
+}
+
+#accountSettingsInputsContainer {
+padding:0;	
+}
+
+
+.settingsSingleSectionContainer {
+display:inline-block;
+margin:0;	
+margin-top:25px;	
+width:100%;
+height:auto;
+}
+
+.settingsSingleSectionContainer:first-child {
+margin-top:0;	
+}
+
+.settingsTitleHeading {
+display:inline-block;
+font-weight:bold;
+padding:10px;	
+margin-bottom:10%;
+cursor:default;
+}
+
+#settingsModal .formTitleSmall {
+padding:15px 0 5px 10px;	
+}
+
+.settingsTitle {
+color:#f95462;
+font-family:roboto;
+font-size:85%;
+font-weight:bold;
+letter-spacing:0;
+text-transform:uppercase;
+}
+
+#settingsModal .myHorizontalCardStyle {
+padding:15px 0;	
+}
+
+
+
+#accountSettings .input-field input[type=text],.input-field input[type=password],.input-field input[type=email] {
+border-bottom:1px solid #e2e2e2;
+font-family:roboto;
+}
+   
+#accountSettings .input-field input[type=text]:focus,.input-field input[type=password]:focus,.input-field input[type=email]:focus {
+border-color:#f95462;
+box-shadow:0 1px 0 #f95462 !important;
+}
+   
+#accountSettings .input-field input[type=text]:focus + label,.input-field input[type=email]:focus + label,.input-field input[type=password]:focus + label {
+color: #f95462 !important;
+box-shadow:none;
+}
+
+
+.input-field input {
+text-indent:2%;
+}

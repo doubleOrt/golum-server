@@ -1,0 +1,214 @@
+
+/* the search input  */
+.whiteInputRow {
+height:43px;	
+}
+
+.whiteInputContainer {
+padding:0 !important;
+margin:0;
+position:relative;
+z-index:3;
+box-shadow:0 2px 3px rgba(0,0,0,.3);
+}
+
+
+.whiteInput::-webkit-input-placeholder {
+color:#aaaaaa !important; 
+}
+
+.whiteInput::-moz-placeholder { 
+color:grey !important;
+}
+
+.whiteInput {
+background-color:white !important;	
+border:none !important;
+text-indent:25px !important;
+-webkit-transition:all .1s ease-out !important;
+margin:0 !important;
+width:100% !important;
+box-shadow:none !important;
+}
+
+.whiteInput:focus {
+border:none !important;
+box-shadow:none !important;	
+}
+
+
+
+
+/* .... search results .... */
+
+
+#searchResultsContainer {
+position:relative;
+width:100%;
+top:103px;
+height:calc(100% - 103px);
+z-index:2;
+display:none;
+}
+
+#resultsColumn {
+background-color:white;	
+padding:0 !important;
+box-shadow:0 2px 3px rgba(0,0,0,.3);
+}
+
+#searchResultRowsContainer {
+width:100%;	
+height:100%;
+display:inline-block;	
+overflow:scroll;	
+padding-top:10px;
+padding-bottom:30px;
+}
+
+/* single search result item (a row) */
+.searchResultRow {
+border-bottom:1px solid #f4f4f4;	
+cursor:pointer;
+width:100%;
+height:65px;
+}
+
+.searchResultRowChild {
+height:100%;	
+padding:0 0 0 2% !important;
+}
+
+
+
+/* avatar part */
+
+.searchResultAvatarContainer {
+height:50px;
+width:50px;
+border-radius:100%;
+overflow:hidden;
+position:relative;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+
+/* the fullname part of the above div */
+.searchResultInfosContainer {	
+display:inline-block;	
+height:100%;
+overflow:hidden;
+padding:0 !important;
+}
+
+.searchResultNamesContainer {
+display:inline-block;
+position:relative;
+top:50%;
+transform:translate(0%,-50%);	
+max-width:90%;
+font-size:14px;
+}
+
+.searchResultFullName {
+color:#333333;	
+background-color:white;
+font-size:100%;
+height:100%;
+padding:2px 3px;
+line-height:12px;
+margin:0 0 0 15px;
+box-shadow: 0 0 5px rgba(0,0,0,.4);
+white-space: nowrap;
+text-overflow: ellipsis;
+overflow: hidden;
+text-transform:capitalize;
+}
+
+.searchResultUserName {
+color:black;	
+display:block;
+font-family:open sans;	
+font-size:80%;
+margin-left:15px;
+margin-top:5px;
+white-space: nowrap;
+text-overflow: ellipsis;
+overflow: hidden;
+}
+
+/* when a user inserts some letters, we add a selected effect to them, this only works for non-white backgrounded texts */
+.searchResultMatchingLetters {
+color:#f95462;	
+}
+
+
+.searchSectionTitles {
+color:white;
+background-color:#f95462;
+font-size:11px;
+font-weight:bold;
+text-transform:uppercase;
+display:inline-block;
+margin:0;	
+margin-bottom:15px;
+padding:2px 10px;
+position:relative;
+left:50%;
+transform:translate(-50%,0);
+}
+
+
+/* search result tags */
+
+#searchTagsContainer {
+margin-top:10px;	
+font-size:16px;
+width:100%;
+}
+
+#searchTagsContainerChild {
+font-size:70%;	
+padding:0 10px;	
+}
+
+#searchTagsContainer .tagName {
+display:inline-block;
+width:auto !important;
+height:auto !important;	
+overflow:visible !important;
+text-transform:capitalize;
+}
+
+
+/* end search result tags */
+
+#searchPostsContainer {
+padding:10px 0;	
+margin:20px 0 !important;
+border-top:1px solid #f4f4f4;
+}
+
+
+
+
+
+
+/* set both our main search containers display to none so that they work properly when we switch the search method from an always visible textbox to an app-like click 
+search button to search */
+@media screen and (max-width:992px) {
+
+.closeSearch {
+display:none;
+}
+
+#searchForUserRow {
+display:none;	
+}	
+
+#searchResultsContainer {
+display:none;	
+}
+	
+}

@@ -1,0 +1,838 @@
+ 
+
+/* let's import our css files */
+
+@import url(sidebar.css);
+
+@import url(chatPortal.css);
+
+@import url(chatModal.css);
+
+@import url(userModal.css);
+
+@import url(search.css);
+
+@import url(contacts.css);
+
+@import url(settings.css);
+
+@import url(add_tags.css);
+
+@import url(new_post.css);
+
+@import url(posts.css);
+
+@import url(commentsModal.css);
+
+@import url(commentRepliesModal.css);
+
+@import url(sendToFriendModal.css);
+
+@import url(votes.css);
+
+@import url(notifications.css);
+
+@import url(avatars.css);
+
+@import url(avatarsHorizontalContainer.css);
+
+@import url(itemsWithImages.css);
+
+@import url(tagPostsModal.css);
+
+@import url(bottomNav.css);
+
+@import url(main_screens.css);
+
+
+/* i suppose this is our palette #b3ea06(yellowgreenish) #00d677(green-bluish) #43d3e8 #ffffff #ebeaea #303030 */
+
+
+
+
+
+::-webkit-scrollbar {
+width:2px;
+height:0;	
+}
+ 
+
+html {
+width:100%;
+height:100%;	
+}
+
+body {
+width:100%;
+height:100%;	
+margin:0;
+padding:0;
+}
+
+
+/* increase font-size for tablets */
+@media screen and (min-width:742px) {
+
+body {
+font-size:14px;	
+}
+	
+}
+
+.dropdown-content li>a, .dropdown-content li>span {
+color:#f95462;
+}
+
+.waves-effect.wavesCustom .waves-ripple {
+background:rgba(205,58,55,.5) !important;	
+}
+
+.myBackground {
+background-color:#f95462 !important;
+}
+
+
+
+/* associated with loading progress bars */
+#showOnBodyLoad {
+display:none;	
+width:100%;
+height:100%;
+overflow:hidden;
+}
+/* end associated with loading progress bars */
+
+
+
+/* just want to set the background color of all modal-contents to white */
+.modal {
+overflow:hidden;
+width:90%;
+height:80%;
+max-height:80%;
+}
+
+.modal-overlay {
+z-index:0 !important;	
+}
+
+.modal-content {
+overflow:hidden !important;
+overflow-y:auto !important;	
+position:relative;
+background-color:white;
+}
+
+
+
+#megaContainer {
+width:100%;	
+height:100%;
+position:relative;
+padding-left:300px;	
+overflow-y:auto;
+}
+
+#pageContent {
+height:100%;
+width:100%;
+overflow:hidden;
+overflow-y:auto;
+background-color:white;
+}
+
+#allPostsContainer {
+width:100%;
+height:100%;	
+}
+
+
+#topBar {
+position:fixed;
+top:0;
+width:100%;
+display:inline-block;
+z-index:4;
+}
+
+/* the button that toggles the sidenav (hamburger button) */
+#sideNavCollapserButton {
+display:none !important;
+height:60px;
+padding:0 12px;
+font-size:32px;
+float:left;
+} 
+
+
+/* buttons and links on the right side of a bar that will be visible only on mobiles */
+.navRightItemsMobile {
+display:none;	
+float:right;	
+height:100%;
+position:absolute;
+top:0;
+right:0;
+line-height:0;
+padding-right:0;
+}
+
+.navRightItemsMobile .btn {
+position:relative;
+top:50%;
+transform:translate(0,-50%);	
+}
+
+/* buttons and links on the right side of a bar that won't be visible on mobiles */
+.navRightItems {
+display:inline-block;
+height:60px;
+position:fixed;
+top:0;
+right:0;
+line-height:0;
+}
+
+/* buttons and links on the right side of a bar that will be visible on all devices */
+.navRightItemsAll {
+display:inline-block;
+height:60px;
+position:fixed;
+right:0;
+line-height:0;
+}
+
+
+#sideNavCollapserButton, .showDeleteContactsButtons {
+display:block;
+background:none;
+color:#494949;	
+border:none;
+font-size:24px;
+width:auto;
+padding:0 11px;
+float:left;
+position:relative;
+}
+
+#sideNavCollapserButton:focus , .showDeleteContactsButtons:focus {
+background:none;	
+}
+
+.navButtons i {	
+font-size:100%;	
+display:table-cell;
+vertical-align:middle;
+}
+
+
+/* buttons floating at the bottom of the page, this gives them a f95462 background, scales the icons up a little bit, and changes their color to white. */
+.bottomFloating {
+position:fixed;
+bottom:20px;
+right:20px;
+font-size:20px;	
+z-index:9999999999999999999999999;
+}
+
+.smallerFontSize {
+font-size:85%;	
+}
+
+.boldText {
+font-weight:bold;	
+}
+
+
+/* common link stylings */
+
+.commonLink {
+color:#4683af;
+}
+
+.commonLinkMainColor {
+color:#f95462;	
+}
+
+.commonLink:active, .commonLinkMainColor:active, .commonLinkBlue:active {
+opacity:.4;	
+}
+
+
+
+/* .myGreyBackgroundOnActive mostly comments, notifications and replies have this class. */
+.myGreyBackgroundOnActive {
+-webkit-transition:background-color .2s ease-out;
+}
+
+.myGreyBackgroundOnActive:active {
+background-color:#ebeaea;	
+}
+ 
+
+ 
+.opacityChangeOnActive:active {
+opacity:.5; 
+}
+ 
+ 
+ 
+/* common button stylings, gives them a white color and f95462 background-color */
+.commonButton {
+color:white;		
+background-color:yellowgreen;
+padding:0 10px;
+text-align:center;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+.commonButton:hover {
+color:white;	
+background-color:yellowgreen;	
+}
+
+.commonButtonWhite {
+color:yellowgreen;
+background-color:white;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+.commonButtonWhite:hover {
+color:yellowgreen;
+background-color:white;
+}
+
+.commonButtonWhite:active {
+color:yellowgreen !important;
+background-color:white !important;
+}
+
+
+
+.fullWidthAndCenteredText {
+width:100%;
+text-align:center;	
+/* padding 0 so that some materialize styles don't forestall the text-align center */
+padding:0;
+}
+
+
+.modalLinks {
+float:right;
+margin:0;	
+position:relative;
+top:50%;
+transform:translate(0,-50%);
+}
+
+.modal-footer a {
+display:inline-block;	
+margin-left:5px !important;	
+float:none !important;
+}
+
+
+.mobileOnly {
+display:none !important;	
+}
+
+
+
+/* modal action bars and such */
+
+.modalHeaderContainer {
+display:inline-block;		
+width:100%;
+font-size:100%;
+position:fixed;
+top:0;	
+left:0;
+z-index:1;
+padding:0;
+}
+
+.modal-header {
+display:block;	
+position:relative;
+background-color:#ffffff;
+overflow:hidden;
+padding-top:0;
+padding-bottom:0;
+height:60px;
+width:100%;
+padding:0 5px 0 0;
+box-shadow:0 1px 2px rgba(0,0,0,.1);
+}
+
+/* action bar titles */
+.modalHeaderFullName {
+display:inline-block;	
+color:#494949;
+font-family:roboto;
+font-size:22px;
+font-weight:500;
+text-transform:capitalize;
+line-height:22px;
+position:absolute;
+top:50%;
+transform:translate(0,-50%);
+margin-left:8px;
+width:125px;
+text-overflow:ellipsis;
+white-space:nowrap;
+overflow-x:hidden;
+overflow-y:visible;
+}
+
+.modalHeaderFullNameSecondary {
+font-size:60%;
+}
+
+
+.transparentModalHeader {
+background:transparent;		
+box-shadow:none;
+position:absolute;
+top:0;
+left:0;
+text-shadow:0 1px 1px rgba(0,0,0,.5);
+}
+
+
+
+.transparentModalHeaderModalContent {
+width:100% !important;
+height:100% !important;
+padding:0 !important;
+background-color:white !important;
+overflow-x:hidden !important;
+overflow-y:auto !important;
+margin:0 !important;
+}
+
+/* the buttons used on the action bars to close modals */
+.modalCloseButton {
+display:inline-block;	
+color:#494949;
+font-size:190%;
+position:relative;
+height:100%;
+width:auto;
+padding:0 12px;
+}
+
+.modalCloseButton i {
+font-size:100%;	
+line-height:60px;	
+}
+
+.modalLinks {
+display:inline-block;
+}	
+
+.modalLinks button:focus {
+background:none;	
+}		
+
+
+
+
+
+
+
+.hasHeader .modal-footer {
+height:60px !important;	
+bottom:0;	
+}
+
+
+.hasHeader .modal-content {
+margin-top:60px !important;	
+height:calc(100% - 60px) !important;
+}	
+	
+	
+	
+	
+	
+
+/* if screen is smaller than 992px, show the nav toggle button. */
+@media screen and (max-width:992px) {
+
+#megaContainer {
+padding-left:0; 
+}
+
+#pageContent {
+height:100%;
+}
+
+.navRightItemsMobile {
+display:block;	
+}
+
+.navRightItems {
+display:none;	
+}
+
+#sideNavCollapserButton {
+display:inline-block !important;
+}
+
+
+.fullScreenModal.open {
+top:0 !important;	
+}
+
+.fullScreenModal {
+height:100% !important;
+width:100% !important;
+max-height:100% !important;	
+top:0 !important;
+}
+
+
+.mobileOnly {
+display:inline-block !important;	
+}
+
+
+.hasMobileOnlyHeader .modal-footer,.hasFooterAndHeader .modal-footer {
+height:60px !important;	
+bottom:0;	
+}
+
+.modal-content {
+height:100%;	
+}
+
+.hasFooterAndHeader .modal-content {
+margin-top:60px;	
+height:calc(100% - 120px) !important;	
+}
+	
+#settingsModal .modal-content {
+margin-top:60px;	
+padding-top:60px;
+height:100% !important;
+padding-bottom:0;
+}	
+	
+}
+
+
+
+
+
+.wrapper {
+display: block;
+width:100%;
+}
+
+.wrapper:after {
+content:"";
+display:table;
+clear:both;
+}
+
+.ripplelink{
+display:block;
+height:80px;
+text-align:center;
+text-decoration:none;
+position:relative;
+overflow:hidden;
+}
+
+
+.ink {
+display: block;
+position: absolute;
+background:lightgrey;
+border-radius: 100%;
+-webkit-transform:scale(0);
+-moz-transform:scale(0);
+-o-transform:scale(0);
+transform:scale(0);
+}
+
+.lightgrey {
+background:white;	
+}
+
+.cyan{
+  background:#00bcd4;
+}
+
+.lightgreen{
+  background:#8bc34a;
+}
+
+.amber{ 
+  background:#ffc107;
+}
+
+.orange{
+  background:#ff9800;
+}
+
+
+
+
+
+
+/* when something is empty, we use these messages to tell the user it is empty */
+.emptyNowPlaceholder {
+color:grey;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+width:75%;
+font-size:16px;
+font-weight:500;
+line-height:20px;
+}
+
+.emptyNowPlaceholder i {
+opacity:1;
+font-size:220%;		
+}
+
+.aaaaaaColor {
+color:#aaaaaa !important;	
+}
+
+
+
+
+
+
+
+
+
+
+
+/* when a user wants to open an image in fullscreen, we use these styles for the elements */
+#fullScreenFileView {
+width:100%;
+height:100%;
+margin:0;
+padding:0;
+background:rgba(0,0,0,.9);	
+display:none;
+z-index:100000;
+position:fixed;
+top:0;
+}
+
+#fullScreenFileViewFile {
+max-width:100%;	
+max-height:100%;	
+position:relative;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+
+
+
+
+
+
+
+
+
+/* these are small forms, one textbox and one button (confirmation code section or whatever)*/
+.smallFormContainer {
+display:inline-block;	
+background-color:white;
+height:77px;
+width:100%;
+margin:0 auto;
+}
+
+.smallFormButtonContainer {
+margin:0;	
+position:relative;
+top:50%;
+transform:translate(0,-50%);
+}
+
+.smallFormButtonContainer a {
+text-align:center !important;
+}
+
+.smallFormTopAndShadowed {
+position:fixed;
+top:60px;
+z-index:99999999999999;
+box-shadow:0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);	
+}
+
+
+
+
+
+
+
+/* loading circle border */
+#preloader .spinner-layer {
+border-color:#f95462;	
+}
+
+
+
+
+/* remove that ugly bluish highlight color for everything on our app */
+:active, :focus {
+-webkit-tap-highlight-color: rgba(255,255,255,0); 
+}
+
+
+
+/* and here ends the reign of tags */
+
+
+
+.disabledButton {
+pointer-events:none;
+opacity:.4;	
+}
+
+
+
+/* bottom sheet modals (send to friend and add tag mainly) */
+
+.bottomSheetModalInputted .modal-content {
+width:100%;
+height:100%;	
+padding:0 !important;
+overflow:hidden !important;	
+}
+
+.bottomSheetModalMainInput {
+padding:0 !important;	
+margin:0;
+max-width:100%;
+overflow:hidden;
+}
+
+.bottomSheetModalMainInput input {
+border-bottom:1px solid #ebeaea !important;	
+font-size:16px;
+box-shadow:none !important;
+padding:8px;
+padding-left:15px;
+margin-bottom:0;
+}
+
+.bottomSheetModalMainInput input:focus::-webkit-input-placeholder {
+opacity:0;	
+}
+
+.bottomSheetModalResultsContainer {
+width:100%;	
+height:calc(100% - 70px);	
+overflow:hidden !important; 
+overflow-y:auto !important;
+padding-top:20px;
+}
+
+.bottomSheetModalResultsContainer .bottomSheetModalResultsContainerCol {
+height:100%;
+margin:0;
+padding:0;
+}
+
+
+
+
+
+
+.postModals .modal-content {
+background-color:white;
+padding:0;	
+}
+
+.postModalsPostsContainer {
+width:100%;
+height:100%;
+margin:0;
+padding:0;	
+overflow:auto;
+}
+
+
+/* our custom material-designy custom non-full-width card stylings that are used everywhere in the app */
+.myHorizontalCardStyle {
+display:inline-block;	
+width:95%;
+margin:0;
+margin-top:10px;
+position:relative;
+left:50%;
+transform:translate(-50%,0);
+}
+
+.cardStyles {
+background-color:white;
+box-shadow:0 1px 2px rgba(0,0,0,.2);
+border-radius:4px;	
+}
+
+
+/* styling for hashtags */
+.hashtag {
+color:#4683af;
+font-weight:500;
+}
+
+
+/* en example of the use of these is the "notification seen" icon in the notifications section */
+.focusStealer {
+display:inline-block;	
+color: white;
+background-color: #4683af;
+border-radius: 100%;
+line-height: 0;
+padding: 2px;
+border: 2px solid white;
+box-shadow: 0 1px 1px rgba(0,0,0,.3), 0 0 0 15px rgba(108, 203, 238,.2); /* #4683af but in rgba since we need some transparency */;
+}
+
+.focusStealer i {
+font-size: 9px;
+font-weight: bold;
+}
+
+
+
+/* global tab styles for all tabs in our app */
+
+.tabs {
+box-shadow:0 1px 1px rgba(0,0,0,.1);	
+z-index:999;
+}
+
+.tabs .tab a {
+color:#aaaaaa;
+font-weight:500;
+}
+
+.tabs .tab a:hover, .tabs .tab a:active {
+color:#f95462;	
+}
+
+.tabs .tab a.active {
+color:#494949;	
+font-weight:700;
+}
+
+.tabs .indicator {
+background-color:#494949;	
+}
+

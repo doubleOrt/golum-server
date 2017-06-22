@@ -1,0 +1,126 @@
+
+.votesContainer {
+display:none;	
+width:100%;
+height:100%;
+background-color:rgba(0,0,0,.4);
+border-bottom:2px solid white;
+padding:10px 0;
+position:relative;
+z-index:1;
+}
+
+.votesContainerChild {
+position:relative;
+top:40%;
+transform:translate(0,-50%);	
+}
+
+.singlePost[data-post-type="3"] .votesContainerChild, .singlePost[data-post-type="4"] .votesContainerChild {
+top:0%;
+transform:translate(0,0);
+}
+
+.singlePost[data-post-type="3"] .votesIcon, .singlePost[data-post-type="4"] .votesIcon {
+padding:7px;
+}
+
+.singlePost[data-post-type="3"] .votesIcon i, .singlePost[data-post-type="4"] .votesIcon i {
+font-size:20px;
+}
+
+.singlePost[data-post-type="3"] .totalVotesNumber, .singlePost[data-post-type="4"] .totalVotesNumber {
+margin-top:2px;
+}
+
+.singlePost[data-post-type="3"] .totalVotesPercentage, .singlePost[data-post-type="4"] .totalVotesPercentage {
+line-height:20px;
+font-size:20px;
+}
+
+
+
+
+.majorityVoteBackgroundColor {
+background-color:#f95462;	
+}
+
+.minorityVoteBackgroundColor {
+background-color:white;	
+}
+
+.votesIcon {
+display:inline-block;	
+position:relative;
+left:50%;
+transform:translate(-50%,0%);	
+padding:10px;
+border:2px solid white;
+border-radius:1000px;
+}
+
+.votesIcon.majorityVoteBackgroundColor {
+background-color:rgba(255,73,69,.7);	
+}
+
+.votesIcon.minorityVoteBackgroundColor {
+background-color:rgba(255,255,255,.4);	
+}
+
+
+.votesIcon i {
+display:block;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+
+.totalVotesNumber {
+text-align:center;
+color:white;
+text-shadow:0 2px 2px rgba(0,0,0,.6);
+margin-top:6px;
+font-size:12px;
+font-weight:bold;
+}
+
+.totalVotesPercentage {
+text-align:center;
+color:white;
+text-shadow:0 2px 2px rgba(0,0,0,.6);
+font-size:24px;
+font-weight:bold;	
+line-height:24px;
+}
+
+.votesLineContainer {
+width:5px;
+position:absolute;
+left:50%;
+bottom:0;
+transform:translate(-50%,0);
+}
+
+.votesLine {
+width:100%;
+height:0%;
+position:absolute;
+left:0;
+bottom:0;
+-webkit-animation:votesLineAnimation 2s ease-out 0s 1 normal forwards !important; 
+border-radius:3px 3px 0 0;
+}
+
+@keyframes votesLineAnimation {
+
+80% {
+height:105%;	
+}
+
+100% {
+height:100%;
+}
+
+}
+
+

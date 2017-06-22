@@ -1,0 +1,289 @@
+#myPostsContainer {	
+display:block;	
+}
+
+.singlePost {
+clear:both;	
+padding:0 !important;	
+margin:0;
+max-width:380px;
+position:relative;
+left:50% !important;
+transform:translate(-50%,0);
+margin-top:70px;
+border-radius:0 0 5px 5px;
+border-top:1px solid #ebeaea;
+border-bottom:1px solid #ebeaea;
+}
+
+
+
+.singlePost:last-child {
+margin-bottom:100px;	
+}
+
+.postTop {
+margin:0;
+font-family:roboto;
+position:relative;
+background-color:white;
+}
+
+
+.postTitle {
+display:inline-block;
+color:black;
+background-color:white;
+position:relative;	
+z-index:1;	
+padding:10px 5px 10px 10px;
+width:100%;
+height:100%;
+font-size:14px;
+text-align:center;
+}
+
+
+.postImagesContainer {
+width:100%;
+height:300px;
+position:relative;
+margin:0;
+padding:0;
+overflow:hidden;
+background:-webkit-linear-gradient(-320deg,#a79f30,#fff22c);
+background:linear-gradient(-320deg,#a79f30,#fff22c);
+}
+
+.postSingleImageContainer {
+padding:0 !important;
+overflow:hidden;	
+position:relative;
+background:transparent;
+}
+
+.postSingleImageContainerImage {
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:0;
+}
+
+
+.postReaction {
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);	
+width:100px;
+}
+
+.postReaction img {
+width:60px;
+height:60px;
+position:relative;
+left:50%;
+transform:translate(-50%,0);	
+}
+
+.postReaction .postReactionText {
+color:white;
+text-shadow:0 2px 2px rgba(0,0,0,.6);
+font-size:14px;
+text-align:center;
+text-transform:uppercase;
+letter-spacing:3px;
+margin:0;
+font-weight:bold;
+}
+
+
+.postReactionAnimation {
+-webkit-animation:postReactionAnimation 2s ease-out .2s 1 normal forwards !important; 		
+-webkit-transform:scale(0) translate(-50%,-50%) !important;
+transform-origin:left top;
+}
+
+@keyframes postReactionAnimation {
+
+20% {
+-webkit-transform:scale(1) translate(-50%,-50%);	
+}
+
+100% {
+-webkit-transform:scale(1) translate(-50%,-50%);
+opacity:0;		
+visibility:hidden;
+}
+
+}
+
+
+
+
+
+.postBottomContainer {
+width:100%;
+background-color:white;	
+padding:0;
+margin:0;
+position:relative;
+min-height:100px;
+border-radius:0 0 5px 5px;
+}
+
+
+.postTagsContainer {
+font-size:60%;	
+padding:15px 0 0 10px !important;
+}
+
+.postTagsContainer .chip {
+font-size:100%;	
+width:auto;
+height:20px;
+line-height:20px;
+margin:0;
+margin-left:3px;
+margin-top:5px;
+padding:0 8px 0 10px;
+}
+
+.postTagsContainer .close {
+line-height:22px;
+padding:0 2px;
+font-size:120%;	
+}
+
+.postAddTagCircle {	
+display:inline-block;
+line-height:0;
+color:#aaaaaa;
+position:absolute;
+margin-left:5px;
+margin-top:5px;
+}
+
+.postAddTagCircle:active {
+opacity:.3;	
+}
+
+.postAddTagCircle i {
+font-size:20px;	
+}
+
+.postActionsContainer {
+font-size:80%;	
+margin:10px 0 0 0;
+padding:0;
+display:inline-block;
+width:100%;	
+height:50px;
+border-top:1px solid #f4f4f4;
+}
+
+.postButtonsContainer {
+display:table;	
+height:100%;
+float:right;	
+}
+
+/* poster avatar and name */
+
+.posterInfoMegaContainer {
+display:table;
+position:relative;
+top:50%;
+transform:translate(0,-50%);	
+margin-left:5px;
+}
+
+.posterAvatarContainer {
+display:table-cell;	
+width:33px;
+height:33px;	
+vertical-align:middle;
+display:inline-block !important;
+}
+
+.posterInfoMegaContainer a {
+vertical-align:middle;
+padding-left:10px;
+font-size:12px;
+font-weight:600;
+text-transform:capitalize;
+}
+
+.singlePost .avatarsHorizontalContainer {
+width:90% !important;	
+}
+
+.singlePost .avatarsHorizontalContainer .avatarContainer {
+width:25px;
+height:25px;
+margin-left:8px;			
+}
+
+
+/* ends here the reign of post avatars and names */
+
+
+.postCommentsButtonCommentsNumberContainer {
+font-size:85%;
+line-height:0;
+position:relative;
+top:-1px;
+font-weight:bold;
+}
+
+.postRightContainer {
+padding:6px 6px 0 0 !important;
+}
+
+.postDate {
+color:#aaaaaa;
+font-size:9px;
+font-weight:bold;	
+width:100px;
+text-align:right;
+}
+
+.postSettingsButton {
+color:grey;		
+line-height:0;
+border-radius:3px;	
+float:right;
+}
+
+.postButtonsContainer .btn {
+height:100%;
+min-width:50px;
+text-align:center;
+box-sizing:border-box;
+padding: 0 10px;
+color:#f95462;
+border-radius:0 !important;
+user-select:none;
+}
+
+.postButtonsContainer .btn i {
+font-size:200%;	
+display:inline-block;
+position:relative;
+top:50%;
+transform:translate(0,-50%);
+}
+
+.postButtonsContainer .btn:active {
+background:none !important;	
+}
+
+.postButtonsContainer .btn:focus {
+background:none !important;	
+}
+
+.postButtonsContainer .btn:first-child {
+margin-left:0;	
+}
+

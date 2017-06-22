@@ -1,0 +1,69 @@
+#notificationsModal .modal-content {
+padding:0;
+padding-top:40px;
+background-color:#f4f4f4;
+}
+
+.singleNotification {
+display:table;	
+min-height:70px;
+padding:18px 20px;
+overflow:hidden;
+}
+
+.singleNotification .focusStealer {
+position:absolute;
+right:7px;
+top:5px;	
+}
+
+.singleNotification:last-child {
+border-bottom:none;	
+}
+
+.notificationsAvatarContainer {
+display:table-cell;
+vertical-align:middle;		
+width:45px;
+}
+
+
+#notificationsModal .avatarContainer {
+position:relative;
+left:50%;
+transform:translate(-50%,0%);
+width:50px;
+height:50px;	
+}
+
+.notificationTextContainer {
+display:table-cell;
+vertical-align:middle;	
+width:calc(100% - 45px);
+padding-left:20px;
+margin-bottom:5px;
+}
+
+.notificationTextContainer a {
+font-weight:bold;	
+}
+
+.notificationText {
+display:inline-block;
+position:relative;
+font-size:14px;	
+}
+
+.notificationFromFullName  {
+color:#f95462 !important;	
+text-transform:capitalize !important;	
+font-weight:bold;
+}
+
+.notificationTime {
+font-size:10px;
+color:#aaaaaa;	
+position:absolute;
+bottom:5px;
+right:10px;
+}
