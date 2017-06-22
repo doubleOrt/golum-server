@@ -1,0 +1,7 @@
+dependencies/
+
+posts/*
+!posts/.gitkeep
+
+users/*
+!users/.gitkeep
