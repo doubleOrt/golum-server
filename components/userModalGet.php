@@ -81,6 +81,7 @@ $echo_arr[0] = "var info = {
 'user_name': '". htmlspecialchars($user_modal_info_arr["user_name"]) ."',
 'background': '". htmlspecialchars($user_modal_info_arr["background_path"]) ."',
 'avatar': '". htmlspecialchars($user_modal_info_arr["avatar_picture"]) ."',
+'avatar_editable': '". ($user_modal_info_arr["avatar_picture"] != "" ? "true" : "false") /* this seems redundant, but it is necessary for our client-side to function properly */ ."', 
 'avatar_positions': [". htmlspecialchars($avatar_positions[0]) .",". htmlspecialchars($avatar_positions[1]) ."],
 'avatar_rotate_degree': ". htmlspecialchars($avatar_rotate_degree) .",
 'personality': '". htmlspecialchars($user_is_trendy_or_grumpy) ."',

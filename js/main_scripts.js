@@ -130,9 +130,10 @@ $("#startChatButton").attr("data-user-id", data["id"]);
 
 $("#profileBackground").css({"background":"url('" + data["background"] + "')", "background-position": "center", "background-size": "cover"});
 
-// if user has uploaded an avatar
-if(data["avatar"] != "") {
+
+// set the avatar image to the user's avatar
 $("#userAvatarImage").attr("src", data["avatar"]);
+$("#userAvatarImage").attr("data-avatar-editable", data["avatar_editable"]);
 $("#userAvatarRotateDiv").attr("data-rotate-degree", data["avatar_rotate_degree"]);
 $("#userAvatarRotateContainer").css({"margin-top": data["avatar_positions"][0], "margin-left": data["avatar_positions"][1]});
 /* if this is the base user they have uploaded an avatar (see the above if statement), then we want to add a 
@@ -144,7 +145,8 @@ $("#userAvatarRotateDiv").addClass("baseUserAvatarRotateDivs");
 else {
 $("#userAvatarRotateDiv").removeClass("baseUserAvatarRotateDivs");		
 }
-}
+
+
 
 // set user's full and user names.
 $("#userModalFullName").html(data["first_name"] + " " + data["last_name"]);

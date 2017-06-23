@@ -61,8 +61,9 @@ eval(data);
 
 </script>
 
-<script src="dependencies/readmore.js"></script> 
+<script src="dependencies/readmore.js"></script><!-- used to add a "Read more..." to long comments and such -->
 <script src="dependencies/jquery_double_tap.js"></script> 
+<script src="dependencies/letter_avatars.js"></script><!-- used to generate letter-avatar images -->
 <script src="js/generic_functions.js"></script> 
 <script src="js/chat_portals.js"></script> 
 <script src="js/modals.js"></script> 
@@ -252,16 +253,15 @@ eval(data);
 <div class='userModalAvatarImageContainer'><!-- START #userModalAvatarImageContainer -->
 <div class='userModalAvatarImage'><!-- START #userModalAvatarImage -->
 
-	<!-- if the user hasn't uploaded an avatar yet, we need to get the markup for a letter avatar -->
 
-	<!-- if the user has uploaded an avatar, this is the proper markup -->	
-	<div id="userAvatarRotateContainer" class='rotateContainer'>
-	<div id="userAvatarRotateDiv" class='userAvatarRotateDiv' data-rotate-degree='0'>
-	<img id='userAvatarImage' class='avatarImages' src='' alt='Image'/>
-	</div>
-	</div>	
+<!-- if the user has uploaded an avatar, this is the proper markup -->	
+<div id="userAvatarRotateContainer" class='rotateContainer'>
+<div id="userAvatarRotateDiv" class='userAvatarRotateDiv' data-rotate-degree='0'>
+<img id='userAvatarImage' class='avatarImages' src='' alt='Image'/>
+</div>
+</div>	
 	
-<div class='baseUserOnly changeAvatarContainer'>
+<div class='changeAvatarContainer'>
 <i class='material-icons'>camera_alt</i>
 <form action='#' method='post' enctype='multipart/form-data' style='display:none;' id='changeAvatarForm'>
 <input id='changeAvatarInput' type='file' name='new_avatar_image' accept='image/*'/>
@@ -269,7 +269,7 @@ eval(data);
 </div>
 
 <!-- show this only if the user has uploaded an avatar -->
-<div id='repositionAvatarDiv' class="baseUserOnly">
+<div id='repositionAvatarDiv'>
 <!-- these "trending flat" icons are actually used for repositioning the avatar -->
 <i class='material-icons repositionAvatar' data-direction='up' style='top:0;left:50%;transform:translate(-50%,0) scale(1,.8) rotate(270deg);'>trending_flat</i>
 <i class='material-icons repositionAvatar' data-direction='right' style='right:0;top:50%;transform:translate(0%,-50%) scale(.8,1) rotate(0deg);'>trending_flat</i>
@@ -656,7 +656,7 @@ Birthdate: User's Birthdate
 
 <div class='row'>
 <div class='input-field col l8 m8 s8 offset-l2 offset-m2 offset-s2'>
-<input id='birthdate' class='datepicker birthdateSelect userModalChangeAbles'  data-change-name='birthdate' type='date' name='birthdate' value='<!-- preselected date -->' />
+<input id='birthdate' class='datepicker birthdateSelect userModalChangeAbles'  data-change-name='birthdate' type='date' name='birthdate' value='1996-01-01' />
 </div>
 </div>
 

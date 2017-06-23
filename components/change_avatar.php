@@ -4,8 +4,13 @@
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
+$MAXIMUM_USER_PROFILE_AVATAR_IMAGE_SIZE = 5000000;
+
+$MAXIMUM_DAILY_AVATAR_UPLOADS = 15;
 
 
+
+$echo_arr = ["" , ""];
 
 if(isset($_FILES["new_avatar"])) {
 
@@ -22,7 +27,7 @@ if($_FILES["new_avatar"]["size"] < 5000000) {
 if($upload_pathinfo == "jpeg" || $upload_pathinfo == "jpg" || $upload_pathinfo == "png" || $upload_pathinfo == "gif") {
 	
 //move the uploaded file
-if(move_uploaded_file($_FILES["new_avatar"]["tmp_name"],$upload_to . basename($_FILES["new_avatar"]["name"]))) {
+if(move_uploaded_file($_FILES["new_avatar"]["tmp_name"], $upload_to . basename($_FILES["new_avatar"]["name"]))) {
 
 //what is going to be the id of the new avatar picture ? we get this by getting the id of the last row and adding 1 to it.
 $what_id_query = $con->query("SELECT id FROM AVATARS where id_of_user = ". $_SESSION["user_id"])->fetchAll();
@@ -35,8 +40,13 @@ $new_path = "users/". $_SESSION["user_id"] ."/media/" . "$what_id" . $upload_pat
 //rename the file and check if it is successful
 if(rename($upload_to . basename($_FILES["new_avatar"]["name"]) , "../" . $new_path)) {
 
+$daily_avatar_uploads_limit_exceeded = daily_avatar_uploads_limit_exceeded($MAXIMUM_DAILY_AVATAR_UPLOADS);
+
+// the avatar upload limit has not been exceeded.
+if($daily_avatar_uploads_limit_exceeded === false) {
+
 //add a new row to the avatars table, check if it is successful.
-$insert_into_avatars = $con->query("INSERT INTO AVATARS (id_of_user,avatar_path,date) values('". $_SESSION["user_id"] ."','". $new_path ."','".date("Y/m/d H:i")."')");
+$insert_into_avatars = $con->query("INSERT INTO AVATARS (id_of_user,avatar_path,date_of) values('". $_SESSION["user_id"] ."','". $new_path ."','".date("Y/m/d H:i")."')");
 
 //if query was successful
 if($insert_into_avatars->rowCount() > 0) {
@@ -45,70 +55,60 @@ $update_users = $con->query("UPDATE USERS SET avatar_picture = '". $new_path ."'
 
 //if query was successful
 if($update_users->rowCount() > 0) {
-
-	
-//echo some js (a toast and some other things to update the user's profile picture until the page loads again.
-echo "
-if(!$('#userAvatarImage').length) {
-// this to are used when the user is uploading his first avatar, meaning the image refs in the loop below wouldn't work because they would be undefined, so we need to use these, and please be sure to change the html of any other base user avatar picture that is persistent on the screen.
-$('.userModalAvatarImageContainer').html(\"<div class='userModalAvatarImage'><div class='rotateContainer' style='margin-top:0%;margin-left:0%;'><div class='userAvatarRotateDiv'><img id='userAvatarImage' class='avatarImages' src='".$new_path."' alt='Image'/></div></div><div class='changeAvatarContainer'><i class='material-icons'>camera_alt</i><form action='#' method='post' enctype='multipart/form-data' style='display:none;' id='changeAvatarForm'><input id='changeAvatarInput' type='file' name='new_avatar_image'/></form></div><div id='repositionAvatarDiv'><i class='material-icons repositionAvatar' data-direction='up' style='top:0;left:50%;transform:translate(-50%,0) scale(1,.8) rotate(270deg);'>trending_flat</i><i class='material-icons repositionAvatar' data-direction='right' style='right:0;top:50%;transform:translate(0%,-50%) scale(.8,1) rotate(0deg);'>trending_flat</i><i class='material-icons repositionAvatar' data-direction='down' style='left:50%;bottom:0;transform:translate(-50%,0%) scale(1,.8) rotate(90deg);'>trending_flat</i><i class='material-icons repositionAvatar' data-direction='left' style='left:0%;top:50%;transform:translate(0%,-50%) scale(.8,1) rotate(180deg);'>trending_flat</i></div></div><button id='rotateAvatarButton' data-change-name='avatar_rotation'><i class='material-icons'>rotate_right</i></button>\");
-$('#userAvatarContainer').html(\"<div class='rotateContainer' style='position:relative;transform:none;display:inline-block;width:100%;height:100%;margin-top:0%;margin-left:0%;'><div class='userAvatarRotateDiv'><img id='userAvatar' class='avatarImages' src='".$new_path."' alt='hello'/></div></div><!-- .end #rotateContainer -->\");
-}
-
-
-$('.baseUserAvatarRotateDivs').each(function(){	
-$(this).attr('data-rotate-degree','0');
-$(this).parent().css({'margin-top':'0px','margin-left':'0px'});
-$(this).css({'top':'0%','left':'0%'});
-$(this).find('img').attr('src','". $new_path ."');
-$(this).css('transform','rotate(' + $(this).attr('data-rotate-degree') + 'deg)');	
-fitToParent('#' + $(this).find('img').attr('id'));
-});
-
-
-Materialize.toast('Avatar Changed',5000,'green')";
-die();			
+$echo_arr[0] = $new_path;
 }	
 else {
-echo "Materialize.toast('Something Went Wrong, Sorry!',6000,'red')";
-die();			
+$echo_arr[1] = "Something Went Wrong, Sorry!";
 }
 }
 // if there was an sql error
 else {
-echo "Materialize.toast('Something Went Wrong, Sorry!',6000,'red')";
-die();		
+$echo_arr[1] = "Something Went Wrong, Sorry!";
+}
+}
+// the avatar upload limit has been exceeded.
+else {
+$echo_arr[1] = "Materialize.toast('You are uploading too many avatars, which costs us a lot! Please wait until tomorrow before you upload another avatar!',6000,'red')";	
 }
 
 }
 //if there was an error while inserting the row into :avatars".
 else {
-echo "Materialize.toast('Something Went Wrong, Sorry!',6000,'red')";
-die();			
+$echo_arr[1] = "Something Went Wrong, Sorry!";
 }	
 
 }
 //if there is an error uploading the file
 else {
-echo "Materialize.toast('Something Went Wrong, Sorry!',6000,'red')";
-die();	
+$echo_arr[1] = "Something Went Wrong, Sorry!";
 }
 	
 }
 //if filetype is not one of the filetypes specified above, alert the user.
 else {
-echo "Materialize.toast('Image Type Must Be Either \"JPEG\", \"JPG\" \"PNG\" Or \"GIF\" !',6000,'red')";
-die();
+$echo_arr[1] = "Image Type Must Be Either \"JPEG\", \"JPG\" \"PNG\" Or \"GIF\" !";
 }
 
 }
 //if file is larger than 5mb
 else {
-echo "Materialize.toast('Image Size Must Be Smaller Than 5MB',6000,'red')";
+$echo_arr[1] = "Image Size Must Be Smaller Than ". ($MAXIMUM_USER_PROFILE_AVATAR_IMAGE_SIZE/1000000) ."MB";
 die();	
 }
 	
 }
 
+
+echo json_encode($echo_arr);
+
+
+
+/* if the user has uploaded more than $amount images in less than $period seconds, returns the time the user has to wait before they can upload another image in seconds, otherwise
+returns false. */
+function daily_avatar_uploads_limit_exceeded($limit) {
+global $con;	
+$background_uploads_today = $con->query("SELECT count(*) from avatars where id_of_user = ". $_SESSION["user_id"] ." and date_of like '". date("Y/m/d") ." %'")->fetch()[0];
+return ($background_uploads_today >= $limit ? true : false);
+}
 
 ?>

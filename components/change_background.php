@@ -40,7 +40,7 @@ if(rename($upload_to . basename($_FILES["new_background"]["name"]) , "../" . $ne
 
 $daily_background_uploads_limit_exceeded = daily_background_uploads_limit_exceeded($MAXIMUM_DAILY_BACKGROUND_UPLOADS);
 
-// the user has not exceeded the background upload limit.
+// the background upload limit has not been exceeded.
 if($daily_background_uploads_limit_exceeded === false) {
 //add a new row to the backgrounds table, check if it is successful.
 $insert_into_backgrounds = $con->query("INSERT INTO backgrounds (id_of_user,background_path,date_of) values('". $_SESSION["user_id"] ."','". $new_path ."','".date("Y/m/d H:i")."')");
