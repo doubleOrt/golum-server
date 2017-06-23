@@ -126,6 +126,7 @@ keep_me_logged_in:$("#keep_me_logged_in:checked").val()
 },
 type:"post",
 success:function(data){
+		
 	if(data == "success") {
 	window.location.href = "logged_in.html";	
 	}

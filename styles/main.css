@@ -4,6 +4,8 @@
 
 @import url(main_screens.css);
 
+@import url(inputs.css);
+
 @import url(chatPortal.css);
 
 @import url(chatModal.css);

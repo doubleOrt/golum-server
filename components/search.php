@@ -106,6 +106,8 @@ $echo_arr[0] .= "
 }
 
 
+
+
 // tag search results
 $tags_arr = $con->query("select * from tags where name_of like '". $search_value_raw ."%'")->fetchAll();
 
@@ -122,7 +124,6 @@ $echo_arr[0] .= "<div class='hashTag openTagPostsModal modal-trigger' data-targe
 
 $echo_arr[0] .= "</div></div>";
 }
-
 
 $matching_post_titles_number = $con->query("select count(id) from posts where title like '%". $search_value_raw ."%'")->fetch()[0];
 

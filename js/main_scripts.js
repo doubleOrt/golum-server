@@ -70,7 +70,8 @@ event.stopPropagation();
 $('select').material_select();
 
 //initialize tabs
-$('.tabs').tabs();
+ $(".tabs").tabs();
+
 
 // initialize the modals
 $('.modal').modal({

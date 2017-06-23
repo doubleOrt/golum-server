@@ -1,67 +1,72 @@
-
-/* the search input  */
-.whiteInputRow {
-height:43px;	
+#search_container {
+overflow:hidden;	
 }
 
-.whiteInputContainer {
-padding:0 !important;
-margin:0;
+#searchForUserRow , #searchForUserContainer , #searchForUser {
+margin:0;	
+}
+
+#searchForUserRow {
+padding:15px 0;	
+}
+
+#searchForUserContainer {
+padding:0;	
+width:100%;
+}
+
+#searchForUser {
+background-color:white;
+background-image:url("../icons/search.png");
+background-size:30px;
+background-position:10px;
+background-repeat:no-repeat;
+border-bottom:none;
+box-shadow:0 2px 2px rgba(0,0,0,.2);	
+border-radius:2px;
+text-indent:50px;
+font-size:1.1rem;
+
+width:95%;
+height:50px;
 position:relative;
-z-index:3;
-box-shadow:0 2px 3px rgba(0,0,0,.3);
+left:50%;
+transform:translate(-50%,0);
+transition:all .2s ease-out;
 }
 
-
-.whiteInput::-webkit-input-placeholder {
-color:#aaaaaa !important; 
+#searchForUser:focus {
+width:100%;	
+border-radius:0;
 }
 
-.whiteInput::-moz-placeholder { 
-color:grey !important;
+#searchForUser:focus::-webkit-input-placeholder {
+opacity:0;	
 }
 
-.whiteInput {
-background-color:white !important;	
-border:none !important;
-text-indent:25px !important;
--webkit-transition:all .1s ease-out !important;
-margin:0 !important;
-width:100% !important;
-box-shadow:none !important;
-}
-
-.whiteInput:focus {
-border:none !important;
-box-shadow:none !important;	
-}
-
-
-
-
-/* .... search results .... */
 
 
 #searchResultsContainer {
-position:relative;
 width:100%;
-top:103px;
-height:calc(100% - 103px);
+height:calc(100% - 80px);
 z-index:2;
-display:none;
+overflow:hidden;
+background-color:white;	
 }
 
 #resultsColumn {
-background-color:white;	
 padding:0 !important;
-box-shadow:0 2px 3px rgba(0,0,0,.3);
+width:100%;
+height:100%;
+max-height:100%;
+overflow:auto;
 }
 
 #searchResultRowsContainer {
 width:100%;	
 height:100%;
 display:inline-block;	
-overflow:scroll;	
+overflow:visible;	
 padding-top:10px;
 padding-bottom:30px;
 }
@@ -203,12 +208,5 @@ search button to search */
 display:none;
 }
 
-#searchForUserRow {
-display:none;	
-}	
-
-#searchResultsContainer {
-display:none;	
-}
 	
 }
