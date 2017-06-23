@@ -48,18 +48,18 @@ opacity:0;
 
 #searchResultsContainer {
 width:100%;
-height:calc(100% - 80px);
+height:calc(100% - 80px); /* compensate for the search box's container */
 z-index:2;
 overflow:hidden;
 background-color:white;	
 }
 
 #resultsColumn {
-padding:0 !important;
 width:100%;
-height:100%;
+height:calc(100% - 48px); /* compenste for the tabs */
 max-height:100%;
 overflow:auto;
+padding:35px 0 0 0;
 }
 
 #searchResultRowsContainer {
@@ -76,22 +76,23 @@ padding-bottom:30px;
 border-bottom:1px solid #f4f4f4;	
 cursor:pointer;
 width:100%;
-height:65px;
+height:75px;
+margin:0;
+padding:0 0 0 10px;
 }
 
-.searchResultRowChild {
+.searchResultRow .col {
 height:100%;	
-padding:0 0 0 2% !important;
 }
+
 
 
 
 /* avatar part */
 
 .searchResultAvatarContainer {
-height:50px;
-width:50px;
-border-radius:100%;
+height:45px;
+width:45px;
 overflow:hidden;
 position:relative;
 top:50%;
@@ -117,27 +118,25 @@ font-size:14px;
 }
 
 .searchResultFullName {
-color:#333333;	
-background-color:white;
+color:#494949;	
 font-size:100%;
+font-weight:500;
 height:100%;
-padding:2px 3px;
-line-height:12px;
 margin:0 0 0 15px;
-box-shadow: 0 0 5px rgba(0,0,0,.4);
 white-space: nowrap;
 text-overflow: ellipsis;
+line-height:15px;
 overflow: hidden;
 text-transform:capitalize;
 }
 
 .searchResultUserName {
-color:black;	
+color:#aaaaaa;	
 display:block;
-font-family:open sans;	
+font-family:roboto;	
 font-size:80%;
+font-weight:500;
 margin-left:15px;
-margin-top:5px;
 white-space: nowrap;
 text-overflow: ellipsis;
 overflow: hidden;
