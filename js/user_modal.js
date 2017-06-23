@@ -1,6 +1,9 @@
 
 // the imagepath referred to by this variable will be used for the background image of users who have not uploaded a background image of their own yet.
 var DEFAULT_USER_PROFILE_BACKGROUND_IMAGE = "icons/default_user_profile_background_image.png";
+var MAXIMUM_USER_PROFILE_BACKGROUND_IMAGE_SIZE = 5000000;
+
+
 
 // this var will block any calls to the "userModalGet.php" file as soon as a call is made, and will re-allow these calls after the call succeeds.
 var userModalShouldServerSide = true;	
@@ -303,18 +306,34 @@ $("#newBackgroundInput").click();
 });
 
 $(document).on("change","#newBackgroundInput",function(){
-setNewBackground($(this));
+setNewBackground($(this) , callback_to_background_set);
+
+function callback_to_background_set(data){
+// if the image was uploaded successfully, then set the user's profile's background image to that uploaded image. 	
+if(data[0] != "") {
+$("#profileBackground").css({"background":"url('" + data[0] + "')","background-size":"cover","background-position":"center center"});	
+Materialize.toast("Background Changed",5000,"green");	
+}
+else {
+Materialize.toast(data[1] , 5000 , "red");	
+}
+}
+
 });
 
 
-function setNewBackground(inputElement) {
+/* on completing, this function will call the function provided in its callback parameter, passing an array that contains the path to the uploaded image in its first index 
+(empty if there was an error uploading the image) and the error message as its second index, in case there was an error uploading the image (empty if the image was uploaded
+successfully). */
+function setNewBackground(inputElement , callback) {
 
 var background_filetype = inputElement[0].files[0]["type"];
 var background_size = inputElement[0].files[0]["size"];
 
 if(background_filetype == "image/jpeg" || background_filetype == "image/jpg" || background_filetype == "image/png" || background_filetype == "image/gif") {
+	
 //check if file is smaller than 5mb
-if(background_size < 5000000) {					
+if(background_size < MAXIMUM_USER_PROFILE_BACKGROUND_IMAGE_SIZE) {					
 if(background_size > 1) {
 var data = new FormData();
 data.append('new_background', inputElement[0].files[0]);
@@ -325,7 +344,16 @@ cache: false,
 contentType: false,
 processData: false,
 success: function(data){
-eval(data);	
+
+console.log(data);
+
+/* if the data_arr's first index (path to the new background) is not empty, then the background has been successfully uploaded, otherwise the operation has been a failure 
+and a custom error message is included in the second index. */
+var data_arr = JSON.parse(data);	
+
+// call the callback function, passing "data_arr" as its parameter.
+callback(data_arr);
+
 }
 }); 
 /* without this, everytime the cancel button is pressed instead of the open button after each avatar picture change, it will throw an error 
