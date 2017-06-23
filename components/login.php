@@ -85,7 +85,6 @@ $con->exec("DELETE FROM account_states WHERE (type = 'deactivate' or type = 'del
 }
 
 
-$con->exec("insert into logins_and_logouts (user_id,date,type) values(". $_SESSION["user_id"] .",'". date("Y/m/d H:i") ."','login')");
 echo "success";
 
 // that "/0" means we don't know if the user has pressed the logout button, but when he does, we write "/1" instead.
