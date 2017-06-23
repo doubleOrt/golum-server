@@ -2,6 +2,8 @@
 
 /* let's import our css files */
 
+@import url(main_screens.css);
+
 @import url(chatPortal.css);
 
 @import url(chatModal.css);
@@ -39,8 +41,6 @@
 @import url(tagPostsModal.css);
 
 @import url(bottomNav.css);
-
-@import url(main_screens.css);
 
 
 /* i suppose this is our palette #b3ea06(yellowgreenish) #00d677(green-bluish) #43d3e8 #ffffff #ebeaea #303030 */
@@ -554,7 +554,7 @@ background:white;
 
 /* when something is empty, we use these messages to tell the user it is empty */
 .emptyNowPlaceholder {
-color:grey;
+color:#aaaaaa;
 position:absolute;
 top:50%;
 left:50%;
@@ -787,6 +787,7 @@ box-shadow:0 1px 1px rgba(0,0,0,.1);
 z-index:999;
 }
 
+
 .tabs .tab a {
 color:#aaaaaa;
 font-weight:500;
@@ -799,9 +800,11 @@ color:#f95462;
 .tabs .tab a.active {
 color:#494949;	
 font-weight:700;
+border-bottom:2px solid #494949;
+-webkit-animation:tab_indicator_animation .2s ease-out 0s 1 normal forwards;
 }
 
 .tabs .indicator {
-background-color:#494949;	
+display:none;
 }
 
