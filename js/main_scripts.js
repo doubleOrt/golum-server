@@ -104,110 +104,6 @@ getNotifications($("#notificationsModal .singleNotification:last-child").attr("d
 
 
 
-/* ----- follows and blocks ----- */
-
-// when a user wants to see their contacts
-$(document).on("click",".contactsButton",function(){
-getBaseUserFollowings($("#contactsModalContentChild"));
-});
-
-// when a user wants to see people who follow them
-$(document).on("click",".followingMeButton",function(){	
-getBaseUserFollows($("#followingMeModalContentChild"));
-});
-
-//related to adding or removing contacts 
-$(document).on("click",".addOrRemoveContact",function(){
-
-if(typeof $(this).attr("data-user-id") == "undefined") {
-return false;
-}  
-
-addOrRemoveContact($(this).attr("data-user-id"), addOrRemoveContactCallback);
-
-/* this fixes an inconsistency where if you opened a user modal from the contacts modal, and then deleted a contact, the contacts modal would not be updated. to fix that, we 
-update the contacts modal everytime that button is clicked. */
-if(typeof $(this).attr("data-not-from-contacts") != "undefined") {
-getBaseUserFollowings($("#contactsModalContentChild"));
-}
-
-
-
-function addOrRemoveContactCallback(newState) {
-
-// user is now following the target user
-if(newState == "0") {	
-$('.addOrRemoveContact').html('Unfollow');
-var userFollowsNum = parseFloat($('.userFollowsNum').html()); 
-if(userFollowsNum + 1 != 1) {
-$('#userModalFollowedBy').html("<span class='userFollowsNum'>" + (userFollowsNum + 1) + "</span> Followers");
-}
-else {
-$('#userModalFollowedBy').html("<span class='userFollowsNum'>1</span> Follower");	
-}
-}
-// user just unfollowed the target user
-else if(newState == "1") {
-$('.addOrRemoveContact').html('Follow');
-var userFollowsNum = parseFloat($('.userFollowsNum').html()); 
-if((userFollowsNum - 1) != 1) {
-$('#userModalFollowedBy').html("<span class='userFollowsNum'>" + (userFollowsNum - 1) + "</span> Followers");
-}
-else {
-$('#userModalFollowedBy').html("<span class='userFollowsNum'>1</span> Follower");	
-}
-}
-	
-}
-
-});
-
-
-
-// used when user blocks or unblocks contacts.
-$(document).on("click","#blockUser",function(){
-blockOrUnblockUser($(this).attr("data-user-id"),blockOrUnblockUserCallback);
-
-function blockOrUnblockUserCallback(newState) {
-// the user is now blocked	
-if(newState == "0") {
-Materialize.toast('User Blocked, Tap Button To Unblock',3000,'green');	
-$("#blockUser").html("Unblock");	
-$("#blockUser").attr("data-current-state","1");	
-$(".addOrRemoveContact").html("Follow");
-// since you unfollow a user when you block them, we have to decrease that user's followings by 1
-var userFollowsNum = parseFloat($('.userFollowsNum').html()); 
-if(userFollowsNum > 0) {
-if((userFollowsNum - 1) != 1) {
-$('#userModalFollowedBy').html("<span class='userFollowsNum'>" + (userFollowsNum - 1) + "</span> Followers");
-}
-else {
-$('#userModalFollowedBy').html("<span class='userFollowsNum'>1</span> Follower");
-}	
-}
-
-$(".addOrRemoveContact").css({"pointer-events":"none","opacity":".5"});
-$(".modalFooterButtonReverse.blockUser").html("Unblock");
-}	
-else if(newState == "1") {
-Materialize.toast('User Unblocked, Tap Button To Block',3000,'green');	
-$("#blockUser").html("Block");	
-$("#blockUser").attr("data-current-state","0");		
-$(".addOrRemoveContact").css({"pointer-events":"auto","opacity":"1"});
-$(".modalFooterButtonReverse.blockUser").html("Block");	
-}
-}
-
-});
-
-/* ----- END follows and blocks ----- */
-
-
-
-
-
-
-
 
 
 
@@ -228,7 +124,7 @@ if(typeof $(this).attr("data-rotate-degree") == "undefined") {
 return false;
 }
 $(this).parent().css("transform","rotate(" + $(this).attr("data-rotate-degree") + "deg)");	
-//fitToParent("#" + $(this).attr("id"));
+fitToParent("#" + $(this).attr("id"));
 adaptRotateWithMargin($(this).find("img"),$(this).attr("data-rotate-degree"),false);
 });
 

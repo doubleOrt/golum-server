@@ -65,12 +65,24 @@ PROFILE_CONTAINER_ELEMENT.find(".baseUserOnly").show();
 else {
 PROFILE_CONTAINER_ELEMENT.find(".baseUserOnly").hide(); 	
 PROFILE_CONTAINER_ELEMENT.find(".notBaseUserOnly").show(); 		
+
+// set the data-user-id attributes on the elements that require it in order to function
+$("#startChatButton").attr("data-user-id", data["id"]); 	
+$("#user_profile_follow_button").attr("data-user-id", data["id"]);
+$("#user_profile_block_button").attr("data-user-id", data["id"]);
+
+// if the base user is not following the profile they are currently viewing, then change the html of the #user_profile_follow_button to "follow"
+if(data["followed_by_base_user"] == "0") {
+$("#user_profile_follow_button").html("follow");
+}
+// if the base user is following the profile they are currently viewing, then change the html of the #user_profile_follow_button to "unfollow"
+else {
+$("#user_profile_follow_button").html("unfollow");	
 }
 
-// add the user id to the #startChatButton button
-if(data["is_base_user"] == "0") {
-$("#startChatButton").attr("data-user-id", data["id"]); 	
 }
+
+
 
 $("#profileBackground").css({"background":"url('" + data["background"] + "')", "background-position": "center", "background-size": "cover"});
 
@@ -105,7 +117,7 @@ $("#userModalFullName").html(data["first_name"] + " " + data["last_name"]);
 $("#userModalUserName").html("@" + data["user_name"]);
 
 // set the user's follower's num
-$("#userModalFollowedBy").find(".userFollowsNum").html(data["followers_num"] + " Followers");
+set_user_profile_follows_num(data["followers_num"]);
 
 
 getUserModalTags(data["id"]);

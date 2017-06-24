@@ -61,13 +61,13 @@ $user_is_trendy_or_grumpy = 0;
 }
 
 
-$contact_already_added = "";
+$followed_by_base_user = "";
 $user_blocked_state = "";
 // if the user is not the base user viewing his own profile
 if($user_id != $_SESSION["user_id"]) {
 // check if base user has already added this person	
-$contact_already_added = $con->query("select * from contacts where contact_of = ".$_SESSION["user_id"]." and contact = ".$user_id)->fetch();
-$user_blocked_state = $con->query("select id from blocked_users where user_ids = '".$_SESSION["user_id"]."-".htmlspecialchars($user_id,ENT_QUOTES)."' or user_ids = '".htmlspecialchars($user_id,ENT_QUOTES) . "-" . $_SESSION["user_id"]."'")->fetch();		
+$followed_by_base_user = ($con->query("select * from contacts where contact_of = ".$_SESSION["user_id"]." and contact = ". $user_id)->fetch()[0] != "" ? 1 : 0);
+$user_blocked_state = ($con->query("select id from blocked_users where user_ids = '".$_SESSION["user_id"]."-".htmlspecialchars($user_id,ENT_QUOTES)."' or user_ids = '".htmlspecialchars($user_id,ENT_QUOTES) . "-" . $_SESSION["user_id"]."'")->fetch()[0] != "" ? 1 : 0);		
 }	
 
 
@@ -90,6 +90,7 @@ $echo_arr[0] = "var info = {
 'sign_up_date': '". htmlspecialchars($user_modal_info_arr["sign_up_date"]) ."',
 'followers_num': ". htmlspecialchars($user_followed_by_num) .",
 'following_num': ". htmlspecialchars($user_following_num) .",
+'followed_by_base_user': '". htmlspecialchars($followed_by_base_user) ."',
 'user_blocked_state': '". htmlspecialchars($user_blocked_state) ."',
 'total_posts_num': ". htmlspecialchars($number_of_posts_shared_by_this_user) ."
 }";
