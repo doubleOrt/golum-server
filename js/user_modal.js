@@ -4,7 +4,8 @@ var DEFAULT_USER_PROFILE_BACKGROUND_IMAGE = "icons/default_user_profile_backgrou
 var MAXIMUM_USER_PROFILE_BACKGROUND_IMAGE_SIZE = 5000000;
 var MAXIMUM_USER_PROFILE_AVATAR_IMAGE_SIZE = 5000000;
 var USER_LETTER_AVATAR_SIZE = 120;
-
+// will be set on document load
+var PROFILE_CONTAINER_ELEMENT;
 
 
 // this var will block any calls to the "userModalGet.php" file as soon as a call is made, and will re-allow these calls after the call succeeds.
@@ -52,6 +53,128 @@ userModalShouldServerSide = true;
 }
 
 
+function handleUserInfo(data) {
+	
+PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user", data["is_base_user"]);
+
+// showing and hiding things that should be only visible when the base-user or only when not-base-user profiles are being viewed. 
+if(PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user") == "1") {
+PROFILE_CONTAINER_ELEMENT.find(".notBaseUserOnly").hide(); 		
+PROFILE_CONTAINER_ELEMENT.find(".baseUserOnly").show(); 	
+}
+else {
+PROFILE_CONTAINER_ELEMENT.find(".baseUserOnly").hide(); 	
+PROFILE_CONTAINER_ELEMENT.find(".notBaseUserOnly").show(); 		
+}
+
+// add the user id to the #startChatButton button
+if(data["is_base_user"] == "0") {
+$("#startChatButton").attr("data-user-id", data["id"]); 	
+}
+
+$("#profileBackground").css({"background":"url('" + data["background"] + "')", "background-position": "center", "background-size": "cover"});
+
+
+// set the avatar image to the user's avatar
+$("#userAvatarImage").attr("src", data["avatar"]);
+$("#userAvatarImage").attr("data-avatar-editable", data["avatar_editable"]);
+$("#userAvatarRotateDiv").attr("data-rotate-degree", data["avatar_rotate_degree"]);
+$("#userAvatarRotateContainer").css({"margin-top": data["avatar_positions"][0] + "%", "margin-left": data["avatar_positions"][1] + "%"});
+/* if this is the base user they have uploaded an avatar (see the above if statement), then we want to add a 
+baseUserAvatarRotateDivs class to it to handle live updates when the user rotates their avatar. */
+if(data["is_base_user"] == "1") {
+$("#userAvatarRotateDiv").addClass("baseUserAvatarRotateDivs");	
+}	
+// else we want to remove the class in case we had added it previously
+else {
+$("#userAvatarRotateDiv").removeClass("baseUserAvatarRotateDivs");		
+}
+// need to do some magic on the avatar image
+$("#userAvatarRotateDiv").attr("data-rotate-degree",$("#userAvatarRotateDiv").attr("data-rotate-degree"));
+$("#userAvatarRotateDiv").css("transform","rotate(" + $("#userAvatarRotateDiv").attr('data-rotate-degree') + "deg)");	
+adaptRotateWithMargin($(this).find("img"),$(this).parent().attr('data-rotate-degree') ,false);
+// the avatar has to be fully loaded before fitToParent() is called, since it will deal with the naturalWidth/naturalHeight properties, which will return 0 if the image is not loaded yet.
+$("#userAvatarRotateDiv img").on("load", function() {
+fitToParent("#userAvatarImage");	
+});
+
+
+
+// set user's full and user names.
+$("#userModalFullName").html(data["first_name"] + " " + data["last_name"]);
+$("#userModalUserName").html("@" + data["user_name"]);
+
+// set the user's follower's num
+$("#userModalFollowedBy").find(".userFollowsNum").html(data["followers_num"] + " Followers");
+
+
+getUserModalTags(data["id"]);
+
+
+
+var personality_infos = [
+{"type": 1, "name": "Trendy","image":"icons/emojis/14.svg"},
+{"type": 2, "name": "Average","image":"icons/emojis/73.svg"},
+{"type": 3, "name": "Grumpy","image":"icons/emojis/85.svg"}
+];
+// handle the user info widgets
+handle_user_info_widget( "personality" , (data["personality"] != "0" ? (personality_infos[parseFloat(data["personality"]) - 1]["name"]) : "Unknown") , (data["personality"] != "0" ? personality_infos[parseFloat(data["personality"]) - 1]["image"] : "icons/other.png") );
+handle_user_info_widget( "gender" , (data["gender"] != "" ? data["gender"] : "Unknown") , (data["gender"] != "" ? "icons/" + data["gender"] + ".png" : "icons/other.png") );
+handle_user_info_widget( "country" , (data["country"] != "" ? get_country_name_from_country_code(data["country"]) : "Unknown") , (data["country"] != "" ? "dependencies/flag-icon-css-master/flags/1x1/" + data["country"] + ".svg" : "icons/other.png"));
+handle_user_info_widget( "birthdate" , (data["birthdate"] != "" ? data["birthdate"] : "Unknown") , data["age_in_years"] );
+
+
+// initialize the #birthdate datepicker and preselect it with the user's birthdate. in case you need to make some modifications, go to the documentation for pickadate.js
+$('#birthdate').pickadate({
+max:-3939,
+selectMonths: true,
+selectYears: 80,
+today: null,
+clear: null
+}).pickadate("picker").set("select" , data["birthdate"] , {format: "d mmmm, yyyy"});
+
+}
+
+
+/* this function changes the front-end of the user-info widgets with the options given in the arguments. 
+DO NOT USE THIS FUNCTION TO CHANGE USER INFOS, this function merely handles the front-end after they have been changed on the server-side */
+function handle_user_info_widget(name, text, icon) {
+
+// handle the user personality 
+if(name == "personality") {
+$("#personalityTypeContainer").find(".userModalKnownInfoText").html(text);
+$("#personalityTypeContainer").find(".userModalKnownInfoIcon").attr("src", icon);	
+}
+
+//handle the user gender widget
+if(name == "gender") {
+$("#genderContainer").find(".userModalKnownInfoText").html(text);
+$("#genderContainer").find(".userModalKnownInfoIcon").attr("src", icon);
+}
+
+//handle the user country widget
+if(name == "country") {
+$("#countryContainer").find(".userModalKnownInfoText").html(text);
+$("#countryContainer").find(".userModalKnownInfoIcon").attr("src", icon);	
+}
+
+// handle the user birthdate widget 
+if(name == "birthdate") {
+$("#birthdateContainer").find(".userModalKnownInfoText").html(text);
+// since we are using a manual element instead of an icon for the birthdate widget (to show the user's age in years), we need to tweak things a bit in here
+$("#birthdateContainer").find(".birthdateContainer div").html(icon);	
+}
+	
+}
+
+
+
+
+
+// returns a full country name from an ISO country code
+function get_country_name_from_country_code(country_code) {
+return $(".countrySelect option[value=" + country_code + "]").html()	
+}
 
 function getUserModalTags(userId) {
 
@@ -68,13 +191,21 @@ $(".tagsContainer").html(JSON.parse(data)[0]);
 	
 
 	
-// these variables are necessary for our user modal infos changing. we make a call to the "user_modal_variables.php" page on document.ready to set their values.
-var changeInfosGetObjDefaults;
-var changeInfosGetObj;
+var changeInfosGetObj = {};
 
 $(document).ready(function(){	
-	
 
+PROFILE_CONTAINER_ELEMENT = $("#user_profile_container");	
+
+		  
+
+// go to a profile
+$(document).on("click",".showUserModal",function(e){
+e.stopPropagation();
+getUser($(this).attr("data-user-id"), handleUserInfo);
+});
+		  
+		  
 		  
 //push every avatar image that shows the base user's avatar into this array, we will later update its source when a user changes his profile picture until the page is refreshed.
 var avatarImagesArray = [{ref:"#userAvatar",type:"img"},{ref:"#userAvatarImage",type:"img"}];
@@ -91,6 +222,7 @@ $(this).attr("data-rotate-degree",newDegree);
 $(this).css("transform","rotate(" + newDegree + "deg)");
 adaptRotateWithMargin($(this).find("img"),newDegree,true);	
 });
+
 changeInfosGetObj[$(this).attr("data-change-name")] = getRotationDegrees($("#userAvatarImage").parent());
 });				
 
@@ -148,7 +280,6 @@ changeInfosGetObj["avatar_positions"][1] = Math.round((parseFloat($("#userAvatar
 
 /* takes care of adding userModalChangeAbles to the changeInfosGetObj object */		
 $(document).on("change",".userModalChangeAbles",function(event){
-event.stopPropagation();
 changeInfosGetObj[$(this).attr("data-change-name")] = $(this).val();
 });					
 
@@ -158,37 +289,47 @@ $(document).on("click","#editProfileButton",function(){
 
 if(editModeActive == true) {
 
-//this loop takes care of emptying variables that were not changed.
-for(var prop in changeInfosGetObj) {
-//if it's an array, we want to do a different check than the one we do if it's a simple variable.
-if(changeInfosGetObj[prop].constructor === Array) {
-if(changeInfosGetObj[prop][0] == changeInfosGetObjDefaults[prop][0] && changeInfosGetObj[prop][1] == changeInfosGetObjDefaults[prop][1]) {
-changeInfosGetObj[prop] = "";
-}
-else {
-userInfosChangedOr = true;	
-}
-}
-else {
-if(changeInfosGetObj[prop] == changeInfosGetObjDefaults[prop]) {
-changeInfosGetObj[prop] = "";	
-}
-else if(changeInfosGetObj[prop] !== ""){
-userInfosChangedOr = true;	
-}
-}
-}
-
-/* if any infos were changed */
-if(userInfosChangedOr == true) {
 $.get({
 url:"components/change_infos.php",
 data:changeInfosGetObj,
-success:function(data,status){
-eval(data);				
+success:function(data){
+
+// this array will contain the user's age_in_years from their new birthdate in its first index.
+var data_arr = JSON.parse(data);
+
+
+// change the front-end of the user's profile with the latest changes in the infos.
+
+if(typeof changeInfosGetObj["gender"] != "undefined") {
+handle_user_info_widget( "gender" , changeInfosGetObj["gender"] , ("icons/" + changeInfosGetObj["gender"] + ".png"));
+}
+
+if(typeof changeInfosGetObj["country"] != "undefined") {
+handle_user_info_widget( "country" , get_country_name_from_country_code(changeInfosGetObj["country"]) , ("dependencies/flag-icon-css-master/flags/1x1/" + changeInfosGetObj["country"] + ".svg"));
+}
+
+if(typeof changeInfosGetObj["birthdate"] != "undefined") {
+// handle the user birthdate widget 
+handle_user_info_widget( "birthdate" , changeInfosGetObj["birthdate"] , (data_arr[0] != "" ? data_arr[0] : null) );
+}
+
+
+if(typeof changeInfosGetObj["avatar_rotation"] != "undefined") {
+$("#userAvatarRotateDiv").attr('data-rotate-degree', changeInfosGetObj["avatar_rotation"]);
+$("#userAvatarRotateDiv").css('transform','rotate(' + $("#userAvatarRotateDiv").attr('data-rotate-degree') + 'deg)');	
+}
+
+if(typeof changeInfosGetObj["avatar_positions"] != "undefined") {
+$("#userAvatarRotateDiv").parent().css({'margin-top': changeInfosGetObj["avatar_positions"][0]  + '%','margin-left': changeInfosGetObj["avatar_positions"][1] + '%'});
+}
+
+adaptRotateWithMargin($("#userAvatarRotateDiv").find('img'),$("#userAvatarRotateDiv").attr('data-rotate-degree') ,false);
+
+changeInfosGetObj = {};
+
 }
 });
-}
+
 
 }
 });
@@ -228,7 +369,7 @@ editModeActive = false;
 // start related to changing the avatar picture ........................							
 
 
-//click the file input whenever the  div is clicked.
+// click the file input whenever the  div is clicked.
 $(document).on("click",".changeAvatarContainer",function(e){
 $("#changeAvatarInput").click();
 });
@@ -241,8 +382,8 @@ e.stopPropagation();
 
 
 $(document).on("mouseover",".userModalAvatarImage",function(){
-// if user is not in edit mode, then on hovering the avatar we show him the change avatar div.
-if(editModeActive == false) {
+// if the user is on their profile and they are not in edit mode, then on hovering the avatar we show him the change avatar div.
+if(check_current_profile_is_base_user() == true && editModeActive == false) {
 $(".changeAvatarContainer").show();
 }
 });
@@ -252,10 +393,6 @@ $(".changeAvatarContainer").show();
 $(document).on("mouseout",".userModalAvatarImage",function(){
 $(".changeAvatarContainer").hide();
 });
-
-// end related to avatar picture ..........................
-
-
 
 
 
@@ -270,14 +407,17 @@ if(data[0] != "") {
 	
 $("#userAvatarImage").attr("data-avatar-editable" , "true");	
 	
-$('.baseUserAvatarRotateDivs').each(function(){	
-$(this).attr('data-rotate-degree','0');
-$(this).parent().css({'margin-top':'0px','margin-left':'0px'});
-$(this).css({'top':'0%','left':'0%'});
-$(this).find('img').attr('src', data[0]);
-$(this).css('transform','rotate(' + $(this).attr('data-rotate-degree') + 'deg)');	
-fitToParent('#' + $(this).find('img').attr('id'));
+$(".baseUserAvatarRotateDivs img").attr('src', data[0]);	
+
+$('.baseUserAvatarRotateDivs img').on("load", function(){	
+fitToParent('#' + $(this).attr('id'));
 });
+
+$(".baseUserAvatarRotateDivs").attr('data-rotate-degree','0');
+$(".baseUserAvatarRotateDivs").parent().css({'margin-top':'0px','margin-left':'0px'});
+$(".baseUserAvatarRotateDivs").css({'top':'0%','left':'0%'});
+$(".baseUserAvatarRotateDivs").css('transform','rotate(' + $(".baseUserAvatarRotateDivs").attr('data-rotate-degree') + 'deg)');	
+adaptRotateWithMargin($(".baseUserAvatarRotateDivs img"),$(".baseUserAvatarRotateDivs").attr('data-rotate-degree') ,false);
 
 
 Materialize.toast('Avatar Changed',5000,'green');	
@@ -336,15 +476,20 @@ Materialize.toast("Image Type Must Be Either \"JPEG\", \"JPG\", \"PNG\" Or \"GIF
 }
 }
 
+// end related to avatar picture ..........................
 
 
 
 
 
+// whenever the user clicks on their background, toggle the #changeBackgroundButton
+$(document).on("click" , "#profileBackground", function(){
+if( check_current_profile_is_base_user() == true ) {	
+$("#changeBackgroundButton").toggle();	
+}
+});
 
-
-
-$(document).on("click","#changeBackgroundButton",function() {
+$(document).on("click","#changeBackgroundButton",function(e) {
 $("#newBackgroundInput").click();
 });
 
@@ -416,6 +561,12 @@ else {
 Materialize.toast("Image Type Must Be Either \"JPEG\", \"JPG\", \"PNG\" Or \"GIF\" !",6000,"red");
 }
 	
+}
+
+
+
+function check_current_profile_is_base_user() {
+return ($("#user_profile_container").attr("data-is-base-user") == "1" ? true : false);
 }
 
 

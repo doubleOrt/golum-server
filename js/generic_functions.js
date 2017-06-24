@@ -1,6 +1,6 @@
 
 /* this function makes sure that an image always fits its parent div (just like background-size:cover, except we couldn't add the background-size
-cover here because its an img). */
+cover here because its an img). Make sure that the image is FULLY LOADED before you call this function */
 function fitToParent(ref) {
 
 //if element is undefined, return false.
@@ -8,8 +8,11 @@ if($(ref).length == 0) {
 return false;	
 }
 
-$(ref).css({"width":"auto","height":"auto"});
+if(ref == "#userAvatarImage") {
+console.log(ref + "\n" + $(ref).prop("naturalWidth") + "\n" + $(ref).prop("naturalHeight"));
+}
 
+$(ref).css({"width":"auto","height":"auto"});
 if($(ref).prop("naturalWidth") >= $(ref).prop("naturalHeight")) {
 $(ref).css({"min-height":"100%","max-height":"100%","min-width":"100%","max-width":"none"});
 }

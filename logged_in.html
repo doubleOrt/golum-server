@@ -18,9 +18,9 @@
 
 
 <!-- Compiled and minified CSS -->
-<link rel="stylesheet" href="dependencies/materialize/css/materialize.min.css">  
+<link rel="stylesheet" href="dependencies/materialize2/css/materialize.min.css">  
 <!-- Compiled and minified JavaScript -->
-<script src="dependencies/materialize/js/materialize.min.js"></script>
+<script src="dependencies/materialize2/js/materialize.min.js"></script>
 
 <link rel="stylesheet" href="dependencies/waves/dist/waves.min.css">  
 <script src="dependencies/waves/dist/waves.min.js"></script>      
@@ -255,10 +255,10 @@ eval(data);
 
 	
 <!-- profile background pic -->	
-<div id="profileBackground" class='modalContentChild onclickShow' data-activates='changeBackgroundDropdown' data-onclick-show='#changeBackgroundButton'>
+<div id="profileBackground" class='modalContentChild'>
 
 <!-- the button used to change background pic -->
-<a id='changeBackgroundButton'  class='baseUserOnly sensitiveActionButton waves-effect waves-lightgrey btn commonButtonWhite defaultDisplayNone stopPropagationOnClick' href='#' style='position:fixed;bottom:0;left:0;position:absolute;top:0;width:100%;z-index:99999; padding:0;display:none'>Change Background...</a>
+<a id='changeBackgroundButton'  class='sensitiveActionButton waves-effect waves-lightgrey btn commonButtonWhite defaultDisplayNone stopPropagationOnClick' href='#' style='position:fixed;bottom:0;left:0;position:absolute;top:0;width:100%;z-index:99999; padding:0;display:none'>Change Background...</a>
 <input id='newBackgroundInput' type='file' accept='image/*' style='display:none;'/>	<!-- hidden input used to change backgrounds -->
 	
 </div><!-- end .modalContentChild -->	
@@ -356,7 +356,7 @@ Block Or ?
 <div class='row'>
 <div class='col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
 <div id='personalityTypeContainer' class='userModalKnownInfo'>
-Personality: User's personality <img src='icons/other.png' alt='Image'/>
+Personality: <span class="userModalKnownInfoText">User's personality</span><img class="userModalKnownInfoIcon" src='icons/other.png' alt='Image'/>
 </div>
 </div>
 </div>
@@ -365,15 +365,16 @@ Personality: User's personality <img src='icons/other.png' alt='Image'/>
 <div class='row'>
 <div class='col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
 <div id='genderContainer' class='userModalKnownInfo'>
-Gender: User's gender
-<img src='icons/other.png' alt='Other Icon'/>
+Gender: <span class="userModalKnownInfoText">User's gender</span>
+<img class="userModalKnownInfoIcon" src='icons/other.png' alt='Other Icon'/>
 </div>
 </div>
 </div>
 
 <div class='row'>
 <div class='col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
-<div id='countryContainer' class='userModalKnownInfo'>Lives In: User's country <span class='flag-icon-background flag-icon-iq' style='box-shadow:0 0 10px rgba(0,0,0,.2);'></span>
+<div id='countryContainer' class='userModalKnownInfo'>Lives In: <span class="userModalKnownInfoText">User's country</span>
+<img class='userModalKnownInfoIcon' src="icons/other.png" style='box-shadow:0 0 10px rgba(0,0,0,.2);' />
 </div>
 </div>
 </div>
@@ -381,8 +382,8 @@ Gender: User's gender
 <div class='row'>
 <div class='col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
 <div id='birthdateContainer' class='userModalKnownInfo'>
-Birthdate: User's Birthdate
-<span class='birthdateContainer'><div>10</div></span>
+Birthdate: <span class="userModalKnownInfoText">Unknown</span>
+<div class='birthdateContainer userModalKnownInfoIcon'><div>?</div></div>
 </div>
 </div>
 </div>
@@ -649,7 +650,7 @@ Birthdate: User's Birthdate
 <option value='UA'>Ukraine</option>
 <option value='AE'>United Arab Emirates</option>
 <option value='GB'>United Kingdom</option>
-<option value='US'>United States</option>
+<option value='US' selected>United States</option>
 <option value='UM'>United States Minor Outlying Islands</option>
 <option value='UY'>Uruguay</option>
 <option value='UZ'>Uzbekistan</option>
@@ -674,7 +675,7 @@ Birthdate: User's Birthdate
 
 <div class='row'>
 <div class='input-field col l8 m8 s8 offset-l2 offset-m2 offset-s2'>
-<input id='birthdate' class='datepicker birthdateSelect userModalChangeAbles'  data-change-name='birthdate' type='date' name='birthdate' value='1996-01-01' />
+<input id='birthdate' class='datepicker birthdateSelect userModalChangeAbles' data-change-name='birthdate' type='date' value='1996-01-01' />
 </div>
 </div>
 

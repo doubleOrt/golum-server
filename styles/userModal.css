@@ -232,12 +232,8 @@ background-color:#ec3131;
 color:#f95462 !important;
 }
 
-.picker__day--highlighted,.picker__day--today {
-color:#f95462 !important;  
-}
-
 .picker__day--selected {
-background-color:#f4f4f4 !important;  
+background-color:#f95462 !important;  
 }
 
 
@@ -266,7 +262,11 @@ position:relative;
 border-bottom:none;
 }
 
-.userModalKnownInfo img, .userModalKnownInfo span {	
+.userModalKnownInfoText {
+text-transform:capitalize;	
+}
+
+.userModalKnownInfoIcon {	
 display:inline-block;
 width:40px;
 height:40px;

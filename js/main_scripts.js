@@ -26,7 +26,7 @@ $(".emojisContainerChild").append("<img class='emoji' src='icons/emojis/" + i + 
 
 $(document).on("click",".modal-trigger",function(){
 	
-// we need to disable the button so the user cannot make multiple calls to the openModalCustom function.	
+// we need to disable the button so the user cannot make multiple calls to the openModalCustom .	
 $(this).css("pointer-events","none");
 var thisModalTrigger = $(this);	
 setTimeout(function(){thisModalTrigger.css("pointer-events","auto");},500);
@@ -101,85 +101,6 @@ getNotifications($("#notificationsModal .singleNotification:last-child").attr("d
 });
 
 
-
-// go to a profile
-$(document).on("click",".showUserModal",function(e){
-e.stopPropagation();
-
-var markupTarget = $("#main_screen_user_profile #user_profile_container");
-
-getUser($(this).attr("data-user-id"), handleUserInfo);
-
-function handleUserInfo(data) {
-	
-markupTarget.attr("data-is-base-user", data["is_base_user"]);
-
-// showing and hiding things that should be only visible when the base-user or only when not-base-user profiles are being viewed. 
-if(markupTarget.attr("data-is-base-user") == "1") {
-markupTarget.find(".notBaseUserOnly").hide(); 		
-markupTarget.find(".baseUserOnly").show(); 	
-}
-else {
-markupTarget.find(".baseUserOnly").hide(); 	
-markupTarget.find(".notBaseUserOnly").show(); 		
-}
-
-// add the user id to the #startChatButton button
-if(data["is_base_user"] == "0") {
-$("#startChatButton").attr("data-user-id", data["id"]); 	
-}
-
-$("#profileBackground").css({"background":"url('" + data["background"] + "')", "background-position": "center", "background-size": "cover"});
-
-
-// set the avatar image to the user's avatar
-$("#userAvatarImage").attr("src", data["avatar"]);
-$("#userAvatarImage").attr("data-avatar-editable", data["avatar_editable"]);
-$("#userAvatarRotateDiv").attr("data-rotate-degree", data["avatar_rotate_degree"]);
-$("#userAvatarRotateContainer").css({"margin-top": data["avatar_positions"][0], "margin-left": data["avatar_positions"][1]});
-/* if this is the base user they have uploaded an avatar (see the above if statement), then we want to add a 
-baseUserAvatarRotateDivs class to it to handle live updates when the user rotates their avatar. */
-if(data["is_base_user"] == "1") {
-$("#userAvatarRotateDiv").addClass("baseUserAvatarRotateDivs");	
-}	
-// else we want to remove the class in case we had added it previously
-else {
-$("#userAvatarRotateDiv").removeClass("baseUserAvatarRotateDivs");		
-}
-
-
-
-// set user's full and user names.
-$("#userModalFullName").html(data["first_name"] + " " + data["last_name"]);
-$("#userModalUserName").html("@" + data["user_name"]);
-
-// set the user's follower's num
-$("#userModalFollowedBy").find(".userFollowsNum").html(data["followers_num"] + " Followers");
-
-
-markupTarget.find(".baseUserAvatarRotateDivs").each(function() {
-$(this).attr("data-rotate-degree",$(this).attr("data-rotate-degree"));
-$(this).css("transform","rotate(" + $(this).attr('data-rotate-degree') + "deg)");	
-adaptRotateWithMargin($(this).find("img"),$(this).attr('data-rotate-degree') ,false);
-});
-
-
-fitToParent("#userAvatarImage");	
-
-getUserModalTags(data["id"]);
-
-$('select').material_select();
-
-$('.datepicker').pickadate({
-max:-3939,
-selectMonths: true, // Creates a dropdown to control month
-selectYears: 80 // Creates a dropdown of 15 years to control year
-});
-
-
-}
-
-});
 
 
 
@@ -290,14 +211,6 @@ $(".modalFooterButtonReverse.blockUser").html("Block");
 
 
 
-
-// we need to run these only once on page load.
-$.get({
-url:"components/user_modal_variables.php",
-success:function(data) {	
-eval(data);
-}	
-});	
 // if user has requested us to link his account with an email address and we have sent him a confirmation code, show him the enter confirmation code form.
 $.get({
 url:"components/show_confirmation_code_form.php",

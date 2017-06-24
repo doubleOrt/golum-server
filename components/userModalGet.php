@@ -17,8 +17,6 @@ $user_id = (intval($_GET["user_id"]) === 0 ? $_SESSION["user_id"] : $_GET["user_
 $user_modal_info_arr = $con->query("select * from users where id = ". $user_id)->fetch();
 
 $user_age_in_years = date_diff(date_create(date("Y-m-d")),date_create(str_replace(",","",$user_modal_info_arr["birthdate"])))->y;
-$preselect_date = date_format(date_create(str_replace(",","",$user_info_arr["birthdate"])),"Y-m-d");
-
 
 $avatar_arr = $con->query("SELECT * FROM avatars WHERE id_of_user = ".$user_id." order by id desc limit 1")->fetch();
 
@@ -88,7 +86,6 @@ $echo_arr[0] = "var info = {
 'gender': '". htmlspecialchars($user_modal_info_arr["gender"]) ."',
 'country': '". htmlspecialchars($user_modal_info_arr["country"]) ."',
 'birthdate': '". htmlspecialchars($user_modal_info_arr["birthdate"]) ."',
-'preselect_date': '". htmlspecialchars($preselect_date) ."',
 'age_in_years': '". htmlspecialchars($user_age_in_years) ."',
 'sign_up_date': '". htmlspecialchars($user_modal_info_arr["sign_up_date"]) ."',
 'followers_num': ". htmlspecialchars($user_followed_by_num) .",

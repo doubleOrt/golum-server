@@ -68,7 +68,7 @@ $echo_arr[1] = "Something Went Wrong, Sorry!";
 }
 // the avatar upload limit has been exceeded.
 else {
-$echo_arr[1] = "Materialize.toast('You are uploading too many avatars, which costs us a lot! Please wait until tomorrow before you upload another avatar!',6000,'red')";	
+$echo_arr[1] = "You are uploading too many avatars, which costs us a lot! Please wait until tomorrow before you upload another avatar!";	
 }
 
 }
