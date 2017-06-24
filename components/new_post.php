@@ -51,12 +51,14 @@ echo "Materialize.toast('Sorry, There Was An Error',6000,'red');";
 die();
 }	
 
+
 if($file_path_info == "jpg" || $file_path_info == "jpeg") {
 $exif = exif_read_data($new_path);
-if(isset($exif["orientation"])) {
-$ort = $exif['Orientation'];	
+
+if(isset($exif["Orientation"])) {
+$orientation = $exif['Orientation'];	
 $image_width = imagesx(ImageCreateFromJpeg($new_path));
-resample($new_path,$image_width,$ort);
+resample($new_path,$image_width,$orientation);
 }
 }
 }
