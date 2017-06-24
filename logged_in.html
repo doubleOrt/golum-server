@@ -1004,16 +1004,18 @@ Identification Info
 </a>
 </div><!-- end  -->
 
+
+<div id="shareNewImagesContainer" class="col l12 m12 s12 row">
+<div class='col l12 m12 s12' data-index='0'><img class='shareNewImagesImage' src='icons/upload.png' alt='Photo'/></div>
+</div>
+
 <div class="row" id="postInputsContainer">
+
+<input id="post_title" type="text" placeholder="Describe your post here..." />
 
 <div id="postInputsContainerChild" class="row">
 
-<div class="input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1">
-<input id="post_title" type="text" name="post_title" data-onfocus-toggle="#shareNewImagesContainer"/>
-<label for="post_title">Title</label>
-</div>
-
-<div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
+<div id="options_num_container" class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
 <select id="options_num">
 <option value="" disabled>Number Of Options</option>
 <option value="1">1</option>
@@ -1026,9 +1028,6 @@ Identification Info
 
 </div><!-- end .postInputsContainerChild -->
 
-<div id="shareNewImagesContainer" class="col l12 m12 s12 row">
-<div class='col l12 m12 s12' data-index='0'><img class='shareNewImagesImage' src='icons/upload.png' alt='Photo'/></div>
-</div>
 
 <div id="newPostInputs">
 <form action='#' method='post' enctype='multipart/form-data'>

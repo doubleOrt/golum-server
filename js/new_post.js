@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
 
 $(document).on("change","#options_num",function(){
@@ -35,20 +34,26 @@ return false;
 }
 
 imagePreview($(this)[0].files[0],$("#shareNewImagesContainer div[data-index=" + $(this).attr("data-index") + "] img"),"src");
+
+
+	
 $("#shareNewImagesContainer div[data-index=" + $(this).attr("data-index") + "]").attr("data-uploaded","true");
-shouldActivateShareButton();
+shouldActivateShareButton(true);
 });
 
 
 $(document).on("change","#post_title",function(){
-shouldActivateShareButton();
+shouldActivateShareButton(true);
+});
+$(document).on("keyup", "#post_title", function(){
+shouldActivateShareButton(false);	
 });
 
 
 // when the user presses the button to create a new post, we need to make a call to new_post.php with that post's data.
 $(document).on("click","#shareNewPostButton",function(){
 
-if(shouldActivateShareButton() != false) {
+if(shouldActivateShareButton(true) != false) {
 
 var data = new FormData();
 
@@ -69,6 +74,7 @@ cache: false,
 contentType: false,
 processData: false,
 success:function(data){
+	
 Materialize.toast("Post Successful!",2000,"green");
 
 //if the post was successfully posted, then open the singlePostModal and populate its innerHTML with the new post's markup.
@@ -89,6 +95,8 @@ $('#shareNewModal').find('.modalCloseButton').click();
 
 
 $("#shareNewPostButton").removeClass("disabledButton");
+
+
 }	
 });
 
@@ -106,7 +114,7 @@ $("#newPostInputs").html("<form action='#' method='post' enctype='multipart/form
 }
 
 // checks if the share post button should be activated
-function shouldActivateShareButton() {	
+function shouldActivateShareButton(toast_user) {	
 
 if($("#post_title").val() == "") {
 $("#shareNewPostButton").addClass("disabledButton");	
@@ -114,7 +122,7 @@ return false;
 }	
 
 if($("#post_title").val().length < 15 || $("#post_title").val().length > 49) {
-Materialize.toast("Title Must Be Longer Than 14 And Shorter Than 50 Characters",6000,"red");	
+(toast_user == true ? Materialize.toast("Title Must Be Longer Than 14 And Shorter Than 50 Characters",6000,"red") : null);	
 $("#shareNewPostButton").addClass("disabledButton");	
 return false;
 }
