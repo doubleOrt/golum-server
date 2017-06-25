@@ -268,11 +268,45 @@ eval(data);
 <a id='changeBackgroundButton'  class='sensitiveActionButton waves-effect waves-lightgrey btn commonButtonWhite defaultDisplayNone stopPropagationOnClick' href='#' style='position:fixed;bottom:0;left:0;position:absolute;top:0;width:100%;z-index:99999; padding:0;display:none'>Change Background...</a>
 <input id='newBackgroundInput' type='file' accept='image/*' style='display:none;'/>	<!-- hidden input used to change backgrounds -->
 	
+	
+<div id="profile_background_bottom_overlay">
+<div id="profile_background_buttons_container">
+<a href="#" class="dropdown-button" data-activates="profile_settings"><i class="material-icons">settings</i></a>
+<ul id='profile_settings' class='dropdown-content'>
+<li><a href='#!' class='waves-effect waves-lightgrey modal-trigger' data-target="settingsModal">Settings</a></li>
+<li><a href='#!' class='waves-effect waves-lightgrey'>Block</a></li>
+<li><a href='#!' class='waves-effect waves-lightgrey'>Logout</a></li>
+</ul>
+</div><!-- end #profile_background_buttons_container -->
+</div><!-- end #profile_background_bottom_overlay -->	
+
 </div><!-- end .modalContentChild -->	
 	
 
-	
+
 <div class='userModalBasicInfoContainer'>
+
+<div id="user_modal_3_infos_container">
+<div id="user_modal_3_infos_container_child">
+
+<div class="user_modal_3_infos_button">
+<div class="user_modal_3_infos_button_num">432</div>
+<div class="user_modal_3_infos_button_label">Posts</div>
+</div>
+
+<div class="user_modal_3_infos_button">
+<div class="user_modal_3_infos_button_num">5004</div>
+<div class="user_modal_3_infos_button_label">Followers</div>
+</div>
+
+<div class="user_modal_3_infos_button">
+<div class="user_modal_3_infos_button_num">56</div>
+<div class="user_modal_3_infos_button_label">Following</div>
+</div>
+
+</div>
+</div>
+
 <div class='userModalBasicInfoContainerChild'>
 
 <div class='userModalAvatarImageContainer'><!-- START #userModalAvatarImageContainer -->
@@ -315,14 +349,19 @@ eval(data);
 <span class='userModalOverline'></span>
 <a id="userModalFullName" class='baseUserFullNameContainers' href='#'>Fullname of user</a>
 <a id="userModalUserName" class='baseUserUserNameContainers' href='#'>Username of user</a>
-<a id='userModalFollowedBy' href='#'><span class='userFollowsNum'>The number of user's followers</a>
+<a id='userModalFollowedBy' href='#' style='display:none'><span class='userFollowsNum'>The number of user's followers</a>
 </div><!-- END .userModalUserInfos -->
 </div><!-- END userModalBasicInfoContainerChild -->
+
+<a id="follow_button" href="#">FOLLOW +</a>
+
 </div><!-- END userModalBasicInfoContainer -->
-<div class="container">
-<div class='userModalOtherInfo row'>
-</div><!-- END .userModalOtherInfo -->
-</div><!-- END .container -->
+
+<ul class="tabs">
+<li class="tab col s4"><a class="active" href="#">Profile</a></li>
+<li class="tab col s4"><a href="#">Posts</a></li>
+</ul>
+
 
 
 <div id='userModalKnownInfoContainer'>
@@ -724,10 +763,10 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 <div id="bottomNav">
 
 <ul id="bottomTabs">
-<li class="bottomTabsItem active" data-open-main-screen="#main_screen_main"><i class="material-icons">home</i></li>
-<li class="bottomTabsItem openNotificationsModal" data-open-main-screen="#main_screen_notifications"><i class="material-icons">notifications</i></li>
-<li class="bottomTabsItem modal-trigger" data-target="shareNewModal"><i class="material-icons">add_box</i></li>
-<li class="bottomTabsItem searchPortal" data-open-main-screen="#main_screen_search" data-target="#searchForUserRow,#searchForUserContainer,#searchResultsContainer"><i class="material-icons">search</i></li>
+<li class="bottomTabsItem active" data-open-main-screen="#main_screen_main" style="display:none"><i class="material-icons">home</i></li>
+<li class="bottomTabsItem openNotificationsModal" data-open-main-screen="#main_screen_notifications" style="display:none"><i class="material-icons">notifications</i></li>
+<li class="bottomTabsItem modal-trigger" data-target="shareNewModal"><i class="material-icons" style="display:none">add_box</i></li>
+<li class="bottomTabsItem searchPortal" data-open-main-screen="#main_screen_search"  style="display:none"data-target="#searchForUserRow,#searchForUserContainer,#searchResultsContainer"><i class="material-icons">search</i></li>
 <li class="bottomTabsItem showUserModal" data-user-id="0" data-open-main-screen="#main_screen_user_profile"><i class="material-icons">person</i></li>
 </ul>
 

@@ -2,80 +2,120 @@
 /* this is the element that you want to be used to contain the search results, this one is also the one that should be scrolled, 
 since we are capturing infinite scrolling on this element.	
 the element won't exist until the document is ready, so we set this variable to the actual contianer of the elements then.	*/
-var SEARCH_RESULTS_CONTAINER_ELEMENT;
+var SEARCH_USERS_RESULTS_CONTAINER;
+var SEARCH_TAGS_RESULTS_CONTAINER;
+var SEARCH_BOX;
+var SEARCH_TABS_STATE_HOLDER;
+
+
+var prevent_multiple_calls_to_search_for_user = false;	
+var prevent_multiple_calls_to_search_for_tag = false;	
+
+function search_section_tabs_changed() {
+
+var active_tab = SEARCH_TABS_STATE_HOLDER.attr("data-active-tab");
+
+// user switched to the PEOPLE tab
+if(active_tab == "0") {
+SEARCH_TAGS_RESULTS_CONTAINER.hide();
+SEARCH_USERS_RESULTS_CONTAINER.show();
+}
+// user switched to the TAGS tab
+else if(active_tab == "1"){
+SEARCH_USERS_RESULTS_CONTAINER.hide();	
+SEARCH_TAGS_RESULTS_CONTAINER.show();
+}
+
+// if the search box is currently empty, we just have to toggle the tab divs.
+if(SEARCH_BOX.val().trim() != "") {
+
+if(active_tab == "0") {
+	
+}
+else if(active_tab == "1") {
+	
+}
+
+}
+
+	
+}
+
+
+
+
+
 
 $(document).ready(function() {
 	
-SEARCH_RESULTS_CONTAINER_ELEMENT = $("#resultsColumn");	
+SEARCH_USERS_RESULTS_CONTAINER = $("#search_users_results_column");	
+SEARCH_TAGS_RESULTS_CONTAINER = $("#search_tags_results_column");	
+SEARCH_BOX = $("#searchForUser");
+SEARCH_TABS_STATE_HOLDER = $("#search_container");	
 	
-var prevent_multiple_calls_to_search_for_user = false;	
+	
+	
+$(document).on("click", "#search_section_tabs .tab" , function(){
+SEARCH_TABS_STATE_HOLDER.attr("data-active-tab", $(this).attr("data-tab-index"));	
+search_section_tabs_changed();	
+});
+	
 	
 // the search box used by users to search for other users or tags
-$("#searchForUser").keyup(function(e){
+SEARCH_BOX.keyup(function(e){
 
 // if empty, toggle #searchResultsContainer
 if($(this).val().trim() == "") {
-SEARCH_RESULTS_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>search</i><br>Please type in something in the search box :)</div>")	
+SEARCH_USERS_RESULTS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>search</i><br>Please type in something in the search box :)</div>")	
+SEARCH_TAGS_RESULTS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>search</i><br>Please type in something in the search box :)</div>")	
 return false;
 }	
-			
-// empty the SEARCH_RESULTS_CONTAINER_ELEMENT of the last search's markup
-SEARCH_RESULTS_CONTAINER_ELEMENT.html("");
 
-if(prevent_multiple_calls_to_search_for_user == false) {			
-prevent_multiple_calls_to_search_for_user = true;			
+var active_tab = SEARCH_TABS_STATE_HOLDER.attr("data-active-tab");
+
+if(active_tab == "0") {			
+// empty the SEARCH_USERS_RESULTS_CONTAINER of the last search's markup
+SEARCH_USERS_RESULTS_CONTAINER.html("");
 search_for_user($(this).val() , 0 , search_for_user_callback);
 }
-	
+else if(active_tab == "1") {
+SEARCH_TAGS_RESULTS_CONTAINER.html("");
+search_for_tag($(this).val() , 0 , function(data){alert(data);});
+}
+
 });
-
-
 // infinite scrolling
-SEARCH_RESULTS_CONTAINER_ELEMENT.scroll(function(){
-if(prevent_multiple_calls_to_search_for_user == false) {	
+SEARCH_USERS_RESULTS_CONTAINER.scroll(function(){
 if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".searchResultRow").length > 0) {	
-prevent_multiple_calls_to_search_for_user = true;
-search_for_user( $("#searchForUser").val() , $(this).find(".searchResultRow").length , search_for_user_callback);
+search_for_user( SEARCH_BOX.val() , $(this).find(".searchResultRow").length , search_for_user_callback);
 }
-}
+});
+
+
 });
 
 
 
 
-function search_for_user_callback(data) {
 
-// if the user is not infinite scrolling and there have been no results, add a placeholder div to tell the user there have been no results.
-if( parseFloat(data[1]) < 1 && SEARCH_RESULTS_CONTAINER_ELEMENT.find(".searchResultRow").length < 1) {
-SEARCH_RESULTS_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>error</i><br>Sorry, there were no results for your search term :(</div>")	
-return false;	
-} 
 
-for(var i = 0;i < data[0].length; i++) {
 
-SEARCH_RESULTS_CONTAINER_ELEMENT.append(
-generate_search_result_user_row_markup( 
-data[0][i]["id"], 
-data[0][i]["first_name"], 
-data[0][i]["last_name"],
-data[0][i]["user_name"], 
-{"avatar": data[0][i]["avatar"] , "avatar_positions": data[0][i]["avatar_positions"] , "avatar_rotate_degree": (data[0][i]["avatar_rotate_degree"] != "" ? data[0][i]["avatar_rotate_degree"] : 0 )}
-)
-);
 
+
+
+function search_for_user(search_term , offset , callback) {
+	
+if(prevent_multiple_calls_to_search_for_user != false) {	
+return false;
 }
 
-
-}
-
-
-function search_for_user(search_term , row_offset , callback) {
+prevent_multiple_calls_to_search_for_user = true;
 
 $.get({
-url: 'components/search.php',
+url: 'components/search_users.php',
 data: {
 "search_value": search_term,
-"row_offset": row_offset
+"row_offset": offset
 },
 success: function(data){
 
@@ -87,6 +127,64 @@ callback(data_arr);
 
 prevent_multiple_calls_to_search_for_user = false;
 
+}
+}); 
+	
+}
+
+function search_for_user_callback(data) {
+
+// if the user is not infinite scrolling and there have been no results, add a placeholder div to tell the user there have been no results.
+if( data.length < 1 && SEARCH_USERS_RESULTS_CONTAINER.find(".searchResultRow").length < 1) {
+SEARCH_USERS_RESULTS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>error</i><br>Sorry, there were no results for your search term :(</div>")	
+return false;	
+} 
+
+for(var i = 0;i < data.length; i++) {
+
+SEARCH_USERS_RESULTS_CONTAINER.append(
+generate_search_result_user_row_markup( 
+data[i]["id"], 
+data[i]["first_name"], 
+data[i]["last_name"],
+data[i]["user_name"], 
+{"avatar": data[i]["avatar"] , "avatar_positions": data[i]["avatar_positions"] , "avatar_rotate_degree": (data[i]["avatar_rotate_degree"] != "" ? data[i]["avatar_rotate_degree"] : 0 )}
+)
+);
+
+}
+
+}
+
+
+
+
+function search_for_tag(search_term , offset , callback) {
+	
+if(prevent_multiple_calls_to_search_for_tag != false) {	
+return false;
+}
+
+// remove a potential hashtag that a user would add since they assume that they should insert a hashtag before their search term since it's a tag search.
+search_term[0] != "#" ? search_term : search_term.substring(1, search_term.length);
+
+prevent_multiple_calls_to_search_for_tag = true;
+
+$.get({
+url: 'components/search_tags.php',
+data: {
+"search_value": search_term,
+"row_offset": offset
+},
+success: function(data){
+	
+var data_arr = JSON.parse(data);
+
+if(typeof callback == "function") {
+callback(data_arr);
+}
+
+prevent_multiple_calls_to_search_for_tag = false;
 }
 }); 
 	
@@ -148,7 +246,3 @@ return user_row_markup;
 
 
 
-
-
-
-});

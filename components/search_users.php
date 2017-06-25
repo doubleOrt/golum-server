@@ -3,7 +3,7 @@ require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
 // first index will be filled with search result data rows, second index will be the number of the search results.
-$echo_arr = [[] , ""];	
+$echo_arr = [];	
 
 
 if(isset($_GET["search_value"])) {
@@ -34,8 +34,6 @@ $search_prepare->execute();
 
 $all_search_results = $search_prepare->fetchAll();
 
-$echo_arr[1] = count($all_search_results);
-
 
 foreach($all_search_results as $row) {
 	
@@ -57,7 +55,7 @@ if(count($search_result_avatar_arr_positions) < 2) {
 $search_result_avatar_arr_positions = [0,0];	
 }
 
-array_push($echo_arr[0], [
+array_push($echo_arr, [
 "id" =>  htmlspecialchars($row["id"]),	
 'first_name' => htmlspecialchars($row["first_name"]),
 'last_name' => htmlspecialchars($row["last_name"]),

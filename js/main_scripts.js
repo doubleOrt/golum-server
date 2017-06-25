@@ -1,5 +1,6 @@
 $(document).ready(function(){
  
+ 
 	 
 //hide the loading bar and show the document body
 hideLoading();
