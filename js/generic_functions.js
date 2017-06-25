@@ -1,15 +1,10 @@
 
-/* this function makes sure that an image always fits its parent div (just like background-size:cover, except we couldn't add the background-size
-cover here because its an img). Make sure that the image is FULLY LOADED before you call this function */
+
 function fitToParent(ref) {
 
 //if element is undefined, return false.
 if($(ref).length == 0) {
 return false;	
-}
-
-if(ref == "#userAvatarImage") {
-console.log(ref + "\n" + $(ref).prop("naturalWidth") + "\n" + $(ref).prop("naturalHeight"));
 }
 
 $(ref).css({"width":"auto","height":"auto"});
@@ -34,7 +29,7 @@ else if(rotationDegree == 180) {
 elem.parent().css({"left":"100%","top":"100%"});elem.css({"top":"auto","bottom":"0","right":"0","left":"auto"});
 }
 else if(rotationDegree == 270) {
-elem.parent().css({"left":"0%","top":"100%"});elem.css({"top":"0","bottom":"auro","right":"0","left":"auto"});
+elem.parent().css({"left":"0%","top":"100%"});elem.css({"top":"0","bottom":"auto","right":"0","left":"auto"});
 }
 else {
 elem.parent().css({"left":"0%","top":"0%"});elem.css({"top":"0","left":"0"});
@@ -68,12 +63,40 @@ return (angle < 0) ? angle + 360 : angle;
 
 
 
+
+
 // for giving a preview of an image before it is uploaded
 function imagePreview(input,elem,background_or_src) {
 
 var reader = new FileReader();
 
+
+var inputElement = input; 
+
 reader.onload = function (e) {
+
+// all EXIF related things deal with EXIF-orientation issues
+var EXIF_adaptation_rotate_degree = 0;
+// these methods are from the EXIF library.
+EXIF.getData(input, function() {
+var orientation = EXIF.getTag(this, "Orientation");
+switch(orientation) {
+case 3:
+EXIF_adaptation_rotate_degree = 180;
+break;
+case 6:
+EXIF_adaptation_rotate_degree = 90;
+break;
+case 8:
+EXIF_adaptation_rotate_degree = -90;
+break;
+}
+elem.css({"transform": "translate(-50%,-50%) rotate(" + EXIF_adaptation_rotate_degree + "deg)"});
+fitToParent("#shareNewImagesContainer .col:nth-child(" + (elem.parent().index() + 1) + ") img");
+});
+
+	
+
 if(background_or_src == "background") {
 elem.css('background', "url(" + e.target.result + ")");
 elem.css('background-size', "cover");
@@ -81,13 +104,13 @@ elem.css('background-position', "center center");
 }
 if(background_or_src == "src") {
 elem.attr('src', e.target.result);
-fitToParent("#shareNewImagesContainer .col:nth-child(" + (elem.parent().index() + 1) + ") img");
-elem.css({"top":"50%","left":"50%","transform":"translate(-50%,-50%);"});
 }
+
 }
 
 reader.readAsDataURL(input);
 }
+
 
 
 // takes an element that has a numeric attribute (which has to be passed to this function as well), and returns that attribute's value incremented or decremented by 1.
