@@ -476,7 +476,8 @@ bottom:0;
 }
 
 .modal-content {
-height:100%;	
+height:calc(100% - 60px);
+margin-top:60px;
 }
 
 .hasFooterAndHeader .modal-content {

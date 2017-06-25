@@ -89,19 +89,6 @@ showLoading();
 });
 
 
-// the user wants to see their notifications
-$(document).on("click",".openNotificationsModal",function(){
-getNotifications(0, $("#main_screen_notifications #notifications_container"));
-$("#newNotificationsNumber").find(".notificationNumContainer").remove();
-});
-$("#main_screen_notifications #notifications_container").scroll(function(){
-if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 100) && notificationsPreventMultipleCalls == false) {
-getNotifications($("#notificationsModal .singleNotification:last-child").attr("data-notification-id"), $("#notificationsModal .modal-content"));
-}
-});
-
-
-
 
 
 
@@ -289,6 +276,8 @@ event.stopPropagation();
 if(typeof $(this).attr("data-actual-post-id") == "undefined") {
 return false;	
 }	
+// empty #singlePostsContainer
+$("#singlePostsContainer").html("");
 getPosts("components/get_single_post.php",{"post_id":$(this).attr("data-actual-post-id")},markUpProcessor,$("#singlePostsContainer"));		
 });
 

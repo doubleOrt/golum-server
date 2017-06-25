@@ -6,11 +6,10 @@ var SEARCH_RESULTS_CONTAINER_ELEMENT;
 
 $(document).ready(function() {
 	
+SEARCH_RESULTS_CONTAINER_ELEMENT = $("#resultsColumn");	
+	
 var prevent_multiple_calls_to_search_for_user = false;	
 	
-
-SEARCH_RESULTS_CONTAINER_ELEMENT = $("#resultsColumn");
-
 // the search box used by users to search for other users or tags
 $("#searchForUser").keyup(function(e){
 
