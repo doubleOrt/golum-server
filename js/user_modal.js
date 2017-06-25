@@ -104,7 +104,7 @@ $("#userAvatarRotateDiv").removeClass("baseUserAvatarRotateDivs");
 // need to do some magic on the avatar image
 $("#userAvatarRotateDiv").attr("data-rotate-degree",$("#userAvatarRotateDiv").attr("data-rotate-degree"));
 $("#userAvatarRotateDiv").css("transform","rotate(" + $("#userAvatarRotateDiv").attr('data-rotate-degree') + "deg)");	
-adaptRotateWithMargin($(this).find("img"),$(this).parent().attr('data-rotate-degree') ,false);
+adaptRotateWithMargin($("#userAvatarRotateDiv").find("img"),$("#userAvatarRotateDiv").attr('data-rotate-degree') ,false);
 // the avatar has to be fully loaded before fitToParent() is called, since it will deal with the naturalWidth/naturalHeight properties, which will return 0 if the image is not loaded yet.
 $("#userAvatarRotateDiv img").on("load", function() {
 fitToParent("#userAvatarImage");	
