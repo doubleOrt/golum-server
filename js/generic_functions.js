@@ -215,16 +215,3 @@ $("#allPostsContainer").html("");
 
 
 
-
-function logOut() {
-
-// when user presses the logout button 
-$.get({
-url:"components/logout.php",
-success:function(data) {
-window.location.href = "login_and_sign_up.html";
-}	
-});
-	
-}
-

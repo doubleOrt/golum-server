@@ -5,12 +5,6 @@ $(document).ready(function(){
 //hide the loading bar and show the document body
 hideLoading();
 $("#showOnBodyLoad").show();
-	 
-// call the logOut() function whenever the user presses the logOut() button.
-$(document).on("click","#logOutButton",function(){
-logOut();
-});
-
 
 $(document).on("click", "[data-open-main-screen]" , function() {
 $(".main_screen").removeClass("main_screen_active");

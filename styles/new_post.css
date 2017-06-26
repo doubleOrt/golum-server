@@ -3,6 +3,7 @@ padding:0;
 width:100%;
 height:calc(100% - 60px); /* compensate for the modal-header */
 margin-top:60px;
+background-color:white;
 }
 
 

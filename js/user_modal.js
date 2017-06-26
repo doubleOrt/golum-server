@@ -1,4 +1,5 @@
 
+
 // the imagepath referred to by this variable will be used for the background image of users who have not uploaded a background image of their own yet.
 var DEFAULT_USER_PROFILE_BACKGROUND_IMAGE = "icons/default_user_profile_background_image.png";
 var MAXIMUM_USER_PROFILE_BACKGROUND_IMAGE_SIZE = 5000000;
@@ -6,6 +7,9 @@ var MAXIMUM_USER_PROFILE_AVATAR_IMAGE_SIZE = 5000000;
 var USER_LETTER_AVATAR_SIZE = 120;
 // will be set on document load
 var PROFILE_CONTAINER_ELEMENT;
+var USER_PROFILE_FOLLOWER_COUNTER;
+var USER_PROFILE_FOLLOWING_COUNTER;
+var USER_PROFILE_POSTS_COUNTER;
 
 
 // this var will block any calls to the "userModalGet.php" file as soon as a call is made, and will re-allow these calls after the call succeeds.
@@ -73,7 +77,7 @@ $("#user_profile_block_button").attr("data-user-id", data["id"]);
 
 // if the base user is not following the profile they are currently viewing, then change the html of the #user_profile_follow_button to "follow"
 if(data["followed_by_base_user"] == "0") {
-$("#user_profile_follow_button").html("follow");
+$("#user_profile_follow_button").html("follow +");
 }
 // if the base user is following the profile they are currently viewing, then change the html of the #user_profile_follow_button to "unfollow"
 else {
@@ -85,6 +89,19 @@ $("#user_profile_follow_button").html("unfollow");
 
 
 $("#profileBackground").css({"background":"url('" + data["background"] + "')", "background-position": "center", "background-size": "cover"});
+
+
+// set the user's posts num
+set_user_profile_posts_num(data["total_posts_num"]);
+// set the user's followers num
+set_user_profile_followers_num(data["followers_num"]);
+// set the user's followings num
+set_user_profile_followings_num(data["followings_num"]);
+
+// set the data-user-id for the show-followers and show-followings buttons, which is required in order for them to show what they are supposed to show when clicked.
+USER_PROFILE_FOLLOWER_COUNTER.attr("data-user-id", data["id"]);
+USER_PROFILE_FOLLOWING_COUNTER.attr("data-user-id", data["id"]);
+
 
 
 // set the avatar image to the user's avatar
@@ -115,9 +132,6 @@ fitToParent("#userAvatarImage");
 // set user's full and user names.
 $("#userModalFullName").html(data["first_name"] + " " + data["last_name"]);
 $("#userModalUserName").html("@" + data["user_name"]);
-
-// set the user's follower's num
-set_user_profile_follows_num(data["followers_num"]);
 
 
 getUserModalTags(data["id"]);
@@ -180,9 +194,6 @@ $("#birthdateContainer").find(".birthdateContainer div").html(icon);
 }
 
 
-
-
-
 // returns a full country name from an ISO country code
 function get_country_name_from_country_code(country_code) {
 return $(".countrySelect option[value=" + country_code + "]").html()	
@@ -200,15 +211,40 @@ $(".tagsContainer").html(JSON.parse(data)[0]);
 
 }
 	
+
+
+// call this function to set the user's follows number on the profile section.
+function set_user_profile_posts_num(posts_num) {
+USER_PROFILE_POSTS_COUNTER.find(".profile_stats_num").html(posts_num);
+USER_PROFILE_POSTS_COUNTER.find(".profile_stats_label").html((posts_num != 1 ? " Posts" : " Post"));
+}	
+// call this function to set the user's follows number on the profile section.
+// this one will be called form user_follow_related.js as well. (to update the follower-count when users press the follow button)
+function set_user_profile_followers_num(followers_num) {
+USER_PROFILE_FOLLOWER_COUNTER.find(".profile_stats_num").html(followers_num);
+USER_PROFILE_FOLLOWER_COUNTER.find(".profile_stats_label").html((followers_num != 1 ? " Followers" : " Follower"));
+}
+// call this function to set the user's followings number on the profile section.
+function set_user_profile_followings_num(followings_num) {
+USER_PROFILE_FOLLOWING_COUNTER.find(".profile_stats_num").html(followings_num);
+USER_PROFILE_FOLLOWING_COUNTER.find(".profile_stats_label").html((followings_num != 1 ? " Followings" : " Following"));
+}
+	
+function get_user_profile_followers_num() {
+return parseFloat(USER_PROFILE_FOLLOWER_COUNTER.find(".profile_stats_num").html());	
+}	
 	
 
+	
 	
 var changeInfosGetObj = {};
 
 $(document).ready(function(){	
 
 PROFILE_CONTAINER_ELEMENT = $("#user_profile_container");	
-
+USER_PROFILE_FOLLOWER_COUNTER = $("#user_profile_follower_count");
+USER_PROFILE_FOLLOWING_COUNTER = $("#user_profile_following_count");
+USER_PROFILE_POSTS_COUNTER = $("#user_profile_posts_count");
 		  
 
 // go to a profile

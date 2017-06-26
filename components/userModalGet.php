@@ -89,7 +89,7 @@ $echo_arr[0] = "var info = {
 'age_in_years': '". htmlspecialchars($user_age_in_years) ."',
 'sign_up_date': '". htmlspecialchars($user_modal_info_arr["sign_up_date"]) ."',
 'followers_num': ". htmlspecialchars($user_followed_by_num) .",
-'following_num': ". htmlspecialchars($user_following_num) .",
+'followings_num': ". htmlspecialchars($user_following_num) .",
 'followed_by_base_user': '". htmlspecialchars($followed_by_base_user) ."',
 'user_blocked_state': '". htmlspecialchars($user_blocked_state) ."',
 'total_posts_num': ". htmlspecialchars($number_of_posts_shared_by_this_user) ."

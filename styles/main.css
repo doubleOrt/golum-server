@@ -120,7 +120,7 @@ z-index:0 !important;
 overflow:hidden !important;
 overflow-y:auto !important;	
 position:relative;
-background-color:white;
+background-color:#f4f4f4;
 }
 
 
@@ -742,7 +742,7 @@ overflow:auto;
 /* our custom material-designy custom non-full-width card stylings that are used everywhere in the app */
 .myHorizontalCardStyle {
 display:inline-block;	
-width:95%;
+width:100%;
 margin:0;
 margin-top:10px;
 position:relative;
