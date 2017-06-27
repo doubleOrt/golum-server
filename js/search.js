@@ -1,4 +1,3 @@
-
 /* this is the element that you want to be used to contain the search results, this one is also the one that should be scrolled, 
 since we are capturing infinite scrolling on this element.	
 the element won't exist until the document is ready, so we set this variable to the actual contianer of the elements then.	*/
@@ -10,6 +9,7 @@ var SEARCH_TABS_STATE_HOLDER;
 
 var prevent_multiple_calls_to_search_for_user = false;	
 var prevent_multiple_calls_to_search_for_tag = false;	
+
 
 function search_section_tabs_changed() {
 
@@ -30,10 +30,14 @@ SEARCH_TAGS_RESULTS_CONTAINER.show();
 if(SEARCH_BOX.val().trim() != "") {
 
 if(active_tab == "0") {
-	
+// empty the SEARCH_USERS_RESULTS_CONTAINER of the last search's markup
+SEARCH_USERS_RESULTS_CONTAINER.html("");
+search_for_user(SEARCH_BOX.val() , 0 , search_for_user_callback);
 }
 else if(active_tab == "1") {
-	
+// empty the SEARCH_TAGS_RESULTS_CONTAINER of the last search's markup	
+SEARCH_TAGS_RESULTS_CONTAINER.html("");
+search_for_tag(SEARCH_BOX.val() , 0 , function(data){alert(data);});	
 }
 
 }
@@ -54,11 +58,11 @@ SEARCH_BOX = $("#searchForUser");
 SEARCH_TABS_STATE_HOLDER = $("#search_container");	
 	
 	
-	
-$(document).on("click", "#search_section_tabs .tab" , function(){
+$(document).on("click", "#search_tabs .tab", function() {
 SEARCH_TABS_STATE_HOLDER.attr("data-active-tab", $(this).attr("data-tab-index"));	
-search_section_tabs_changed();	
+search_section_tabs_changed();
 });
+	
 	
 	
 // the search box used by users to search for other users or tags
@@ -72,13 +76,13 @@ return false;
 }	
 
 var active_tab = SEARCH_TABS_STATE_HOLDER.attr("data-active-tab");
-
-if(active_tab == "0") {			
+if(active_tab == "0") {	
 // empty the SEARCH_USERS_RESULTS_CONTAINER of the last search's markup
 SEARCH_USERS_RESULTS_CONTAINER.html("");
 search_for_user($(this).val() , 0 , search_for_user_callback);
 }
 else if(active_tab == "1") {
+// empty the SEARCH_TAGS_RESULTS_CONTAINER of the last search's markup	
 SEARCH_TAGS_RESULTS_CONTAINER.html("");
 search_for_tag($(this).val() , 0 , function(data){alert(data);});
 }
@@ -140,8 +144,8 @@ SEARCH_USERS_RESULTS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='
 return false;	
 } 
 
-for(var i = 0;i < data.length; i++) {
 
+for(var i = 0;i < data.length; i++) {
 SEARCH_USERS_RESULTS_CONTAINER.append(
 generate_search_result_user_row_markup( 
 data[i]["id"], 

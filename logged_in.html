@@ -208,7 +208,7 @@ eval(data);
 
 <div id="main_screen_search" class="row main_screen">
 
-<div id="search_container" class="main_screen_child">
+<div id="search_container" class="main_screen_child" data-active-tab="0">
 
 <div id="searchForUserRow" class="row">
 
@@ -221,18 +221,26 @@ eval(data);
 
 <div id="searchResultsContainer" class="row">
 
-<ul class="tabs">
-<li class="tab col s4 getPosts showLoadingOnClick"><a class="active" href="#">People</a></li>
-<li class="tab col s4 getFeaturedPosts showLoadingOnClick"><a href="#">Tags</a></li>
+<ul id='search_tabs' class="tabs">
+<li class="tab col s4 getPosts showLoadingOnClick" data-tab-index="0"><a class="active" href="#">People</a></li>
+<li class="tab col s4 getFeaturedPosts showLoadingOnClick" data-tab-index="1"><a href="#">Tags</a></li>
 </ul>
 
-<div id="resultsColumn" class="col l12 m12 s12">
+<div id="search_users_results_column" class="col l12 m12 s12">
 
 <!-- since the resultsColumn is initially empty, we want to fill it with a placeholder (otherwise it looks bad) -->
 <div class='emptyNowPlaceholder'><i class='material-icons'>search</i><br>Please type in something in the search box :)</div>
 
-</div><!-- end #resultsColumn -->
-</div><!-- end .searchResultsContainer -->
+</div><!-- end #search_user_results_column -->
+
+<div id="search_tags_results_column" class="col l12 m12 s12">
+
+<!-- since the resultsColumn is initially empty, we want to fill it with a placeholder (otherwise it looks bad) -->
+<div class='emptyNowPlaceholder'><i class='material-icons'>search</i><br>Please type in something in the search box :)</div>
+
+</div><!-- end #search_user_results_column -->
+
+</div><!-- end #searchResultsContainer -->
  
 </div><!-- end #search_container -->
  
