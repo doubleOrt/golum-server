@@ -192,19 +192,21 @@ $(elemsArr[i]).css("display","block");
 
 $(document).on("click",".addTagFromTagPostsModal",function(){
 	
+var this_button = $(this);	
+	
 if($(this).attr("data-current-state") == "0") {	
 
 addTagsToUserById($(this).attr("data-tag"),function(){
-$("#tagPostsModal .addTagFromTagPostsModal").attr("data-current-state","1");
-$("#tagPostsModal .addTagFromTagPostsModal").html("Unfollow");
+this_button.attr("data-current-state","1");
+this_button.html("Unfollow");
 });	
 
 }
 else {
 	
 removeTagsFromUserById($(this).attr("data-tag"),function(){
-$("#tagPostsModal .addTagFromTagPostsModal").attr("data-current-state","0");	
-$("#tagPostsModal .addTagFromTagPostsModal").html("Follow");
+this_button.attr("data-current-state","0");	
+this_button.html("Follow +");
 });		
 
 }

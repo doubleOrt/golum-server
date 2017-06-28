@@ -1,6 +1,6 @@
 #megaContainer {
 padding-left:0 !important;	
-background:-webkit-linear-gradient(bottom , yellowgreen , green);
+background:-webkit-linear-gradient(36deg, yellow 10%, green 70%);
 }
 
 #megaContainer .container {

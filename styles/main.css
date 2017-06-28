@@ -88,7 +88,7 @@ background:rgba(205,58,55,.5) !important;
 }
 
 .myBackground {
-background-color:#f95462 !important;
+background:-webkit-linear-gradient(36deg, yellow 10%, green 70%);
 }
 
 
@@ -787,7 +787,7 @@ font-weight: bold;
 
 .tabs {
 box-shadow:0 1px 1px rgba(0,0,0,.1);	
-z-index:999;
+z-index:99;
 }
 
 
@@ -810,4 +810,5 @@ border-bottom:2px solid #494949;
 .tabs .indicator {
 display:none;
 }
+
 

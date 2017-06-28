@@ -37,7 +37,7 @@ search_for_user(SEARCH_BOX.val() , 0 , search_for_user_callback);
 else if(active_tab == "1") {
 // empty the SEARCH_TAGS_RESULTS_CONTAINER of the last search's markup	
 SEARCH_TAGS_RESULTS_CONTAINER.html("");
-search_for_tag(SEARCH_BOX.val() , 0 , function(data){alert(data);});	
+search_for_tag(SEARCH_BOX.val() , 0 , search_for_tag_callback);	
 }
 
 }
@@ -84,7 +84,7 @@ search_for_user($(this).val() , 0 , search_for_user_callback);
 else if(active_tab == "1") {
 // empty the SEARCH_TAGS_RESULTS_CONTAINER of the last search's markup	
 SEARCH_TAGS_RESULTS_CONTAINER.html("");
-search_for_tag($(this).val() , 0 , function(data){alert(data);});
+search_for_tag($(this).val() , 0 , search_for_tag_callback);
 }
 
 });
@@ -92,6 +92,12 @@ search_for_tag($(this).val() , 0 , function(data){alert(data);});
 SEARCH_USERS_RESULTS_CONTAINER.scroll(function(){
 if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".searchResultRow").length > 0) {	
 search_for_user( SEARCH_BOX.val() , $(this).find(".searchResultRow").length , search_for_user_callback);
+}
+});
+// infinite scrolling
+SEARCH_TAGS_RESULTS_CONTAINER.scroll(function(){
+if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".searchResultRow").length > 0) {	
+search_for_tag( SEARCH_BOX.val() , $(this).find(".searchResultRow").length , search_for_tag_callback);
 }
 });
 
@@ -112,6 +118,7 @@ function search_for_user(search_term , offset , callback) {
 if(prevent_multiple_calls_to_search_for_user != false) {	
 return false;
 }
+
 
 prevent_multiple_calls_to_search_for_user = true;
 
@@ -161,8 +168,6 @@ data[i]["user_name"],
 }
 
 
-
-
 function search_for_tag(search_term , offset , callback) {
 	
 if(prevent_multiple_calls_to_search_for_tag != false) {	
@@ -181,7 +186,7 @@ data: {
 "row_offset": offset
 },
 success: function(data){
-	
+console.log(data);
 var data_arr = JSON.parse(data);
 
 if(typeof callback == "function") {
@@ -193,6 +198,32 @@ prevent_multiple_calls_to_search_for_tag = false;
 }); 
 	
 }
+
+
+
+function search_for_tag_callback(data) {
+
+// if the user is not infinite scrolling and there have been no results, add a placeholder div to tell the user there have been no results.
+if( data.length < 1 && SEARCH_TAGS_RESULTS_CONTAINER.find(".searchResultRow").length < 1) {
+SEARCH_TAGS_RESULTS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>error</i><br>Sorry, there were no results for your search term :(</div>")	
+return false;	
+} 
+
+for(var i = 0;i < data.length; i++) {
+SEARCH_TAGS_RESULTS_CONTAINER.append(
+generate_search_result_tag_row_markup( 
+data[i]["tag"], 
+data[i]["total_posts"], 
+data[i]["total_followers"],
+data[i]["sample_image_path"],
+data[i]["current_state"]
+)
+);
+}
+	
+}
+
+
 
 
 // used to generate the markup for user rows when a user searches for other rows
@@ -250,3 +281,31 @@ return user_row_markup;
 
 
 
+
+
+function generate_search_result_tag_row_markup(tag, total_posts, total_followers, sample_image_path, current_state) {
+
+return `<div class='row tag_search_result_row searchResultRow getTagPosts modal-trigger' data-tag='` + tag + `' data-target='tagPostsModal'>
+
+<div class='col l1 m1 s3 tag_sample_image_container'>
+
+
+<div class='tag_sample_image' style='background:url(\"` + sample_image_path + `\"); background-size:cover; background-position:center;'>
+</div>
+
+</div>
+
+<div class='col l9 m9 s5 searchResultInfosContainer'>
+<div class='searchResultNamesContainer'>
+<div class='searchResultFullName flow-text'>` + tag + `</div>
+<div class='searchResultUserName flow-text'>` + total_followers + (total_followers != 1 ? " Followers" : " Follower") + `</div>
+<div class='searchResultUserName flow-text'>` + total_posts + (total_posts != 1 ? " Posts" : " Post") + `</div>
+</div>
+</div><!-- end .searchResultInfosContainer -->
+
+<div class='col l2 m2 s4 tag_row_button_container skewScaleItem'>
+<a href='#' class='tag_follow_button myBackground opacityChangeOnActive addTagFromTagPostsModal stopPropagationOnClick' data-tag='` + tag + `' data-current-state='` + current_state + `'>` + (current_state == 0 ? "Follow +" : "Unfollow") + `</a>
+</div>
+
+</div><!-- end .searchResultRow -->`;
+}
