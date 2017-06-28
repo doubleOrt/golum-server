@@ -42,7 +42,6 @@ search_for_tag(SEARCH_BOX.val() , 0 , search_for_tag_callback);
 
 }
 
-	
 }
 
 

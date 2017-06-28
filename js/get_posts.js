@@ -42,11 +42,18 @@ blockCallsToGetPosts = true;
 }
 
 
-function markUpProcessor(data,appendMarkUpTo,callback) {
+function markUpProcessor(data, appendMarkUpTo, empty_message, callback) {
 
 // these variables will have to be bound to this object so that we can use them in our callback function, also any variable that you use in the callback function has to be bound to this object first.
 this.dataArr = data;	
 this.appendMarkUpTo = appendMarkUpTo;
+
+
+if(dataArr.length < 1 && appendMarkUpTo.find(".singlePost").length < 1) {
+appendMarkUpTo.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>" + empty_message + "</div>")	
+}
+
+
 
 // append the posts to the container of the posts, then hide the loading, and finally show the container of the posts.	
 for(var i = 0; i < data.length; i++) {	
@@ -264,13 +271,13 @@ MAIN_SCREEN_POSTS_SCROLLER = $("#main_screen_main_posts_container");
 $(document).on("click",".getPosts",function(){
 emptyAllPostsContainer();
 getPosts("components/get_posts.php",{"row_offset":0},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Your feed is so empty :(", function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
 });		
 });
 
 // make a call to this function on page load
 getPosts("components/get_posts.php",{"row_offset":0},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Nothing here :(", function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
 });		
 
 
@@ -278,7 +285,7 @@ markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER,function(){MAIN_SCREEN_POST
 $(document).on("click",".getFeaturedPosts",function(){
 emptyAllPostsContainer();
 getPosts("components/get_featured_posts.php",{"row_offset":0},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","featuredPosts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "We don't know why there is nothing here either :(", function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","featuredPosts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
 });		
 });
 
@@ -286,7 +293,7 @@ markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER,function(){MAIN_SCREEN_POST
 $(document).on("click",".getMyFavoritePosts",function(){	
 emptyAllPostsContainer();
 getPosts("components/get_my_favorite_posts.php",{"row_offset":0},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","favoritePosts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "After you favorite some posts, you should look for them here :)" , function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","favoritePosts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
 });		
 });
 
@@ -303,17 +310,17 @@ var allPostsContainerContainsWhichPosts = MAIN_SCREEN_POSTS_CONTAINER.attr("data
 
 if(allPostsContainerContainsWhichPosts == "posts") {
 getPosts("components/get_posts.php",{"row_offset":$("#allPostsContainer .singlePost").length},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts")});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Your feed is so empty :(", function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts")});	
 });		
 }	
 else if(allPostsContainerContainsWhichPosts == "featuredPosts") {
 getPosts("components/get_featured_posts.php",{"row_offset":$("#allPostsContainer .singlePost").length},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","featuredPosts")});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "We don't know why there is nothing here either :(" ,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","featuredPosts")});	
 });		
 }	
 else if(allPostsContainerContainsWhichPosts == "favoritePosts") {
 getPosts("components/get_my_favorite_posts.php",{"row_offset":$("#allPostsContainer .singlePost").length},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","favoritePosts")});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "After you favorite some posts, you shall find them here :P" ,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","favoritePosts")});	
 });		
 }	
 
@@ -333,7 +340,7 @@ return false;
 // empty #singlePostsContainer
 $("#singlePostsContainer").html("");
 getPosts("components/get_single_post.php",{"post_id":$(this).attr("data-actual-post-id")},function(data_arr){
-markUpProcessor(data_arr,$("#singlePostsContainer"));	
+markUpProcessor(data_arr,$("#singlePostsContainer"), "We don't know why the post didn't appear either :(");	
 });		
 });
 
@@ -415,7 +422,7 @@ $("#tagPostsModal .modal-content").scrollTop(0);
 // if the user is switching between the tabs
 if($(this).parents(".tabs").length > 0) {
 getPosts("components/get_tag_posts.php",{"row_offset":0,"tag":$(this).parents("#tagPostsModal").attr("data-tag"),"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
-markUpProcessor(data_arr[0],$("#tagPostsContainer"));	
+markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(");	
 });
 }
 // user is not switching between the tabs
@@ -432,7 +439,7 @@ $("#tagPostsModal .modalContentImageContainer").css({"height":"0","background":"
 }
 
 getPosts("components/get_tag_posts.php",{"row_offset":0,"tag":$(this).attr("data-tag"),"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
-markUpProcessor(data_arr[0],$("#tagPostsContainer"));	
+markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(");	
 // add the "follow tag" button which should be in dataArr[1]
 $("#tagPostsModal .navRightItemsMobile").html(dataArr[1]);
 });
@@ -445,7 +452,7 @@ $("#tagPostsContainer").scroll(function(){
 if($(this).scrollTop() > ($(this)[0].scrollHeight - $("#tagPostsModal .modalContentImageContainer")[0].scrollHeight - 650) && $(this).find(".singlePost").length > 0) {
 
 getPosts("components/get_tag_posts.php",{"row_offset":$("#tagPostsModal .singlePost").length,"tag":$("#tagPostsModal").attr("data-tag"),"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){
-markUpProcessor(data_arr[0],$("#tagPostsContainer"));	
+markUpProcessor(data_arr[0], $("#tagPostsContainer"), "Nothing here :(");	
 });
 		
 }
