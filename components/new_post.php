@@ -72,8 +72,14 @@ $counter++;
 
 $post_time = time();
 
-$prepared = $con->prepare("insert into posts (title,type,file_types,time,posted_by) values(:title,:type,:file_types,:time,:posted_by)");
+// output the post tags from the title into $post_tags
+$matches = [];
+preg_match_all("/(#\w+)/", $_POST["title"], $matches, PREG_PATTERN_ORDER);
+$post_tags = implode("," , $matches[0]);
+
+$prepared = $con->prepare("insert into posts (title,tags,type,file_types,time,posted_by) values(:title,:tags,:type,:file_types,:time,:posted_by)");
 $prepared->bindParam(":title",$_POST["title"]);
+$prepared->bindParam(":tags",$post_tags);
 $prepared->bindParam(":type",$_POST["type"]);
 $prepared->bindParam(":file_types",$file_types);
 $prepared->bindParam(":time",$post_time);

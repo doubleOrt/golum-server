@@ -21,32 +21,30 @@ echo json_encode($echo_arr);
 die();
 }	
 
-
-$tag_search = "%#" . trim($_GET["search_value"]) . " %";
-$tag_search2 = "%#" . trim($_GET["search_value"]);
-$tag_search3 = "#" . trim($_GET["search_value"]) . " %";
+$tag = "#" . $_GET["search_value"];
+$tag_like = "%" . $tag . "%";
 
 // this query selects only accounts not existing in the account_states database table.
-$search_prepare = $con->prepare("select type, file_types from posts where title like :tag_search or title like :tag_search2 or title like :tag_search3 order by id desc limit 20 OFFSET :row_offset");
-$search_prepare->bindParam(':tag_search', $tag_search, PDO::PARAM_STR);
-$search_prepare->bindParam(':tag_search2', $tag_search2, PDO::PARAM_STR);
-$search_prepare->bindParam(':tag_search3', $tag_search3, PDO::PARAM_STR);
+$search_prepare = $con->prepare("select matching_tag, total_posts, total_followers, sample_post_id_and_file_type, tag as current_state from (select case when LOCATE(',', tags) != 0 then MID(MID(tags, LOCATE(:tag, tags), CHAR_LENGTH(TITLE)), 1, LOCATE(',', MID(tags, LOCATE(:tag, tags), CHAR_LENGTH(MID(tags, LOCATE(:tag, tags))))) - 1) else MID(MID(tags, LOCATE(:tag, tags), CHAR_LENGTH(TITLE)), 1) end as matching_tag, (select count(id) from posts where (tags like CONCAT('%,', matching_tag, ',%') or tags like concat(matching_tag, ',%') or tags like concat('%,', matching_tag) or tags like matching_tag)) as total_posts, (select count(id) from following_tags where following_tags.tag like matching_tag) as total_followers, (select concat(id, '-' ,file_types) from posts where (tags like CONCAT('%,', matching_tag, ',%') or tags like concat(matching_tag, ',%') or tags like concat('%,', matching_tag) or tags like matching_tag) order by id desc limit 1) as sample_post_id_and_file_type from posts where (title like concat('%', :tag, '%') or title like concat(:tag, '%') or title like concat('%', :tag)) group by matching_tag) t1 left join following_tags on tag = matching_tag and id_of_user = :user_id where matching_tag != '' order by total_posts limit 15 ". ($row_offset > 0 ? "OFFSET :row_offset" : ""));
+
+$search_prepare->bindParam(':tag', $tag, PDO::PARAM_STR);
+$search_prepare->bindParam(':tag_like', $tag_like, PDO::PARAM_STR);
+$search_prepare->bindParam(':user_id', $_SESSION["user_id"], PDO::PARAM_INT);
 $search_prepare->bindParam(":row_offset", $row_offset , PDO::PARAM_INT);
 $search_prepare->execute();
 
-$all_search_results = $search_prepare->fetchAll();
+$all_search_results = $search_prepare->fetchAll(PDO::FETCH_ASSOC);
 
 
-foreach($all_search_results as $row) {
-$current_state = $con->query("select id from blocked_users where user_ids = '".$row["posted_by"]. "-" . $_SESSION["user_id"]."'")->fetch();		
-// if the current user has been blocked by the user of the current iteration	
-if($current_state[0] != "") {
-continue;	
-}
-	
-	
-array_push($echo_arr, $row);
-
+foreach($all_search_results as $row) {	
+$sample_image_path = "posts/" . explode("-", $row["sample_post_id_and_file_type"])[0] . "-0." . explode(",", explode("-", $row["sample_post_id_and_file_type"])[1])[0];
+array_push($echo_arr, [
+"tag" => $row["matching_tag"],
+"total_posts" => $row["total_posts"],
+"total_followers" => $row["total_followers"],
+"sample_image_path" => $sample_image_path,
+"current_state" => ($row["current_state"] != "" ? 1 : 0)
+]);
 }
 
 echo json_encode($echo_arr);
