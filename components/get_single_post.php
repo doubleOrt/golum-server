@@ -6,13 +6,14 @@ require_once "logged_in_importants.php";
 require_once "post_markup_function.php";
 
 
-if(isset($_GET["post_id"]) && is_numeric($_GET["post_id"])) {
-$echo_arr = [""];	
+$echo_arr = [];	
+
+if(isset($_GET["post_id"]) && is_integer(intval($_GET["post_id"]))) {
 $single_post_query = $con->query("select *, 1 as new_id from posts where id = ". $_GET["post_id"])->fetch();	
-$echo_arr[0] .= get_post_markup($single_post_query,"singlePosts");
-echo json_encode($echo_arr);
+array_push($echo_arr, get_post_markup($single_post_query));
 }
 
+echo json_encode($echo_arr);
 
 
 ?>

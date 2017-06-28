@@ -80,7 +80,9 @@ Materialize.toast("Post Successful!",2000,"green");
 //if the post was successfully posted, then open the singlePostModal and populate its innerHTML with the new post's markup.
 if(!isNaN(data)) {
 openModalCustom("singlePostModal",currentZindexStack,modalsOpened);
-getPosts("components/get_single_post.php",{"post_id":data},markUpProcessor,$("#singlePostsContainer"));		
+getPosts("components/get_single_post.php",{"post_id":data},function(data_arr){
+markUpProcessor(data_arr,$("#singlePostsContainer"));	
+});		
 }
 
 // reset the #shareNewModal 

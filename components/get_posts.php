@@ -7,26 +7,17 @@ require_once "logged_in_importants.php";
 require_once "post_markup_function.php";
 
 
-if(isset($_GET["last_post_id"]) && is_numeric($_GET["last_post_id"])) {
+$echo_arr = [];	
 
-$echo_arr = [""];	
-	
+
+if(isset($_GET["row_offset"]) && is_integer(intval($_GET["row_offset"]))) {	
 	
 $tags_followed_by_user = $con->query("select tag from following_tags where id_of_user = ". $_SESSION["user_id"])->fetchAll();		
 	
-// when the user wants to see the first 10 posts	
-if($_GET["last_post_id"] == 0) {
-$prepared = $con->prepare("select * from (select *, @rn:=@rn+1 AS new_id from (select * from posts where posted_by in (select contact from contacts where contact_of = :user_id) or posted_by = :user_id) t1, (SELECT @rn:=0) t2) new_table order by new_table.new_id desc limit 3");
+
+$prepared = $con->prepare("select * from posts where posted_by in (select contact from contacts where contact_of = :user_id) or posted_by = :user_id order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
 $prepared->bindParam(":user_id",$_SESSION["user_id"]);
 $prepared->execute();
-}
-// when the user is infinite scrolling
-else {
-$prepared = $con->prepare("select * from (select *, @rn:=@rn+1 AS new_id from (select * from posts where posted_by in (select contact from contacts where contact_of = :user_id) or posted_by = :user_id) t1, (SELECT @rn:=0) t2) new_table where new_table.new_id < :last_post_id order by new_table.new_id desc limit 3");
-$prepared->bindParam(":last_post_id",$_GET["last_post_id"]);
-$prepared->bindParam(":user_id",$_SESSION["user_id"]);
-$prepared->execute();	
-}
 
 $posts_arr = $prepared->fetchAll();
 
@@ -43,13 +34,14 @@ continue 2;
 }
 }
 	
-$echo_arr[0] .= get_post_markup($posts_arr[$i],"posts");
+array_push($echo_arr, get_post_markup($posts_arr[$i]));
 }
 
+}
 
 echo json_encode($echo_arr);
-}
 
-
+// close the connection
+unset($con);
 
 ?>

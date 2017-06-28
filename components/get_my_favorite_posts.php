@@ -5,22 +5,13 @@ require_once "common_requires.php";
 require_once "logged_in_importants.php";
 require_once "post_markup_function.php";
 
+$echo_arr = [];	
 
-if(isset($_GET["last_post_id"]) && is_numeric($_GET["last_post_id"])) {
+if(isset($_GET["row_offset"]) && is_integer(intval($_GET["row_offset"]))) {
 	
-$echo_arr = [""];	
-
-// when the user wants to see the first 10 posts	
-if($_GET["last_post_id"] == 0) {
-$prepared = $con->prepare("select * from (SELECT *, @rn:=@rn+1 AS new_id FROM ( SELECT * FROM favorites where user_id = ". $_SESSION["user_id"] ." ) t1, (SELECT @rn:=0) t2) new_table inner join posts on new_table.post_id = posts.id order by new_table.new_id desc limit 3");
+$prepared = $con->prepare("SELECT * FROM favorites INNER JOIN posts ON favorites.post_id = posts.id WHERE favorites.user_id = :user_id ORDER BY favorites.id DESC LIMIT 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
+$prepared->bindParam(":user_id", $_SESSION["user_id"]);
 $prepared->execute();
-}
-// when the user is infinite scrolling
-else {
-$prepared = $con->prepare("select * from (SELECT *, @rn:=@rn+1 AS new_id FROM ( SELECT * FROM favorites where user_id = ". $_SESSION["user_id"] ." ) t1, (SELECT @rn:=0) t2) new_table inner join posts on new_table.post_id = posts.id where new_table.new_id < :last_post_id order by new_table.id desc limit 3");
-$prepared->bindParam(":last_post_id",$_GET["last_post_id"]);
-$prepared->execute();	
-}
 
 $posts_arr = $prepared->fetchAll();
 
@@ -38,20 +29,17 @@ continue 2;
 }
 }		
 
-$echo_arr[0] .= get_post_markup($posts_arr[$i],"favoritePosts");
+array_push($echo_arr, get_post_markup($posts_arr[$i]));
 }
 }
-else if($_GET["last_post_id"] == 0) {
-$echo_arr[0] .= "<div class='emptyNowPlaceholder'>
-<i class='material-icons'>info</i>
-<br>
-No Posts Favorited! </div>";	
-}	
- 
+
+}
+
+
 echo json_encode($echo_arr);
 
-}
 
+unset($con);
 
 
 ?>

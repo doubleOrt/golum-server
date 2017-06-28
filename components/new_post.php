@@ -3,9 +3,6 @@
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
-$im = new Imagick(); 
-
-
 if(isset($_POST["title"]) && isset($_POST["type"]) && is_numeric($_POST["type"]) && count($_FILES) > 0) {
 
 //this is the path of the images after upload
