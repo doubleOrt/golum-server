@@ -56,9 +56,10 @@ $all_posts_arr = $con->query("select distinct posts.id, posts.time, favorites.id
 $echo_arr = [];
 
 foreach($all_posts_arr as $post_arr) {
-array_push($echo_arr,[$post_arr["id"],time_to_string($post_arr["time"]),$post_arr["total_favorites"],"<a href='#commentsModal' class='waves-effect wavesCustom btn btn-flat showPostComments modal-trigger' data-actual-post-id='". $post_arr["id"] ."'><i class='material-icons'>comment</i> <span class='postCommentsButtonCommentsNumberContainer'><span class='commentButtonCommentsNumber' data-total-number='". $post_arr["post_comments_num"] ."'>". ($post_arr["post_comments_num"] > 0 ? "(".$post_arr["post_comments_num"].")" : "") ."</span></span></a>
-<a href='#' class='waves-effect wavesCustom btn btn-flat favoritePost' data-actual-post-id='". $post_arr["id"] ."'><i class='material-icons'>". ($post_arr["added_to_favorites"] != "" ? "star" : "star_border") ."</i></a>
-<a href='#sendToFriendModal' class='waves-effect wavesCustom btn btn-flat modal-trigger sendPostToFriend' data-actual-post-id='". $post_arr["id"] ."'><i class='material-icons'>send</i></a>"]);
+array_push($echo_arr,[$post_arr["id"],time_to_string($post_arr["time"]),$post_arr["total_favorites"],"
+<a href='#commentsModal' class='btn btn-flat showPostComments modal-trigger' data-actual-post-id='". $post_arr["id"] ."'><i class='material-icons'>comment</i> <span class='postCommentsButtonCommentsNumberContainer'><span class='commentButtonCommentsNumber' data-total-number='". $post_arr["post_comments_num"] ."'>". ($post_arr["post_comments_num"] > 0 ? "(".$post_arr["post_comments_num"].")" : "") ."</span></span></a>
+<a href='#' class='btn btn-flat favoritePost' data-actual-post-id='". $post_arr["id"] ."'><i class='material-icons'>". ($post_arr["added_to_favorites"] != "" ? "star" : "star_border") ."</i></a>
+<a href='#sendToFriendModal' class='btn btn-flat modal-trigger sendPostToFriend' data-actual-post-id='". $post_arr["id"] ."'><i class='material-icons'>send</i></a>"]);
 }
 
 }

@@ -188,6 +188,7 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 <div class='postTitle scaleItem'>
 ` +   handle_tags(data["post_title"]) + `
 </div><!-- end .postTitle -->
+<a href='#' class='postSettingsButton dropdown-button opacityChangeOnActive' data-activates='postSettings` + random_num + `'><i class='material-icons'>more_vert</i></a>
 </div><!-- end .postTop -->
 
 <div class='postImagesContainer row'>
@@ -202,10 +203,6 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 </ul>
 
 
-<div class='postRightContainer col l4 m4 s2'>
-<div class='postDate right'></div><!-- end .postDate -->
-<a href='#' class='dropdown-button waves-effect waves-lightgrey postSettingsButton' data-activates='postSettings` + random_num + `'><i class='material-icons'>more_horiz</i></a>
-</div><!-- end .postRightContainer -->
 
 <div class='postActionsContainer'>
 
@@ -225,7 +222,10 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 </div><!-- end .avatarContainerChild -->
 </div><!-- end .avatarContainer -->
 
+<div class='posterInfoChild'>
 <a href='#modal1' class='commonLink showUserModal' data-user-id='` + data["post_owner_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'>` + poster_full_name + `</a>
+<div class='postDate'></div><!-- end .postDate -->
+</div><!-- end .posterInfoChild -->
 </div><!-- end .posterInfoMegaContainer -->
 
 </div>
