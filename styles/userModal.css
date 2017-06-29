@@ -264,8 +264,8 @@ position:relative;
 /* when user views another users profile picture, the male, birthdate and country infos.*/	  
 
 #userModalKnownInfoContainer {
-margin-bottom:60px;	
-padding-top:50px;
+margin-bottom:30px;	
+padding-top:80px;
 }	 
 
 
@@ -277,9 +277,12 @@ display:none;
 .userModalKnownInfo {
 display:inline-block;
 width:100%;
-border-bottom:1px solid #f4f4f4;
+color:grey;
+border-bottom:1px solid #ebeaea;
 padding-bottom:15px;
 position:relative;
+font-weight:bold;
+user-select:none;
 }	  
 
 #userModalInfoSee .row:last-child .userModalKnownInfo {
@@ -287,6 +290,7 @@ border-bottom:none;
 }
 
 .userModalKnownInfoText {
+color:black;	
 text-transform:capitalize;	
 }
 

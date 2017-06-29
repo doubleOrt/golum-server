@@ -141,10 +141,6 @@ $("#userModalFullName").html(data["first_name"] + " " + data["last_name"]);
 $("#userModalUserName").html("@" + data["user_name"]);
 
 
-getUserModalTags(data["id"]);
-
-
-
 var personality_infos = [
 {"type": 1, "name": "Trendy","image":"icons/emojis/14.svg"},
 {"type": 2, "name": "Average","image":"icons/emojis/73.svg"},
@@ -204,18 +200,6 @@ $("#birthdateContainer").find(".birthdateContainer div").html(icon);
 // returns a full country name from an ISO country code
 function get_country_name_from_country_code(country_code) {
 return $(".countrySelect option[value=" + country_code + "]").html()	
-}
-
-function getUserModalTags(userId) {
-
-$.get({
-data:{"user_id":userId},
-url:"components/get_user_modal_tags.php",
-success:function(data){
-$(".tagsContainer").html(JSON.parse(data)[0]);	
-}
-});
-
 }
 	
 
@@ -438,13 +422,11 @@ $("#repositionAvatarDiv").fadeToggle();
 if(editModeActive == false) {
 $("#editProfileButton i").html("done");
 $("#userAvatarImage").css("opacity",".8");
-$(".tagsContainer").hide();
 editModeActive = true;
 }
 else {
 $("#editProfileButton i").html("mode_edit");
 $("#userAvatarImage").css("opacity","1");
-$(".tagsContainer").show();
 editModeActive = false;
 }
 });
