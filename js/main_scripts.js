@@ -193,10 +193,12 @@ $(elemsArr[i]).css("display","block");
 $(document).on("click",".addTagFromTagPostsModal",function(){
 	
 var this_button = $(this);	
-	
+this_button.addClass("disabledButton");	
+
 if($(this).attr("data-current-state") == "0") {	
 
 addTagsToUserById($(this).attr("data-tag"),function(){
+this_button.removeClass("disabledButton");
 this_button.attr("data-current-state","1");
 this_button.html("Unfollow");
 });	
@@ -205,6 +207,7 @@ this_button.html("Unfollow");
 else {
 	
 removeTagsFromUserById($(this).attr("data-tag"),function(){
+this_button.removeClass("disabledButton");	
 this_button.attr("data-current-state","0");	
 this_button.html("Follow +");
 });		

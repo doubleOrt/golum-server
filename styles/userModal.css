@@ -179,16 +179,6 @@ text-align:center;
 line-height:20px;
 }
 
-#userModalOverline {
-display:none;
-width:30px;
-height:2px;
-position:relative;
-left:50%;
-transform:translate(-50%,0);
-background-color:#f95462;
-}
-
 #userModalUserInfosChild {
 border-bottom:1px solid #ebeaea;	
 padding-bottom:5px;
@@ -261,12 +251,23 @@ background-color:#f95462 !important;
 
 
 
+
+#user_profile_tabs .disabled a {
+color:#494949;
+}
+
+#userModalKnownInfoContainer, #user_profile_posts_container {
+position:relative;	
+}
+
+
 /* when user views another users profile picture, the male, birthdate and country infos.*/	  
 
 #userModalKnownInfoContainer {
 margin-bottom:60px;	
 padding-top:50px;
 }	 
+
 
 /* we want the profile info (male,country,etc...) to be hidden by default, until a user clicks the edit button */
 #userModalInfoChangers {

@@ -347,26 +347,31 @@ markUpProcessor(data_arr,$("#singlePostsContainer"), "We don't know why the post
 
 
 
-/*
+
 // when a user wants to view another's posts via clicking the "posts" button on their user modal 
 $(document).on("click",".getUserPosts",function(){
+
 if(typeof $(this).attr("data-user-id") == "undefined") {
 return false;	
 }
+
 //empty the #userPostsContainer of the last query's posts
 $("#userPostsContainer").html("");
 $("#userPostsContainer").attr("data-user-id",$(this).attr("data-user-id"));
-getPosts("components/get_user_posts.php",{"row_offset":0,"user_id":$(this).attr("data-user-id")},markUpProcessor,$("#userPostsContainer"));		
+getPosts("components/get_user_posts.php",{"user_id": $(this).attr("data-user-id"), "row_offset": 0},function(data_arr){
+markUpProcessor(data_arr, $("#userPostsContainer"), "This user does not have a single post, such a loser.");		
 });
-
-// user is scrolling the user posts modal
+});
+// user is infinite scrolling the user posts modal
 $("#userPostsContainer").scroll(function(){
-if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && blockCallsToGetPosts == false && $(this).find(".singlePost").length > 0) {
-getPosts("components/get_user_posts.php",{"row_offset":$("#userPostsContainer .singlePost:last-child").attr("data-post-id"),"user_id":$(this).attr("data-user-id")},markUpProcessor,$("#userPostsContainer"));		
+if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".singlePost").length > 0) {
+getPosts("components/get_user_posts.php",{"user_id": $(this).attr("data-user-id"), "row_offset": $(this).find(".singlePost").length},function(data_arr){
+markUpProcessor(data_arr, $("#userPostsContainer"), "This user does not have a single post, such a loser.");		
+});
 }
 });
 
-
+/*
 // when users want to view posts that match their search terms
 $(document).on("click",".openGetPostsByTitleModal",function(){
 
@@ -402,6 +407,8 @@ if(typeof $(this).attr("data-tag") == "undefined" && typeof $("#tagPostsModal").
 return false;	
 }
 
+var tag = (typeof $(this).attr("data-tag") != "undefined" ? $(this).attr("data-tag") : $("#tagPostsModal").attr("data-tag"));
+
 if(typeof $(this).attr("data-hot-or-new") == "undefined") {
 var hotOrNew = 0;	
 }
@@ -421,14 +428,14 @@ $("#tagPostsModal .modal-content").scrollTop(0);
 
 // if the user is switching between the tabs
 if($(this).parents(".tabs").length > 0) {
-getPosts("components/get_tag_posts.php",{"row_offset":0,"tag":$(this).parents("#tagPostsModal").attr("data-tag"),"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
+getPosts("components/get_tag_posts.php",{"row_offset":0,"tag": tag,"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
 markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(");	
 });
 }
 // user is not switching between the tabs
 else {
-$("#tagPostsModal").attr("data-tag",$(this).attr("data-tag"));
-$("#tagPostsModal .modal-header .modalHeaderFullName").html($(this).attr("data-tag"));	
+$("#tagPostsModal").attr("data-tag", tag);
+$("#tagPostsModal .modal-header .modalHeaderFullName").html(tag);	
 
 // if this tag has an image, add the necessary markup.
 if(typeof $(this).attr("data-image") != "undefined") {
@@ -438,10 +445,10 @@ else {
 $("#tagPostsModal .modalContentImageContainer").css({"height":"0","background":"none"});	
 }
 
-getPosts("components/get_tag_posts.php",{"row_offset":0,"tag":$(this).attr("data-tag"),"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
+getPosts("components/get_tag_posts.php",{"row_offset":0,"tag": tag,"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
 markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(");	
 // add the "follow tag" button which should be in dataArr[1]
-$("#tagPostsModal .navRightItemsMobile").html(dataArr[1]);
+$("#tagPostsModal .navRightItemsMobile").html("<a href='#' class='btn commonButton navRightItemsMobileCommonButton addTagFromTagPostsModal scaleVerticallyCenteredItem opacityChangeOnActive' data-tag='" + tag + "' data-current-state='" + data_arr[1] + "'>" + (data_arr[1] == "" ? "Follow +" : "Unfollow") + "</a>");
 });
 
 }

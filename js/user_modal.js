@@ -10,6 +10,9 @@ var PROFILE_CONTAINER_ELEMENT;
 var USER_PROFILE_FOLLOWER_COUNTER;
 var USER_PROFILE_FOLLOWING_COUNTER;
 var USER_PROFILE_POSTS_COUNTER;
+var USER_PROFILE_KNOWN_INFO_CONTAINER;
+var USER_PROFILE_POSTS_CONTAINER;
+
 
 
 // this var will block any calls to the "userModalGet.php" file as soon as a call is made, and will re-allow these calls after the call succeeds.
@@ -59,7 +62,11 @@ userModalShouldServerSide = true;
 
 function handleUserInfo(data) {
 	
+PROFILE_CONTAINER_ELEMENT.attr("data-user-id", data["id"]);
 PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user", data["is_base_user"]);
+
+$("#user_profile_tabs .tab[data-tab-index=1]").attr("data-user-id", data["id"]);
+
 
 // showing and hiding things that should be only visible when the base-user or only when not-base-user profiles are being viewed. 
 if(PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user") == "1") {
@@ -234,6 +241,21 @@ function get_user_profile_followers_num() {
 return parseFloat(USER_PROFILE_FOLLOWER_COUNTER.find(".profile_stats_num").html());	
 }	
 	
+	
+function user_profile_section_tabs_changed() {
+
+var active_tab = USER_PROFILE_TABS_STATE_HOLDER.attr("data-active-tab");
+
+// user switched to the PEOPLE tab
+if(active_tab == "0") {
+USER_PROFILE_POSTS_CONTAINER.hide();
+USER_PROFILE_KNOWN_INFO_CONTAINER.show();
+}
+// user switched to the TAGS tab
+else if(active_tab == "1"){
+}
+
+}
 
 	
 	
@@ -245,6 +267,22 @@ PROFILE_CONTAINER_ELEMENT = $("#user_profile_container");
 USER_PROFILE_FOLLOWER_COUNTER = $("#user_profile_follower_count");
 USER_PROFILE_FOLLOWING_COUNTER = $("#user_profile_following_count");
 USER_PROFILE_POSTS_COUNTER = $("#user_profile_posts_count");
+USER_PROFILE_TABS_STATE_HOLDER = PROFILE_CONTAINER_ELEMENT;	
+USER_PROFILE_KNOWN_INFO_CONTAINER = $("#userModalKnownInfoContainer");
+USER_PROFILE_POSTS_CONTAINER = $("#user_profile_posts_container");
+
+$(document).on("click", "#user_profile_tabs .tab", function() {
+/* if we didn't add a disabled class and then overwrote that disabled tab's styles to look like a not-disabled tab, we would have to manually reset the 
+tab to the "profile" tab whenever the "posts" tab was clicked, which is weird, but yeah, the "posts" tab isn't actually supposed to work like a tab, 
+rather, it is a modal opener, so without the disabled class on it, the user would open its modal, then go back and see himself having activated the 
+"posts" tab which shows nothing, instead, whenever the user goes back, using this disabled functionality, we give them the illusion that they switched the 
+tab back to the "people" tab. So anything related with .disabled in this particular #user_profile_tabs is there to enable this functionality. */
+if(!$(this).hasClass("disabled")) {	
+USER_PROFILE_TABS_STATE_HOLDER.attr("data-active-tab", $(this).attr("data-tab-index"));	
+user_profile_section_tabs_changed();
+}
+});
+
 		  
 
 // go to a profile

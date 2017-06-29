@@ -13,7 +13,7 @@ if(isset($_GET["tag"]) && isset($_GET["row_offset"]) && is_integer(intval($_GET[
 if($_GET["row_offset"] == 0) {
 $current_tag_follow_state = $con->query("select id from following_tags where id_of_user = ". $_SESSION["user_id"] ." and tag = '". htmlspecialchars($_GET["tag"]) ."'")->fetch();
 // the follow tag button.
-$echo_arr[1] .= "<a href='#' class='waves-effect wavesCustom btn commonButtonWhite navRightItemsMobileCommonButton addTagFromTagPostsModal scaleVerticallyCenteredItem' data-tag='". htmlspecialchars($_GET["tag"]) ."' data-current-state='". ($current_tag_follow_state == "" ? "0" : "1") ."'>". ($current_tag_follow_state == "" ? "Follow" : "Unfollow") ."</a>";
+$echo_arr[1] = $current_tag_follow_state[0] != "" ? 1 : 0;
 }
 	
 

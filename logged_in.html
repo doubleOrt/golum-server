@@ -249,7 +249,7 @@ eval(data);
  
 <div id="main_screen_user_profile" class="row main_screen">
 
-<div id="user_profile_container" class="main_screen_child">
+<div id="user_profile_container" class="main_screen_child" data-active-tab="0">
 
 	<!-- START profile floating action buttons -->
 
@@ -368,9 +368,9 @@ eval(data);
 
 </div><!-- END userModalBasicInfoContainer -->
 
-<ul class="tabs">
-<li class="tab col s4"><a class="active" href="#">Profile</a></li>
-<li class="tab col s4"><a href="#">Posts</a></li>
+<ul id="user_profile_tabs" class="tabs">
+<li class="tab col s4" data-tab-index="0"><a class="active" href="#">Profile</a></li>
+<li class="tab col s4 getUserPosts modal-trigger disabled" data-tab-index="1" data-target="userPostsModal"><a href="#">Posts</a></li>
 </ul>
 
 
@@ -729,12 +729,13 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 </div><!-- end #userModalInfoChangers -->
 </div><!-- end #userModalKnownInfoContainer -->
 
+<div id="user_profile_posts_container">
+</div><!-- end #user_modal_posts_container -->
 
-</div> 
- 
- </div><!-- end .user_profile_container -->
+</div><!-- end #user_profile_container -->
  
  </div><!-- end #main_screen_user_profile -->
+ 
  
 <!-- this screeen will be used to show the users the chat section of the app -->
 <div id="chatsPortalContainer" class="main_screen">
