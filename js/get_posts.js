@@ -21,8 +21,6 @@ success:function(data) {
 
 // if the ajax call actually returned something.
 if(data != "") {
-
-console.log(data);
 		
 var data_arr = JSON.parse(data);	
 
@@ -355,21 +353,41 @@ if(typeof $(this).attr("data-user-id") == "undefined") {
 return false;	
 }
 
+/* if the element that was clicked has a "data-first-name" attribute set, it means that the .modalHeaderFullName of the 
+#userPostsModal should be set to that "data-first-name" (which should be the name of the user that the modal is being opened for). 
+If it is not set, than just use the default. */
+var modal_label = (typeof $(this).attr("data-first-name") != "undefined" ? $(this).attr("data-first-name") : "Posts");
+$("#userPostsModal .modalHeaderFullName").html(modal_label);
+
 //empty the #userPostsContainer of the last query's posts
 $("#userPostsContainer").html("");
+
 $("#userPostsContainer").attr("data-user-id",$(this).attr("data-user-id"));
+$("#userPostsModal .navRightItemsMobile .follow_user").attr("data-user-id", $(this).attr("data-user-id"));
+
+/* if base user is looking at their own posts, hide the "follow" button (because not hiding it would not make any sense), if they are looking 
+at someone else's posts, show it. */
+if($(this).attr("data-user-id") == BASE_USER_ID_HOLDER.attr("data-user-id")) {
+$("#userPostsModal .navRightItemsMobile .follow_user").hide();
+}
+else {
+$("#userPostsModal .navRightItemsMobile .follow_user").show();	
+}
+
 getPosts("components/get_user_posts.php",{"user_id": $(this).attr("data-user-id"), "row_offset": 0},function(data_arr){
-markUpProcessor(data_arr, $("#userPostsContainer"), "This user does not have a single post, such a loser.");		
+markUpProcessor(data_arr[0], $("#userPostsContainer"), "This user does not have a single post, such a loser.");		
+$("#userPostsModal .navRightItemsMobile .follow_user").html((data_arr[1] == 0 ? "Follow +" : "Unfollow"));
 });
 });
 // user is infinite scrolling the user posts modal
 $("#userPostsContainer").scroll(function(){
 if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".singlePost").length > 0) {
 getPosts("components/get_user_posts.php",{"user_id": $(this).attr("data-user-id"), "row_offset": $(this).find(".singlePost").length},function(data_arr){
-markUpProcessor(data_arr, $("#userPostsContainer"), "This user does not have a single post, such a loser.");		
+markUpProcessor(data_arr[0], $("#userPostsContainer"), "This user does not have a single post, such a loser.");		
 });
 }
 });
+
 
 /*
 // when users want to view posts that match their search terms
@@ -448,7 +466,8 @@ $("#tagPostsModal .modalContentImageContainer").css({"height":"0","background":"
 getPosts("components/get_tag_posts.php",{"row_offset":0,"tag": tag,"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
 markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(");	
 // add the "follow tag" button which should be in dataArr[1]
-$("#tagPostsModal .navRightItemsMobile").html("<a href='#' class='btn commonButton navRightItemsMobileCommonButton addTagFromTagPostsModal scaleVerticallyCenteredItem opacityChangeOnActive' data-tag='" + tag + "' data-current-state='" + data_arr[1] + "'>" + (data_arr[1] == "" ? "Follow +" : "Unfollow") + "</a>");
+$("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").attr("data-current-state", data_arr[1]);
+$("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").html(data_arr[1] == 0 ? "Follow" : "Unfollow");
 });
 
 }

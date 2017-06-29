@@ -48,16 +48,28 @@
 
 <script>
 
+$(document).ready(function(){
 
 $.get({
 url:"components/common_requires.php"
 });
+
 $.get({
 url:"components/login_to_logout.php",
 success:function(data) {
-eval(data);	
+
+// user shouldn't be here because he hasn't logged in yet
+if(data == 0) {
+window.location.href = "login_and_sign_up.html";
+}
+// user has logged in
+else {
+BASE_USER_ID_HOLDER.attr("data-user-id", data);
+}
 }
 });	
+
+});
 
 </script>
 
@@ -364,13 +376,13 @@ eval(data);
 </div><!-- END #userModalUserInfos -->
 </div><!-- END #userModalBasicInfoContainerChild -->
 
-<a id="user_profile_follow_button" class="opacityChangeOnActive notBaseUserOnly" href="#">FOLLOW +</a>
+<a id="user_profile_follow_button" class="opacityChangeOnActive notBaseUserOnly follow_user" href="#" data-user-id=''>FOLLOW +</a>
 
 </div><!-- END userModalBasicInfoContainer -->
 
 <ul id="user_profile_tabs" class="tabs">
 <li class="tab col s4" data-tab-index="0"><a class="active" href="#">Profile</a></li>
-<li class="tab col s4 getUserPosts modal-trigger disabled" data-tab-index="1" data-target="userPostsModal"><a href="#">Posts</a></li>
+<li class="tab col s4 getUserPosts modal-trigger disabled" data-tab-index="1" data-target="userPostsModal" data-user-id='' data-first-name=''><a href="#">Posts</a></li>
 </ul>
 
 
@@ -1190,6 +1202,7 @@ Identification Info
 </a>
 <span class='modalHeaderFullName'>Posts</span>
 <div class='modalLinks navRightItemsMobile'>
+<a href='#' class='btn commonButton follow_user navRightItemsMobileCommonButton scaleVerticallyCenteredItem opacityChangeOnActive' data-user-id=''>Follow +</a>
 </div>
 </div><!-- end .modal-header -->
 </div>
@@ -1272,6 +1285,7 @@ Identification Info
 </a>
 <span class='modalHeaderFullName'></span>
 <div class='modalLinks navRightItemsMobile'>
+<a href='#' class='btn commonButton addTagFromTagPostsModal navRightItemsMobileCommonButton scaleVerticallyCenteredItem opacityChangeOnActive' data-tag='' data-current-state=''></a>
 </div>
 </div><!-- end .modal-header -->
 

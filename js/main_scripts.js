@@ -1,6 +1,11 @@
+
+// will be set on document load. This element will contain a "data-user-id" attribute that points to the id of the logged_in user.
+var BASE_USER_ID_HOLDER;
+
+
 $(document).ready(function(){
  
- 
+BASE_USER_ID_HOLDER = $("#megaContainer");
 	 
 //hide the loading bar and show the document body
 hideLoading();

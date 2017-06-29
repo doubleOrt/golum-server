@@ -65,7 +65,7 @@ function handleUserInfo(data) {
 PROFILE_CONTAINER_ELEMENT.attr("data-user-id", data["id"]);
 PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user", data["is_base_user"]);
 
-$("#user_profile_tabs .tab[data-tab-index=1]").attr("data-user-id", data["id"]);
+$("#user_profile_tabs .tab[data-tab-index=1]").attr({"data-user-id": data["id"], "data-first-name": data["first_name"]});
 
 
 // showing and hiding things that should be only visible when the base-user or only when not-base-user profiles are being viewed. 

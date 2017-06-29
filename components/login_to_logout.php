@@ -6,8 +6,11 @@ require_once "common_requires.php";
 
 
 if(!isset($_SESSION["user_id"])) {
-echo "window.location.href = 'login_and_sign_up.html';";
+echo 0;
 die();
+}
+else {
+echo $_SESSION["user_id"];	
 }
 
 
