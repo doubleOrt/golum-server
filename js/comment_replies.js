@@ -1,3 +1,8 @@
+/*
+bug 1 in bugs.txt explains a bug that occured in this page and the steps that were taken to remove it.
+*/
+
+
 // will be set on document load.
 var REPLIES_CONTAINER_ELEMENT;
 
@@ -8,31 +13,30 @@ var repliesPreventMultipleCalls = false;
 var repliesIntervalVar;
 var repliesIntervalObject;
 
-function getReplies(commentId,lastReplyId,pinReplyToTop, callback) {
+var ajax_call_to_get_replies;
 
-if(typeof commentId == "undefined" || typeof lastReplyId == "undefined" || typeof pinReplyToTop == "undefined" || typeof callback != "function") {
+function getReplies(commentId,row_offset,pinReplyToTop, callback) {
+
+if(typeof commentId == "undefined" || typeof row_offset == "undefined" || typeof pinReplyToTop == "undefined" || typeof callback != "function") {
 return false;	
 }
-
 
 if(repliesPreventMultipleCalls == false) {
 repliesPreventMultipleCalls = true;	
 
 var dataObj = {};
 dataObj["comment_id"] = commentId;
-dataObj["last_reply_id"] = lastReplyId;
+dataObj["row_offset"] = row_offset;
 
 if(typeof pinReplyToTop != "undefined") {
 dataObj["pin_comment_to_top"] = pinReplyToTop;	
 }
 
 
-$.get({
+ajax_call_to_get_replies = $.get({
 url:"components/get_comment_replies.php",
 data:dataObj,
 success:function(data) {	
-
-console.log(data);
 
 var data_arr = JSON.parse(data);
 
@@ -46,6 +50,12 @@ repliesPreventMultipleCalls = false;
 
 }
 
+
+function abort_request_to_get_replies() {
+if(typeof ajax_call_to_get_replies != "undefined") {	
+ajax_call_to_get_replies.abort();	
+}
+}
 
 
 
@@ -114,17 +124,19 @@ setNewNumber(reply_comment_element.find(".reply_button_total_replies"),"data-tot
 
 function get_replies_callback(data) {
 
+
+$("#totalNumberOfReplies").html("(" + data[1] + ")");
+$("#totalNumberOfReplies").attr("data-total-number",data[1]);
+
 if(data[0].length < 1 && REPLIES_CONTAINER_ELEMENT.find(".singleComment").length < 1) {
-REPLIES_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>No replies yet :(</div>")	
+REPLIES_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>No replies yet :(</div>");
+return false;
 }
 
 
 for(var i = 0; i < data[0].length; i++) {
 REPLIES_CONTAINER_ELEMENT.append(get_comment_markup(data[0][i], 1));	
 }
-
-$("#totalNumberOfReplies").html("(" + data[1] + ")");
-$("#totalNumberOfReplies").attr("data-total-number",data[1]);
 
 
 REPLIES_CONTAINER_ELEMENT.find('.actualCommentComment').readmore({
@@ -169,10 +181,14 @@ $(document).on("click",".addReplyToComment",function(){
 // empty the REPLIES_CONTAINER_ELEMENT of the previously viewed post comments 
 REPLIES_CONTAINER_ELEMENT.html("");		
 
+// for details concerning these 2 lines, see the first bug in the bugs.txt file.
+repliesPreventMultipleCalls = false;
+abort_request_to_get_replies();
+
 $("#replyToCommentButton").attr("data-comment-id",$(this).attr("data-comment-id"));
 REPLIES_CONTAINER_ELEMENT.attr("data-comment-id",$(this).attr("data-comment-id"));
 
-if(typeof $(this).attr("data-pin-commet-to-top") == "undefined") {
+if(typeof $(this).attr("data-pin-comment-to-top") == "undefined") {
 getReplies($(this).attr("data-comment-id"),0, 0, get_replies_callback);
 }
 else {

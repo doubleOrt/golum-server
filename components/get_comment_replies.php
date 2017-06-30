@@ -7,7 +7,7 @@ require_once "get_comment_function.php";
 
 $echo_arr = [[]];
 
-if(isset($_GET["comment_id"]) && filter_var($_GET["comment_id"], FILTER_VALIDATE_INT) !== "" && isset($_GET["last_reply_id"]) && filter_var($_GET["last_reply_id"], FILTER_VALIDATE_INT) !== "" && isset($_GET["pin_comment_to_top"]) && filter_var($_GET["pin_comment_to_top"], FILTER_VALIDATE_INT) !== "") {
+if(isset($_GET["comment_id"]) && filter_var($_GET["comment_id"], FILTER_VALIDATE_INT) !== "" && isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== "" && isset($_GET["pin_comment_to_top"]) && filter_var($_GET["pin_comment_to_top"], FILTER_VALIDATE_INT) !== "") {
 
 
 $not_pin_to_top_comment = "";
@@ -17,18 +17,18 @@ $not_pin_to_top_comment = " and id != ". $_GET["pin_comment_to_top"];
 $_SESSION["pinned_to_top_reply"] = $_GET["pin_comment_to_top"];
 }
 // unset this whenever the user opens the comments for another post or this post. 
-else {
+else if($_GET["row_offset"] < 1) {
 unset($_SESSION["pinned_to_top_reply"]);
 }
 
 
-$post_comments_arr = $con->query("SELECT * FROM (SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE is_reply_to = comment_replies.id) AS replies, (SELECT type FROM reply_upvotes_and_downvotes WHERE user_id = ". $_SESSION["user_id"] ." AND comment_id = comment_replies.id) as base_user_opinion, (SELECT post_id from post_comments where id = ". $_GET["comment_id"] .") as reply_owner_post_id FROM comment_replies) comment_replies LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON comment_replies.user_id = post_votes.user_id2 AND reply_owner_post_id = post_votes.post_id2 WHERE comment_replies.comment_id = ". $_GET["comment_id"] . $not_pin_to_top_comment . (isset($_SESSION["pinned_to_top_comment"]) ? " and id != ". $_SESSION["pinned_to_top_comment"] : "") ." ORDER BY upvotes DESC, id DESC LIMIT 15 ". ($_GET["last_reply_id"] > 0 ? " OFFSET " . $_GET["last_reply_id"] : ""))->fetchAll();
+$post_comments_arr = $con->query("SELECT * FROM (SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE is_reply_to = comment_replies.id) AS replies, (SELECT type FROM reply_upvotes_and_downvotes WHERE user_id = ". $_SESSION["user_id"] ." AND comment_id = comment_replies.id) as base_user_opinion, (SELECT post_id from post_comments where id = ". $_GET["comment_id"] .") as reply_owner_post_id FROM comment_replies) comment_replies LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON comment_replies.user_id = post_votes.user_id2 AND reply_owner_post_id = post_votes.post_id2 WHERE comment_replies.comment_id = ". $_GET["comment_id"] . $not_pin_to_top_comment . (isset($_SESSION["pinned_to_top_reply"]) ? " AND id != ". $_SESSION["pinned_to_top_reply"] : "") ." ORDER BY upvotes DESC, id DESC LIMIT 15 ". ($_GET["row_offset"] > 0 ? " OFFSET " . $_GET["row_offset"] : ""))->fetchAll();
 
 
 
 // now we want to append the comment the user wants to pin to the top to the beginning of the $post_comments_arr
 if(intval($_GET["pin_comment_to_top"]) !== 0) {
-array_unshift($post_comments_arr,$con->query("SELECT * FROM SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE is_reply_to = comment_replies.id) AS replies, (SELECT type FROM reply_upvotes_and_downvotes WHERE user_id = ". $_SESSION["user_id"] ." AND comment_id = comment_replies.id) as base_user_opinion, (SELECT post_id from post_comments where id = ". $_GET["comment_id"] .") as reply_owner_post_id FROM comment_replies) comment_replies LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON comment_replies.user_id = post_votes.user_id2 AND reply_owner_post_id = post_votes.post_id2 WHERE comment_replies.comment_id = ". $_GET["comment_id"] ." and id = ". $_GET["pin_comment_to_top"])->fetch());
+array_unshift($post_comments_arr,$con->query("SELECT * FROM (SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE is_reply_to = comment_replies.id) AS replies, (SELECT type FROM reply_upvotes_and_downvotes WHERE user_id = ". $_SESSION["user_id"] ." AND comment_id = comment_replies.id) as base_user_opinion, (SELECT post_id from post_comments where id = ". $_GET["comment_id"] .") as reply_owner_post_id FROM comment_replies) comment_replies LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON comment_replies.user_id = post_votes.user_id2 AND reply_owner_post_id = post_votes.post_id2 WHERE comment_replies.comment_id = ". $_GET["comment_id"] ." and id = ". $_GET["pin_comment_to_top"])->fetch());
 }
 		
 

@@ -1,3 +1,8 @@
+/*
+bug 1 in bugs.txt explains a bug that occured in this page and the steps that were taken to remove it.
+*/
+
+
 // will be set on document load.
 var COMMENTS_CONTAINER_ELEMENT;
 // a comment cannot be longer than 800 characters.
@@ -10,25 +15,30 @@ var commentsPreventMultipleCalls = false;
 var commentsIntervalVar; 
 var commentsIntervalObject;
 
-function getComments(postId,lastCommentId,pinCommentToTop, callback) {
 
-if(typeof postId == "undefined" || typeof lastCommentId == "undefined" || typeof pinCommentToTop == "undefined" || typeof callback != "function") {
+var ajax_call_to_get_comments;
+
+function getComments(postId,row_offset,pinCommentToTop, callback) {
+
+if(typeof postId == "undefined" || typeof row_offset == "undefined" || typeof pinCommentToTop == "undefined" || typeof callback != "function") {
 return false;	
 }
 
 if(commentsPreventMultipleCalls == false) {
+	
 commentsPreventMultipleCalls = true;
+
 
 var dataObj = {};
 dataObj["post_id"] = postId;
-dataObj["last_comment_id"] = lastCommentId;
+dataObj["row_offset"] = row_offset;
 dataObj["pin_comment_to_top"] = pinCommentToTop;	
 
-$.get({
+ajax_call_to_get_comments = $.get({
 url:"components/get_post_comments.php",
 data:dataObj,
-success:function(data) {	
-
+success:function(data) {
+	
 var data_arr = JSON.parse(data);
 
 callback(data_arr)	
@@ -41,6 +51,14 @@ commentsPreventMultipleCalls = false;
 }
 
 }
+
+
+function abort_request_to_get_comments() {
+if(typeof ajax_call_to_get_comments != "undefined") {	
+ajax_call_to_get_comments.abort();	
+}
+}
+
 
 
 function validateCommentLength(comment) {
@@ -100,17 +118,19 @@ callback();
 
 function get_comments_callback(data) {
 
-if(data[0].length < 1 && COMMENTS_CONTAINER_ELEMENT.find(".singleComment").length < 1) {
-COMMENTS_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>No comments yet :(</div>")	
-}
 
+$("#totalNumberOfComments").html("(" + data[1] + ")");
+$("#totalNumberOfComments").attr("data-total-number",data[1]);
+
+
+if(data[0].length < 1 && COMMENTS_CONTAINER_ELEMENT.find(".singleComment").length < 1) {
+COMMENTS_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>No comments yet :(</div>");
+return false;
+}
 
 for(var i = 0; i < data[0].length; i++) {
 COMMENTS_CONTAINER_ELEMENT.append(get_comment_markup(data[0][i], 0));	
 }
-
-$("#totalNumberOfComments").html("(" + data[1] + ")");
-$("#totalNumberOfComments").attr("data-total-number",data[1]);
 
 
 $('#commentsModal .actualCommentComment').readmore({
@@ -166,38 +186,36 @@ setNewNumber(commentSinglePostElement.find(".commentButtonCommentsNumber"),"data
 
 
 
-
-
-
-
-
-
 $(document).ready(function() {
 
 COMMENTS_CONTAINER_ELEMENT = $("#post_comments_container");
 
-
-
 // user wants to see post comments
 $(document).on("click",".showPostComments",function() {
-	
-// empty the COMMENTS_CONTAINER_ELEMENT of the previously viewed post comments 
-COMMENTS_CONTAINER_ELEMENT.html("");		
 
 $("#postCommentButton").attr("data-actual-post-id",$(this).attr("data-actual-post-id"));
 COMMENTS_CONTAINER_ELEMENT.attr("data-actual-post-id",$(this).attr("data-actual-post-id"));
+
+
+// empty the COMMENTS_CONTAINER_ELEMENT of the previously viewed post comments 
+COMMENTS_CONTAINER_ELEMENT.html("");
+ 	
+// for details concerning these 2 lines, see the first bug in the bugs.txt file.
+commentsPreventMultipleCalls = false;
+abort_request_to_get_comments();
 
 if(typeof $(this).attr("data-pin-comment-to-top") == "undefined") {
 getComments($(this).attr("data-actual-post-id"),0, 0, get_comments_callback);
 }
 else {
-getComments($(this).attr("data-actual-post-id"),0,$(this).attr("data-pin-comment-to-top"), get_comments_callback);	
+getComments($(this).attr("data-actual-post-id"), 0, $(this).attr("data-pin-comment-to-top"), get_comments_callback);	
 }
 
 });
 // user is infinite scrolling the comments
-COMMENTS_CONTAINER_ELEMENT.scroll(function(){
-if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 100) && commentsPreventMultipleCalls == false) {
+COMMENTS_CONTAINER_ELEMENT.scroll(function(){	
+if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) == 0)) {
+	last_call_type = 1;
 getComments($(this).attr("data-actual-post-id"), COMMENTS_CONTAINER_ELEMENT.find(".singleComment").length, 0, get_comments_callback);
 }
 });
