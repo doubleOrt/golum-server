@@ -24,12 +24,11 @@ dataObj["post_id"] = postId;
 dataObj["last_comment_id"] = lastCommentId;
 dataObj["pin_comment_to_top"] = pinCommentToTop;	
 
-
 $.get({
 url:"components/get_post_comments.php",
 data:dataObj,
 success:function(data) {	
-console.log(data);
+
 var data_arr = JSON.parse(data);
 
 callback(data_arr)	
@@ -139,6 +138,33 @@ stopPropagation:true
 }
 
 
+function add_comment_to_post_callback(data_arr) {
+
+// the post element that is the parent of this comment.
+var commentSinglePostElement = $(".singlePost[data-actual-post-id=" + COMMENTS_CONTAINER_ELEMENT.attr("data-actual-post-id") + "]");
+
+if(data_arr[0] != "") {
+COMMENTS_CONTAINER_ELEMENT.prepend(get_comment_markup(data_arr[0], 0));
+$('#postCommentTextarea').html("<span class='placeholder' style='color:#aaaaaa'>Type Comment...</span>");
+$('#postCommentTextarea').attr('data-state','0');
+// remove the empty now placeholder
+COMMENTS_CONTAINER_ELEMENT.find(".emptyNowPlaceholder").remove();
+}
+
+if(data_arr[1] != "") {
+Materialize.toast(data_arr[1] ,5000 ,"red")	
+}
+
+setNewNumber($("#totalNumberOfComments"),"data-total-number",true,true,"");
+if(commentSinglePostElement.length > 0) {
+// update the comments button's comment number element
+setNewNumber(commentSinglePostElement.find(".commentButtonCommentsNumber"),"data-total-number",true,true,"");
+}
+	
+}
+
+
+
 
 
 
@@ -202,32 +228,6 @@ return false;
 addCommentToPost($(this).attr("data-actual-post-id"), $("#postCommentTextarea").html(), add_comment_to_post_callback);
 });
 
-
-function add_comment_to_post_callback(data_arr) {
-
-
-// the post element that is the parent of this comment.
-var commentSinglePostElement = $(".singlePost [data-actual-post-id=" + $("#postCommentButton").attr("data-actual-post-id") + "]");
-
-if(data_arr[0] != "") {
-COMMENTS_CONTAINER_ELEMENT.prepend(get_comment_markup(data_arr[0]));
-$('#postCommentTextarea').html("<span class='placeholder' style='color:#aaaaaa'>Type Comment...</span>");
-$('#postCommentTextarea').attr('data-state','0');
-// remove the empty now placeholder
-COMMENTS_CONTAINER_ELEMENT.find(".emptyNowPlaceholder").remove();
-}
-
-if(data_arr[1] != "") {
-Materialize.toast(data_arr[1] ,5000 ,"red")	
-}
-
-setNewNumber($("#totalNumberOfComments"),"data-total-number",true,true,"");
-if(commentSinglePostElement.length > 0) {
-// update the comments button's comment number element
-setNewNumber(commentSinglePostElement.find(".commentButtonCommentsNumber"),"data-total-number",true,true,"");
-}
-	
-}
 
 
 

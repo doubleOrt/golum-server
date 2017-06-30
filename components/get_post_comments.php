@@ -7,7 +7,7 @@ require_once "get_comment_function.php";
 
 $echo_arr = [[]];
 
-if(is_integer(intval($_GET["post_id"])) && is_integer(intval($_GET["last_comment_id"])) && is_integer(intval($_GET["pin_comment_to_top"]))) {
+if(isset($_GET["post_id"]) && filter_var($_GET["post_id"], FILTER_VALIDATE_INT) !== "" && isset($_GET["last_comment_id"]) && filter_var($_GET["last_comment_id"], FILTER_VALIDATE_INT) !== "" && isset($_GET["pin_comment_to_top"]) && filter_var($_GET["pin_comment_to_top"], FILTER_VALIDATE_INT) !== "") {
 
 $not_pin_to_top_comment = "";
 // when we want to pin a comment to the top of the comments, for example we need to do this when a user taps a comment or reply notification to see the comment.
@@ -35,6 +35,8 @@ array_unshift($post_comments_arr,$con->query("SELECT *, (SELECT COUNT(id) FROM c
 $this_user_related_blocks = $con->query("select user_ids from blocked_users where user_ids like '%-" . $_SESSION["user_id"]."' or user_ids like '". $_SESSION["user_id"] ."-%'")->fetchAll();	
 
 
+$poster_id = $con->query("select posted_by from posts where id = ". $_GET["post_id"])->fetch()[0];		
+
 for( $i = 0; $i < count($post_comments_arr); $i++ )	{
 	
 //iterate through the user blocking table and continue the posts loop if you find out that the poster has either blocked this user or has been blocked by this user.	
@@ -46,11 +48,8 @@ continue 2;
 }
 
 
-$poster_id = $con->query("select posted_by from posts where id = ". $_GET["post_id"])->fetch()[0];		
 $post_comments_arr[$i]["original_post_by"] = $poster_id;	
-
 array_push($echo_arr[0], get_comment($post_comments_arr[$i],0));	
-
 }
 
 $echo_arr[1] = $con->query("select count(id) from post_comments where post_id = ". $_GET["post_id"])->fetch()[0];	
