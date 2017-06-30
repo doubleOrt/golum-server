@@ -27,7 +27,8 @@ $search_value = $search_value_raw . "%";
 
 
 // this query selects only accounts not existing in the account_states database table.
-$search_prepare = $con->prepare("SELECT users.id, users.first_name, users.last_name, users.user_name, users.avatar_picture FROM users LEFT JOIN account_states ON users.id = account_states.user_id WHERE (concat(first_name,' ',last_name) LIKE :search_value or user_name LIKE :search_value) AND type IS NULL LIMIT 15 OFFSET :row_offset");
+$search_prepare = $con->prepare("SELECT users.id, users.first_name, users.last_name, users.user_name, users.avatar_picture, (select id from contacts where contact_of = :base_user_id and contact = users.id) as current_state FROM users LEFT JOIN account_states ON users.id = account_states.user_id WHERE (concat(first_name,' ',last_name) LIKE :search_value or user_name LIKE :search_value) AND type IS NULL LIMIT 15 OFFSET :row_offset");
+$search_prepare->bindParam(":base_user_id",$_SESSION["user_id"]);
 $search_prepare->bindParam(":search_value",$search_value);
 $search_prepare->bindParam(":row_offset", $row_offset , PDO::PARAM_INT);
 $search_prepare->execute();
@@ -60,6 +61,7 @@ array_push($echo_arr, [
 'first_name' => htmlspecialchars($row["first_name"]),
 'last_name' => htmlspecialchars($row["last_name"]),
 'user_name' => htmlspecialchars($row["user_name"]),
+'current_state' => ($row["current_state"] == "" ? 0 : 1),
 'avatar' => htmlspecialchars($row["avatar_picture"]),
 'avatar_positions' => $search_result_avatar_arr_positions,
 'avatar_rotate_degree' => htmlspecialchars($search_result_avatar_arr["rotate_degree"])

@@ -258,24 +258,25 @@ get_user_followings($("#contactsModalContentChild"));
 */
 
 
-var follow_button = $(this);
+/* grab all the buttons that have this user's id so that we can update them all simultaneously. */
+var follow_buttons = $(".follow_user[data-user-id=" + $(this).attr("data-user-id") + "]");
 // disable this button and then re-enable it. 
-follow_button.addClass("disabledButton");
+follow_buttons.addClass("disabledButton");
 
 
 // this method is specific to the follow button from the user profiles. 
 function addOrRemoveContactCallback(newState) {
 
-follow_button.removeClass("disabledButton");
+follow_buttons.removeClass("disabledButton");
 
 // if newState is 0, user pressed the follow button and they are now following their target
 if(newState == "0") {	
-follow_button.html('unfollow');
+follow_buttons.html('unfollow');
 set_user_profile_followers_num(get_user_profile_followers_num() + 1);
 }
 // user just unfollowed the target user
 else if(newState == "1") {
-follow_button.html('follow +');
+follow_buttons.html('follow +');
 set_user_profile_followers_num(get_user_profile_followers_num() - 1);
 }
 	

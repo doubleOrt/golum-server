@@ -201,7 +201,16 @@ margin-left:5px;
 height:100%;	
 }
 
-.tag_follow_button {
+/* end search result tags */
+
+#searchPostsContainer {
+padding:10px 0;	
+margin:20px 0 !important;
+border-top:1px solid #f4f4f4;
+}
+
+
+.search_result_button {
 display:inline-block;	
 padding:5px 12px;
 color:white;
@@ -214,14 +223,6 @@ position:relative;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
-}
-
-/* end search result tags */
-
-#searchPostsContainer {
-padding:10px 0;	
-margin:20px 0 !important;
-border-top:1px solid #f4f4f4;
 }
 
 

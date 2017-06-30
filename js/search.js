@@ -152,16 +152,7 @@ return false;
 
 
 for(var i = 0;i < data.length; i++) {
-SEARCH_USERS_RESULTS_CONTAINER.append(
-generate_search_result_user_row_markup( 
-data[i]["id"], 
-data[i]["first_name"], 
-data[i]["last_name"],
-data[i]["user_name"], 
-{"avatar": data[i]["avatar"] , "avatar_positions": data[i]["avatar_positions"] , "avatar_rotate_degree": (data[i]["avatar_rotate_degree"] != "" ? data[i]["avatar_rotate_degree"] : 0 )}
-)
-);
-
+SEARCH_USERS_RESULTS_CONTAINER.append(generate_search_result_user_row_markup(data[i]));
 }
 
 }
@@ -227,24 +218,24 @@ data[i]["current_state"]
 
 // used to generate the markup for user rows when a user searches for other rows
 // avatar_object must be in this format: {"avatar": "xyz" , "avatar_positions" : [x,y] , "avatar_rotate_degree" : x} 
-function generate_search_result_user_row_markup(user_id, first_name, last_name, user_name,  avatar_object) {
+function generate_search_result_user_row_markup(data) {
 
-var full_name = first_name + " " + last_name;
+var full_name = data["first_name"] + " " + data["last_name"];
 
 // need the avatar to have an id so that we can identify it successfully, fit it to its parent and then find its .searchResultRow parent so we can initialize the special waves on it.
-var result_row_element_id = "searchResultRow" + user_id;
+var result_row_element_id = "searchResultRow" + data["id"];
 
 var user_row_markup = `
 
-<div id='` + result_row_element_id + `' class='row searchResultRow showUserModal' data-user-id='` + user_id + `' data-open-main-screen='#main_screen_user_profile'>
+<div id='` + result_row_element_id + `' class='row searchResultRow showUserModal' data-user-id='` + data["id"] + `' data-open-main-screen='#main_screen_user_profile'>
 
 <div class='col l1 m1 s2'>
 
 <div class='searchResultAvatarContainer avatarContainer'>
 <div class='avatarContainerChild'>
-<div class='rotateContainer' style='position:relative;transform:none;display:inline-block;width:100%;height:100%;margin-top: ` + avatar_object["avatar_positions"][0] + `%;margin-left:` + avatar_object["avatar_positions"][1] + `%;'>
-<div class='avatarRotateDiv' style='transform: rotate(` + avatar_object["avatar_rotate_degree"] + `deg);'>
-<img class='searchResultAvatar avatarImages' src='` + (avatar_object["avatar"] != "" ? avatar_object["avatar"] : LetterAvatar(first_name , 60)) + `' alt='Avatar Picture'/>
+<div class='rotateContainer' style='position:relative;transform:none;display:inline-block;width:100%;height:100%;margin-top: ` + data["avatar_positions"][0] + `%;margin-left:` + data["avatar_positions"][1] + `%;'>
+<div class='avatarRotateDiv' style='transform: rotate(` + data["avatar_rotate_degree"] + `deg);'>
+<img class='searchResultAvatar avatarImages' src='` + (data["avatar"] != "" ? data["avatar"] : LetterAvatar(data["first_name"] , 60)) + `' alt='Avatar Picture'/>
 </div><!-- end .avatarRotateDiv -->
 </div><!-- end .rotateContainer -->
 </div><!-- end avatarContainerChild -->
@@ -252,20 +243,22 @@ var user_row_markup = `
 
 </div>
 
-<div class='col l10 m11 s10 searchResultInfosContainer'>
-
+<div class='col l9 m9 s6 searchResultInfosContainer'>
 <div class='searchResultNamesContainer'>
 <div class='searchResultFullName flow-text'>` + full_name + `</div>
-<div class='searchResultUserName flow-text'>@` + user_name + `</div>
+<div class='searchResultUserName flow-text'>@` + data["user_name"] + `</div>
 </div>
-
 </div><!-- end .searchResultInfosContainer -->
+
+<div class='col l2 m2 s4 skewScaleItem'>
+<a href='#' class='search_result_button myBackground opacityChangeOnActive follow_user stopPropagationOnClick' data-user-id='` + data["id"] + `'>` + (data["current_state"] == 0 ? "Follow +" : "Unfollow") + `</a>
+</div>
 
 <script>
 
 	$("#` + result_row_element_id + `").find('.searchResultAvatar').on('load',function(){
 		fitToParent($(this));
-		adaptRotateWithMargin($(this), ` + avatar_object["avatar_rotate_degree"] + `,false);
+		adaptRotateWithMargin($(this), ` + (data["rotate_degree"] != "" ? data["rotate_degree"] : 0) + `,false);
 	});
 	
 	Waves.attach( "#` + result_row_element_id + `" , ['waves-block']);
@@ -302,8 +295,8 @@ return `<div class='row tag_search_result_row searchResultRow getTagPosts modal-
 </div>
 </div><!-- end .searchResultInfosContainer -->
 
-<div class='col l2 m2 s4 tag_row_button_container skewScaleItem'>
-<a href='#' class='tag_follow_button myBackground opacityChangeOnActive addTagFromTagPostsModal stopPropagationOnClick' data-tag='` + tag + `' data-current-state='` + current_state + `'>` + (current_state == 0 ? "Follow +" : "Unfollow") + `</a>
+<div class='col l2 m2 s4 skewScaleItem'>
+<a href='#' class='search_result_button myBackground opacityChangeOnActive addTagFromTagPostsModal stopPropagationOnClick' data-tag='` + tag + `' data-current-state='` + current_state + `'>` + (current_state == 0 ? "Follow +" : "Unfollow") + `</a>
 </div>
 
 </div><!-- end .searchResultRow -->`;
