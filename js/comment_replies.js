@@ -264,4 +264,60 @@ callback();
 
 
 
+// user wants to see comment replies
+
+$(document).on("click",".addReplyToComment",function(){
+if(typeof $(this).attr("data-comment-id") == "undefined") {
+return false;	
+}	
+
+$(".commentRepliesContainer").html("");		
+$("#replyToCommentButton").attr("data-comment-id",$(this).attr("data-comment-id"));
+$(".commentRepliesContainer").attr("data-comment-id",$(this).attr("data-comment-id"));	
+$(".commentRepliesContainer").attr("data-actual-post-id",$(this).attr("data-actual-post-id"));	
+
+if(typeof $(this).attr("data-pin-comment-to-top") == "undefined") {
+getReplies($(this).attr("data-comment-id"),0);
+}
+else {
+getReplies($(this).attr("data-comment-id"),0,$(this).attr("data-pin-comment-to-top"));	
+}
+});
+
+
+
+// user wants to reply to a reply
+
+$(document).on("click",".addReplyToReply",function(){
+
+if(typeof $(this).attr("data-commenter-full-name") == "undefined" || typeof $(this).attr("data-commenter-id") == "undefined") {
+return false;	
+}
+
+$("#replyToCommentTextarea").html("<a href='#modal1' class='replyToFullname  modal-trigger showUserModal view-user' data-user-id='" + $(this).attr("data-commenter-id") + "' data-reply-to='" + $(this).attr("data-commenter-id") + "'>" + $(this).attr("data-commenter-full-name") + "&nbsp;</a>");	
+$("#replyToCommentTextarea").focus();
+$("#replyToCommentTextarea").attr("data-state","1");
+movePointerToEnd($("#replyToCommentTextarea").get(0));	
+});
+
+// when user presses the button to reply to a comment
+$(document).on("click","#replyToCommentButton",function(){
+
+if(typeof $(this).attr("data-comment-id") == "undefined" || $("#replyToCommentTextarea").find("#commentRepliesModal .placeholder").length > 0 || 
+$("#replyToCommentTextarea").attr("data-state") == "0" || $("#replyToCommentTextarea").html().trim().length < 1) {
+return false;	
+}	
+
+var isReplyTo;
+if($("#replyToCommentTextarea").find("a").length > 0) {
+isReplyTo = $("#replyToCommentTextarea").find("a").attr("data-reply-to");
+$("#replyToCommentTextarea").find("a").remove();	
+}
+
+addReplyToComment( $(this).attr("data-comment-id"),$("#replyToCommentTextarea").html(),isReplyTo);
+});
+
+
+
+
 });

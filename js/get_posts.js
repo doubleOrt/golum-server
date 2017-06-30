@@ -242,19 +242,6 @@ adaptRotateWithMargin($(this), ` + data["post_owner_info"]["avatar_rotate_degree
 }
 
 
-// call this function to properly format all the tags in a string
-function handle_tags(target_string) {
-return target_string = target_string.replace(/(#\w+)/gi, function func(tag){
-return "<span class='hashtag getTagPosts opacityChangeOnActive modal-trigger' data-target='tagPostsModal' data-tag='" + tag + "'>" + tag + "</span>";
-});
-}
-
-
-
-
-
-
-
 
 
 $(document).ready(function(){

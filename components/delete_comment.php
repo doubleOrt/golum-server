@@ -22,13 +22,7 @@ $con->exec("delete from comment_replies where comment_id = ". $comment_arr["id"]
 $con->exec("delete from post_comments where id = ". $_POST["comment_id"]);	
 
 
-$shmid = $comment_arr["user_id"] . "" . 6; 
-$shm = shmop_open($shmid, 'c', 0777, 1024);
-shmop_write($shm, str_to_nts("true"), 0);
-shmop_close($shm);	
-
-echo "1";
-	
+echo "1";	
 }
 
 

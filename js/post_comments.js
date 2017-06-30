@@ -1,3 +1,7 @@
+// will be set on document load.
+var COMMENTS_CONTAINER_ELEMENT;
+// a comment cannot be longer than 800 characters.
+var MAXIMUM_COMMENT_LENGTH = 800;
 
 
 // we use this variable to prevent multiple calls to "get_post_comments.php", otherwise there would be duplicate comments, be sure to set this variable to true whenever you call "getComments()", and set it to false after a successful return in the function.
@@ -6,34 +10,108 @@ var commentsPreventMultipleCalls = false;
 var commentsIntervalVar; 
 var commentsIntervalObject;
 
-function getComments(postId,lastCommentId,pinCommentToTop) {
+function getComments(postId,lastCommentId,pinCommentToTop, callback) {
+
+if(typeof postId == "undefined" || typeof lastCommentId == "undefined" || typeof pinCommentToTop == "undefined" || typeof callback != "function") {
+return false;	
+}
+
+if(commentsPreventMultipleCalls == false) {
+commentsPreventMultipleCalls = true;
 
 var dataObj = {};
 dataObj["post_id"] = postId;
 dataObj["last_comment_id"] = lastCommentId;
-
-if(typeof pinCommentToTop != "undefined") {
 dataObj["pin_comment_to_top"] = pinCommentToTop;	
-}
+
 
 $.get({
 url:"components/get_post_comments.php",
 data:dataObj,
 success:function(data) {	
-console.log(data);	
+console.log(data);
+var data_arr = JSON.parse(data);
 
-var dataArr = JSON.parse(data);
+callback(data_arr)	
 
-$(".postCommentsContainer").append(dataArr[0]);	
-$("#totalNumberOfComments").html("(" + dataArr[1] + ")");
-$("#totalNumberOfComments").attr("data-total-number",dataArr[1]);
-
-
-$("#commentsModal .avatarRotateDiv").each(function(){
-$(this).css("transform","rotate(" + $(this).attr("data-rotate-degree") + "deg)");	
-fitToParent("#" + $(this).find(".commenterAvatarImages").attr("id"));
-adaptRotateWithMargin($(this).find("img"),$(this).attr("data-rotate-degree") ,false);
+commentsPreventMultipleCalls = false;
+}	
 });
+
+
+}
+
+}
+
+
+function validateCommentLength(comment) {
+if(comment.length > MAXIMUM_COMMENT_LENGTH) {
+return false;
+}
+else {
+return true;	
+}
+}
+
+
+function addCommentToPost(postId, comment, callback) {
+
+if(typeof postId == "undefined" || typeof comment == "undefined" || typeof callback != "function") {
+return false;	
+}
+
+// check if the comment's length has exceeded the limit.
+if(validateCommentLength(comment) == false) {
+Materialize.toast("Comments Cannot Be Longer Than " + MAXIMUM_COMMENT_LENGTH + " Characters, Currently At " + comment.length + "!",4000,"red");	
+return false;	
+}
+
+$.post({
+url:"components/add_comment_to_post.php",
+data:{
+"post_id": postId,
+"comment": comment
+},
+success: function(data) {
+var data_arr = JSON.parse(data);
+callback(data_arr);
+}	
+});
+	
+}
+
+
+function deleteComment(commentId, callback) {
+
+$.post({
+url:"components/delete_comment.php",
+data:{"comment_id":commentId},
+success:function(data) {
+if(data == 1) {
+if(typeof callback != "undefined") {	
+callback();	
+}
+}
+}
+});
+	
+}
+
+
+
+function get_comments_callback(data) {
+
+if(data[0].length < 1 && COMMENTS_CONTAINER_ELEMENT.find(".singleComment").length < 1) {
+COMMENTS_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>No comments yet :(</div>")	
+}
+
+
+for(var i = 0; i < data[0].length; i++) {
+COMMENTS_CONTAINER_ELEMENT.append(get_comment_markup(data[0][i], 0));	
+}
+
+$("#totalNumberOfComments").html("(" + data[1] + ")");
+$("#totalNumberOfComments").attr("data-total-number",data[1]);
 
 
 $('#commentsModal .actualCommentComment').readmore({
@@ -55,57 +133,49 @@ belowOrigin: true, // Displays dropdown below the button
 alignment: 'left', // Displays dropdown with edge aligned to the left of button
 stopPropagation:true
 }
-);	
+);
 
-commentsIntervalObject = new EnhancedInterval(commentsIntervalVar,60000,function(){
-
-var commentIdsArr = [];
-
-$("#commentsModal .singleComment").each(function(){
-commentIdsArr.push($(this).attr("data-actual-comment-id"));
-});
-
-
-if(commentIdsArr.length < 1) {
-return false;	
+	
 }
 
 
-$.get({
-url:"components/comment_activities.php",
-data:{"comment_ids":commentIdsArr},
-success:function(data) {
-var dataArr = JSON.parse(data);
-for(var i = 0;i<dataArr.length;i++) {
-$("#commentsModal .singleComment[data-actual-comment-id=" + dataArr[i][0] + "] .postCommentActions").html(dataArr[i][1]);
-}
-}	
-});
-
-});
-
-commentsIntervalObject.intervalFunction();
 
 
-commentsPreventMultipleCalls = false;
-}	
-});
-
-}
 
 
-function validateCommentLength(comment) {
-if(comment.length > 800) {
-return false;
-}
-else {
-return true;	
-}
-}
 
 
 
 $(document).ready(function() {
+
+COMMENTS_CONTAINER_ELEMENT = $("#post_comments_container");
+
+
+
+// user wants to see post comments
+$(document).on("click",".showPostComments",function() {
+	
+// empty the COMMENTS_CONTAINER_ELEMENT of the previously viewed post comments 
+COMMENTS_CONTAINER_ELEMENT.html("");		
+
+$("#postCommentButton").attr("data-actual-post-id",$(this).attr("data-actual-post-id"));
+COMMENTS_CONTAINER_ELEMENT.attr("data-actual-post-id",$(this).attr("data-actual-post-id"));
+
+if(typeof $(this).attr("data-pin-comment-to-top") == "undefined") {
+getComments($(this).attr("data-actual-post-id"),0, 0, get_comments_callback);
+}
+else {
+getComments($(this).attr("data-actual-post-id"),0,$(this).attr("data-pin-comment-to-top"), get_comments_callback);	
+}
+
+});
+// user is infinite scrolling the comments
+COMMENTS_CONTAINER_ELEMENT.scroll(function(){
+if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 100) && commentsPreventMultipleCalls == false) {
+getComments($(this).attr("data-actual-post-id"), COMMENTS_CONTAINER_ELEMENT.find(".singleComment").length, 0, get_comments_callback);
+}
+});
+
 
 
 $(document).on("click",".postCommentTextarea",function(){
@@ -121,75 +191,45 @@ $(this).attr("data-state","0");
 });
 
 
-$(".postCommentsContainer").scroll(function(){
-if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 100) && commentsPreventMultipleCalls == false) {
-getComments($(this).attr("data-actual-post-id"),$("#commentsModal .singleComment:last-child").attr("data-comment-id"));
-commentsPreventMultipleCalls = true;
+// when user presses the comment button.
+$(document).on("click","#postCommentButton",function(){
+	
+if(typeof $(this).attr("data-actual-post-id") == "undefined" || $("#postCommentTextarea").find("#commentsModal .placeholder").length > 0 || 
+$("#postCommentTextarea").attr("data-state") == "0" || $("#postCommentTextarea").html().trim().length < 1) {
+return false;
 }
+
+addCommentToPost($(this).attr("data-actual-post-id"), $("#postCommentTextarea").html(), add_comment_to_post_callback);
 });
 
-function addCommentToPost(postId, comment) {
 
-if(typeof postId == "undefined" || typeof comment == "undefined") {
-return false;	
-}
+function add_comment_to_post_callback(data_arr) {
 
-if(validateCommentLength(comment) == false) {
-Materialize.toast("Comments Cannot Be Longer Than 800 Characters, Currently At " + comment.length,4000,"red");	
-return false;	
-}
 
 // the post element that is the parent of this comment.
-var commentSinglePostElement = $(".singlePost [data-actual-post-id=" + $(this).attr("data-actual-post-id") + "]");
+var commentSinglePostElement = $(".singlePost [data-actual-post-id=" + $("#postCommentButton").attr("data-actual-post-id") + "]");
 
-$.post({
-url:"components/add_comment_to_post.php",
-data:{
-"post_id": postId,
-"comment": comment
-},
-success: function(data) {
+if(data_arr[0] != "") {
+COMMENTS_CONTAINER_ELEMENT.prepend(get_comment_markup(data_arr[0]));
+$('#postCommentTextarea').html("<span class='placeholder' style='color:#aaaaaa'>Type Comment...</span>");
+$('#postCommentTextarea').attr('data-state','0');
+// remove the empty now placeholder
+COMMENTS_CONTAINER_ELEMENT.find(".emptyNowPlaceholder").remove();
+}
 
-var dataArr = JSON.parse(data);
-
-$(".postCommentsContainer").prepend(dataArr[0]);
-eval(dataArr[1]);
+if(data_arr[1] != "") {
+Materialize.toast(data_arr[1] ,5000 ,"red")	
+}
 
 setNewNumber($("#totalNumberOfComments"),"data-total-number",true,true,"");
 if(commentSinglePostElement.length > 0) {
 // update the comments button's comment number element
 setNewNumber(commentSinglePostElement.find(".commentButtonCommentsNumber"),"data-total-number",true,true,"");
 }
-
-$("#commentsModal .avatarRotateDiv").each(function(){
-$(this).css("transform","rotate(" + $(this).attr("data-rotate-degree") + "deg)");	
-fitToParent("#" + $(this).find(".commenterAvatarImages").attr("id"));
-adaptRotateWithMargin($(this).find("img"),$(this).attr("data-rotate-degree") ,false);
-});
-
-
-// initialize dropdowns	
-$('#commentsModal .dropdown-button').dropdown({
-inDuration: 300,
-outDuration: 225,
-constrain_width: false, // Does not change width of dropdown to that of the activator
-hover: false, // Activate on hover
-gutter: 0, // Spacing from edge
-belowOrigin: true, // Displays dropdown below the button
-alignment: 'left', // Displays dropdown with edge aligned to the left of button
-stopPropagation:true
-}
-);	
-
-$('#commentsModal .actualCommentComment').readmore({speed: 500, moreLink: '<a href="#" class="readMore" style="font-size:12px;color:#aaaaaa;position:relative;top:-4px;">Read More</a>',
-lessLink: '<a href="#" class="readLess" style="font-size:12px;color:#aaaaaa;position:relative;top:-4px;">Close</a>'});
-
-commentsIntervalObject.intervalFunction();
-
-}	
-});
 	
 }
+
+
 
 
 /* upvoting and downvoting */
@@ -224,6 +264,10 @@ eval(data);
 
 
 
+
+
+
+
 /* deleting comments */
 
 
@@ -252,7 +296,7 @@ return false;
 var thisCommentObject = $(this).parents(".singleComment");
 
 // the post element that is the parent of this comment.
-var commentSinglePostElement = $(".singlePost [data-actual-post-id=" + thisCommentObject.parents(".postCommentsContainer").attr("data-actual-post-id") + "]");
+var commentSinglePostElement = $(".singlePost [data-actual-post-id=" + COMMENTS_CONTAINER_ELEMENT.attr("data-actual-post-id") + "]");
 
 deleteComment($(this).attr("data-comment-id"),function(){thisCommentObject.fadeOut('fast',function(){$(this).remove();});});
 
@@ -264,22 +308,6 @@ setNewNumber(commentSinglePostElement.find(".commentButtonCommentsNumber"),"data
 }
 
 });
-
-function deleteComment(commentId, callback) {
-
-$.post({
-url:"components/delete_comment.php",
-data:{"comment_id":commentId},
-success:function(data) {
-if(data == 1) {
-if(typeof callback != "undefined") {	
-callback();	
-}
-}
-}
-});
-	
-}
 
 
 });

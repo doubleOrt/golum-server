@@ -78,7 +78,6 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 <script src="dependencies/jquery_double_tap.js"></script> 
 <script src="dependencies/letter_avatars.js"></script><!-- used to generate letter-avatar images -->
 <script src="js/generic_functions.js"></script> 
-<script src="js/get_post_markup_function.js"></script> 
 <script src="js/chat_portals.js"></script> 
 <script src="js/modals.js"></script> 
 <script src="js/votes.js"></script> 
@@ -91,6 +90,7 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 <script src="js/user_modal.js"></script>
 <script src="js/new_post.js"></script>
 <script src="js/send_post.js"></script>
+<script src="js/get_comment_markup.js"></script>
 <script src="js/post_comments.js"></script>
 <script src="js/comment_replies.js"></script>
 <script src="js/post_sensitive_actions.js"></script>
@@ -1089,7 +1089,7 @@ Identification Info
  
 <div id="commentsModal" class="modal fullScreenModal hasMobileOnlyHeader">
 <div class="modal-content">
-<div class='postCommentsContainer commentElementsContainer'>
+<div id="post_comments_container" class='commentElementsContainer'>
 </div>
 
 <div class="addComments">
@@ -1097,7 +1097,7 @@ Identification Info
 <span class='placeholder' style="color:#aaaaaa">Type Comment...</span>
 </div><!-- end #postCommentTextarea -->
 <div class="postCommentButtonContainer">
-<a href="#" id="postCommentButton" class="postCommentButton waves-effect wavesCustom"><i class="material-icons">comment</i><a>
+<a href="#" id="postCommentButton" class="postCommentButton myBackground waves-effect wavesCustom"><i class="material-icons">comment</i><a>
 </div>
 </div>
 </div>

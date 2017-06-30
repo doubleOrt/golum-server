@@ -55,7 +55,7 @@ continue 2;
 }
 	
 $post_comments_arr[$i]["original_post_by"] = $poster_id;
-$echo_arr[0] .= get_comment($post_comments_arr[$i],18,45,1);	
+$echo_arr[0] .= get_comment($post_comments_arr[$i],1);	
 }
 }
 
