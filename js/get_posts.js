@@ -442,14 +442,6 @@ else {
 $("#tagPostsModal").attr("data-tag", tag);
 $("#tagPostsModal .modal-header .modalHeaderFullName").html(tag);	
 
-// if this tag has an image, add the necessary markup.
-if(typeof $(this).attr("data-image") != "undefined") {
-$("#tagPostsModal .modalContentImageContainer").css({"height":"350px","background":"url('" + $(this).attr("data-image") + "')","background-size":"cover","background-position":"center center"});	
-}
-else {	
-$("#tagPostsModal .modalContentImageContainer").css({"height":"0","background":"none"});	
-}
-
 getPosts("components/get_tag_posts.php",{"row_offset":0,"tag": tag,"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
 markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(");	
 // add the "follow tag" button which should be in dataArr[1]
