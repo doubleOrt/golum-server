@@ -213,7 +213,7 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 <div class='posterInfoMegaContainer'><!-- contains the user's avatar, their fullname and the time of the post -->
 
 <div class='avatarContainer posterAvatarContainer'>
-<div class='avatarContainerChild posterAvatarContainerChild showUserModal' data-user-id='` + data["post_owner_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'>
+<div class='avatarContainerChild posterAvatarContainerChild showUserModal modal-trigger' data-user-id='` + data["post_owner_info"]["id"] + `' data-target='user_modal'>
 <div class='rotateContainer' style='margin-top:` + data["post_owner_info"]["avatar_positions"][0] + `%;margin-left:` + data["post_owner_info"]["avatar_positions"][1] + `%;'>
 <div class='avatarRotateDiv ` + (data["posted_by_base_user"] == true ? "baseUserAvatarRotateDivs" : "") + `' data-rotate-degree='` + data["post_owner_info"]["avatar_rotate_degree"] + `' style='transform:rotate(` + data["post_owner_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='` + avatar_id + `' class='avatarImages posterAvatarImages' src='` + (data["post_owner_info"]["avatar_picture"] != "" ? data["post_owner_info"]["avatar_picture"] : LetterAvatar(poster_full_name, 120)) + `' alt='Image'/>

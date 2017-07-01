@@ -24,7 +24,7 @@ return `<div class='singleComment scaleHorizontallyCenteredItem myGreyBackground
 </ul>` : "") + `
 <div class='commenterAvatarContainerParent col l1 m1 s2'>
 <div class='avatarContainer commenterAvatarContainer'>
-<div class='avatarContainerChild commenterAvatarContainerChild showUserModal' data-user-id='` + data["comment_owner_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'>
+<div class='avatarContainerChild commenterAvatarContainerChild showUserModal modal-trigger' data-user-id='` + data["comment_owner_info"]["id"] + `' data-target='user_modal'>
 <div class='rotateContainer' style='margin-top:` + data["comment_owner_info"]["avatar_positions"][0] + `%;margin-left:` + data["comment_owner_info"]["avatar_positions"][1] + `%;'>
 <div class='avatarRotateDiv ` + (data["comment_by_base_user"] == true ? `baseUserAvatarRotateDivs` : ``) + `' data-rotate-degree='` + data["comment_owner_info"]["avatar_rotate_degree"] + `' style='transform:rotate(` + data["comment_owner_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='` + commenter_avatar_id + `' class='avatarImages commenterAvatarImages' src='` + (data["comment_owner_info"]["avatar_picture"] != "" ? data["comment_owner_info"]["avatar_picture"] : LetterAvatar(data["comment_owner_info"]["first_name"], 120)) + `' alt='Image'/>

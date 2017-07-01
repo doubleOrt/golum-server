@@ -227,7 +227,7 @@ var result_row_element_id = "searchResultRow" + data["id"];
 
 var user_row_markup = `
 
-<div id='` + result_row_element_id + `' class='row searchResultRow showUserModal' data-user-id='` + data["id"] + `' data-open-main-screen='#main_screen_user_profile'>
+<div id='` + result_row_element_id + `' class='row searchResultRow showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["id"] + `'>
 
 <div class='col l1 m1 s2'>
 
@@ -258,7 +258,7 @@ var user_row_markup = `
 
 	$("#` + result_row_element_id + `").find('.searchResultAvatar').on('load',function(){
 		fitToParent($(this));
-		adaptRotateWithMargin($(this), ` + (data["rotate_degree"] != "" ? data["rotate_degree"] : 0) + `,false);
+		adaptRotateWithMargin($(this), ` + (data["avatar_rotate_degree"] != "" ? data["avatar_rotate_degree"] : 0) + `,false);
 	});
 	
 	Waves.attach( "#` + result_row_element_id + `" , ['waves-block']);
@@ -267,8 +267,7 @@ var user_row_markup = `
 </script>
 </div><!-- end .searchResultRow -->`;
 	
-return user_row_markup;
-	
+return user_row_markup;	
 }
 
 

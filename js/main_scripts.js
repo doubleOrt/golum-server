@@ -11,37 +11,10 @@ BASE_USER_ID_HOLDER = $("#megaContainer");
 hideLoading();
 $("#showOnBodyLoad").show();
 
-$(document).on("click", "[data-open-main-screen]" , function() {
-$(".main_screen").removeClass("main_screen_active");
-$($(this).attr("data-open-main-screen")).addClass("main_screen_active");
-});
-
-
 // we got 284 emojis in our emojis file, we need to append them all to our emojisContainerChild element.
 for(var i = 0;i<285;i++) {
 $(".emojisContainerChild").append("<img class='emoji' src='icons/emojis/" + i + ".svg' alt='Emoji' style='width:55px;height:55px;'/>");
 }
-
-
-
-$(document).on("click",".modal-trigger",function(){
-	
-// we need to disable the button so the user cannot make multiple calls to the openModalCustom .	
-$(this).css("pointer-events","none");
-var thisModalTrigger = $(this);	
-setTimeout(function(){thisModalTrigger.css("pointer-events","auto");},500);
-	
-// grab the modal's id
-var modalId = ( typeof $(this).attr("data-target") != "undefined" ? $(this).attr("data-target") : $(this).attr("href").substr(1,this.length));
-
-openModalCustom(modalId,currentZindexStack,modalsOpened);
-});
-
-
-$(document).on("click",".modalCloseButton, .modal-overlay",function(){	
-closeModal($(this).attr("data-modal"));
-});
-
 
 
 
@@ -73,13 +46,6 @@ $('select').material_select();
  $(".tabs").tabs();
 
 
-// initialize the modals
-$('.modal').modal({
-ready:function(){
-// because of a bug where the indicator for tabs doesn't work if the tabs are not visible when they are initialized, we have to initialize the tabs as soon as they become visible.
-$(this).find(".tabs").tabs();
-}
-});
 
 
 /* components that require a loading circle to show until they are fully loaded, on clicking those, we hide all the pageContentComponents (these methods are used for them) and show the loading circle, then we have to manually show the div we want to after we know it has fully loaded */
@@ -437,10 +403,18 @@ $($(this).attr("data-onfocus-toggle")).fadeIn();
 
 
 
+$(document).on("click", "[data-open-main-screen]" , function() {
+$(".main_screen").removeClass("main_screen_active");
+$($(this).attr("data-open-main-screen")).addClass("main_screen_active");
+});
 
+
+var non_activatable_item_class_name = "bottom_nav_static_item";
 $(document).on("click",".bottomTabsItem",function(){
+if(!$(this).hasClass(non_activatable_item_class_name)) { 	
 $(".bottomTabsItem").removeClass("active");
 $(this).addClass("active");
+}
 });
 $(document).on("touchstart",".bottomTabsItem",function(){
 $(this).addClass("bottomTabsItemActiveColor");

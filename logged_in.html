@@ -750,9 +750,9 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 <ul id="bottomTabs">
 <li class="bottomTabsItem active" data-open-main-screen="#main_screen_main"><i class="material-icons">home</i></li>
 <li class="bottomTabsItem openNotificationsModal" data-open-main-screen="#main_screen_notifications"><i class="material-icons">notifications</i></li>
-<li class="bottomTabsItem modal-trigger" data-target="shareNewModal"><i class="material-icons">add_box</i></li>
+<li class="bottomTabsItem modal-trigger bottom_nav_static_item" data-target="shareNewModal"><i class="material-icons">add_box</i></li>
 <li class="bottomTabsItem searchPortal" data-open-main-screen="#main_screen_search" data-target="#searchForUserRow,#searchForUserContainer,#searchResultsContainer"><i class="material-icons">search</i></li>
-<li class="bottomTabsItem showUserModal" data-user-id="0" data-open-main-screen="#main_screen_user_profile"><i class="material-icons">person</i></li>
+<li id="bottom_nav_user_profile" class="bottomTabsItem" data-user-id="0" data-open-main-screen="#main_screen_user_profile"><i class="material-icons">person</i></li>
 </ul>
 
 </div>
@@ -765,7 +765,7 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 
 
   <!-- Current Password Modal (After Someone Wants To Change Some Account Info) -->
-<div id="modal2" class="modal hasFooterAndHeader fullScreenModal">
+<div id="modal2" class="modal hasFooterAndHeader">
     <div class="modal-content" style="height:calc(100% - 60px);">
 	<div class="row">
 	<form autocomplete="off">
@@ -779,20 +779,20 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 	
 	<div class="modalHeaderContainer">
 	<div class="modal-header mobileOnly">
-	<a class="modalCloseButton waves-effect wavesCustom" data-modal="#modal2" href="#">
+	<a class="modalCloseButton waves-effect wavesCustom" data-modal="modal2" href="#">
 	<i class="material-icons">arrow_back</i>
 	</a>
 	<span class="modalHeaderFullName">Save Changes</span>
 	</div><!-- end modal header -->
 	</div>
 		
-    <div class="modal-footer col l12 m12 s12 row myBackground" style="bottom:0;box-shadow:0 -5px 8px rgba(0,0,0,.1);margin:0;">
+    <div class="modal-footer col l12 m12 s12 row" style="bottom:0;box-shadow:0 -5px 8px rgba(0,0,0,.1);margin:0;">
 	<div class="col l5 m12 s12 offset-l7" style="position:relative;top:50%;transform:translate(0,-50%);">
 		<div class="col l6 m6 s6" style="padding:0 1%;">
-		 <a href="#" id="cancelChanges" class="modal-close modal-action waves-effect wavesCustom btn commonButton" style="width:100%;">Cancel</a>
+		 <a href="#" id="cancelChanges" class="waves-effect wavesCustom btn commonButtonWhite modalCloseButton" data-modal="modal2" style="width:100%;">Cancel</a>
 		 </div>
 	<div class="col l6 m6 s6" style="padding:0 1%;">
-        <a href="#" id="saveChanges" class="waves-effect waves-ff3333 btn commonButtonWhite modal-close modal-action" style="width:100%;">Save Changes</a>
+        <a href="#" id="saveChanges" class="waves-effect wavesCustom btn commonButton modalCloseButton" data-modal="modal2" style="width:100%;">Save Changes</a>
 		</div>	
 	  </div>
 	</div><!-- .modal-footer -->
@@ -908,8 +908,8 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header mobileOnly'>
-<a class='modalCloseButton waves-effect wavesCustom' data-modal='#settingsModal'>
-<i class='material-icons' style='font-size:100% !important;'>arrow_back</i>
+<a class='modalCloseButton waves-effect wavesCustom' data-modal='settingsModal'>
+<i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName'>Settings</span>
 </div><!-- end modal header -->
@@ -944,8 +944,8 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header'>
-<a class='modalCloseButton waves-effect wavesCustom chatModalCloseButton' data-modal='#chatModal'>
-<i class='material-icons' style='font-size:100% !important;'>arrow_back</i>
+<a class='modalCloseButton waves-effect wavesCustom chatModalCloseButton' data-modal='chatModal'>
+<i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName chatModalFullName'></span>
 <div class='modalLinks navRightItemsMobile'>
@@ -981,7 +981,7 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header'>
-<a class='waves-effect wavesCustom modalCloseButton' data-modal='#followingMeModal' href='#'>
+<a class='waves-effect wavesCustom modalCloseButton' data-modal='followingMeModal' href='#'>
 <i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName'>Followers</span>
@@ -1006,7 +1006,7 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header'>
-<a class='waves-effect wavesCustom modalCloseButton' data-modal='#contactsModal' href='#'>
+<a class='waves-effect wavesCustom modalCloseButton' data-modal='contactsModal' href='#'>
 <i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName'>Followings</span>
@@ -1075,8 +1075,8 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header'>
-<a class='modalCloseButton waves-effect wavesCustom' data-modal='#shareNewModal'>
-<i class='material-icons' style="font-size:100% !important">arrow_back</i>
+<a class='modalCloseButton waves-effect wavesCustom' data-modal='shareNewModal'>
+<i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName'>New Post</span>
 <div class='modalLinks navRightItemsMobile'>
@@ -1104,8 +1104,8 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header'>
-<a class='modalCloseButton waves-effect wavesCustom' data-modal='#commentsModal'>
-<i class='material-icons' style="font-size:100% !important">arrow_back</i>
+<a class='modalCloseButton waves-effect wavesCustom' data-modal='commentsModal'>
+<i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName'>Comments <span id="totalNumberOfCommentsContainer" class="modalHeaderFullNameSecondary"><span id="totalNumberOfComments" data-total-number="0"></span></span></span>
 <div class='modalLinks navRightItemsMobile'>
@@ -1136,8 +1136,8 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header'>
-<a class='modalCloseButton waves-effect wavesCustom' data-modal='#commentRepliesModal'>
-<i class='material-icons' style="font-size:100% !important">arrow_back</i>
+<a class='modalCloseButton waves-effect wavesCustom' data-modal='commentRepliesModal'>
+<i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName'>Replies <span id="totalNumberOfRepliesContainer" class="modalHeaderFullNameSecondary"><span id="totalNumberOfReplies" data-total-number="0"></span></span></span>
 <div class='modalLinks navRightItemsMobile'>
@@ -1160,7 +1160,7 @@ Identification Info
 
 <div class="bottomSheetModalResultsContainer">
 <div class="col l12 m12 s12 sendToFriendContainerCol bottomSheetModalResultsContainerCol">
-<span id="sendToFriendModalPlaceholder" class="emptyNowPlaceholder aaaaaaColor">Friends Will Appear Here...</span>
+<span id="sendToFriendModalPlaceholder" class="emptyNowPlaceholder aaaaaaColor"><i class='material-icons'>info</i><br>Friends Will Appear Here...</span>
 </div>
 </div>
 
@@ -1178,8 +1178,8 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header'>
-<a class='modalCloseButton waves-effect wavesCustom' data-modal='#userPostsModal'>
-<i class='material-icons' style="font-size:100% !important">arrow_back</i>
+<a class='modalCloseButton waves-effect wavesCustom' data-modal='userPostsModal'>
+<i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName'>Posts</span>
 <div class='modalLinks navRightItemsMobile'>
@@ -1202,8 +1202,8 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header'>
-<a class='modalCloseButton waves-effect wavesCustom' data-modal='#singlePostModal'>
-<i class='material-icons' style="font-size:100% !important">arrow_back</i>
+<a class='modalCloseButton waves-effect wavesCustom' data-modal='singlePostModal'>
+<i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName'>Post</span>
 <div class='modalLinks navRightItemsMobile'>
@@ -1227,8 +1227,8 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header'>
-<a class='modalCloseButton waves-effect wavesCustom' data-modal='#getPostsByTitleModal'>
-<i class='material-icons' style="font-size:100% !important">arrow_back</i>
+<a class='modalCloseButton waves-effect wavesCustom' data-modal='getPostsByTitleModal'>
+<i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName'></span>
 <div class='modalLinks navRightItemsMobile'>
@@ -1256,8 +1256,8 @@ Identification Info
 
 <div class="modalHeaderContainer">
 <div class='modal-header' id="tagPostsModalHeader" data-register-to-scroll-effect="true" data-scroll-targets="#tagPostsModalContent" data-minimum-scrolltop-to-activate="0">
-<a class='modalCloseButton waves-effect wavesCustom waves-circle' data-modal='#tagPostsModal'>
-<i class='material-icons' style="font-size:100% !important">arrow_back</i>
+<a class='modalCloseButton waves-effect wavesCustom waves-circle' data-modal='tagPostsModal'>
+<i class='material-icons'>arrow_back</i>
 </a>
 <span class='modalHeaderFullName'></span>
 <div class='modalLinks navRightItemsMobile'>
@@ -1294,14 +1294,37 @@ Identification Info
  
  
  
+
+<div id="user_modal" class="modal fullScreenModal hasMobileOnlyHeader">
+
+<div class="modal-content">
+</div>
+
+
+<div class="modalHeaderContainer">
+<div class='modal-header'>
+<a class='modalCloseButton waves-effect wavesCustom' data-modal='user_modal'>
+<i class='material-icons'>arrow_back</i>
+</a>
+<span class='modalHeaderFullName'>User</span>
+<div class='modalLinks navRightItemsMobile'>
+</div>
+</div><!-- end .modal-header -->
+</div>
+
+</div>
+
+ 
+ 
+ 
  
 <div id="fullScreenFileView">
 <img id="fullScreenFileViewFile" alt="File"/>
 </div>
 
 
-<div class="emojisContainer">
-<div class='emojisContainerChild'>
+<div id="emojisContainer">
+<div id='emojisContainerChild'>
 </div>
 </div> 
   

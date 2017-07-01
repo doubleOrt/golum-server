@@ -32,10 +32,12 @@ transform:translate(0,-50%);
 color:#cccccc;	
 z-index:1;
 font-size:120%;
+transition:color .1s ease-out .2s;
 }
 
 .bottomTabsItem i:after {
 content:"";	
+opacity:0;
 position:absolute;	
 z-index:-1;
 top:50%;
@@ -49,6 +51,7 @@ transition:all .3s ease-out;
 }
 
 .bottomTabsItemActiveColor i:after {
+opacity:1;	
 transform:translate(-50%,-50%) scale(1);
 }
 
