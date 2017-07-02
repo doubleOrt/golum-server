@@ -441,12 +441,13 @@ markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(");
 else {
 $("#tagPostsModal").attr("data-tag", tag);
 $("#tagPostsModal .modal-header .modalHeaderFullName").html(tag);	
+$("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").attr("data-tag", tag);
 
 getPosts("components/get_tag_posts.php",{"row_offset":0,"tag": tag,"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
 markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(");	
 // add the "follow tag" button which should be in dataArr[1]
 $("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").attr("data-current-state", data_arr[1]);
-$("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").html(data_arr[1] == 0 ? "Follow" : "Unfollow");
+$("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").html(data_arr[1] == 0 ? "Follow +" : "Unfollow");
 });
 
 }
@@ -454,7 +455,7 @@ $("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").html(d
 });
 // infinite scrolling tagPosts
 $("#tagPostsContainer").scroll(function(){
-if($(this).scrollTop() > ($(this)[0].scrollHeight - $("#tagPostsModal .modalContentImageContainer")[0].scrollHeight - 650) && $(this).find(".singlePost").length > 0) {
+if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 650) && $(this).find(".singlePost").length > 0) {
 
 getPosts("components/get_tag_posts.php",{"row_offset":$("#tagPostsModal .singlePost").length,"tag":$("#tagPostsModal").attr("data-tag"),"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){
 markUpProcessor(data_arr[0], $("#tagPostsContainer"), "Nothing here :(");	

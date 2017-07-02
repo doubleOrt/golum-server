@@ -39,7 +39,7 @@ position:relative;
 left:50%;
 transform:translate(-50%,0%);
 background-color:white;
-padding:0 20px 35px 20px;
+padding:0 15px 35px 15px;
 border-bottom:1px solid #ebeaea;
 }
 
@@ -50,14 +50,14 @@ position:fixed;
 bottom:70px;	
 }
 
-#user_modal_3_infos_container {
+#user_modal_important_infos_container {
 display:block;	
 width:100%;
 height:auto;
 margin:0;
 }
 
-#user_modal_3_infos_container_child {
+#user_modal_important_infos_container_child {
 display:inline-block;
 position:relative;
 left:50%;
@@ -65,32 +65,33 @@ transform:translate(-50%,0);
 border-bottom:1px solid #f4f4f4;
 }
 
-.user_modal_3_infos_button {
-min-width:80px;	
+.user_modal_important_infos_button {
+min-width:55px;	
 float:left;
-margin-left:25px;	
+margin-left:15px;	
 text-align:center;	
 padding:15px 0 10px 0;
 user-select:none;
 }
 
-.user_modal_3_infos_button:active {
+.user_modal_important_infos_button:active {
 background-color:#f4f4f4;	
 }
 
-.user_modal_3_infos_button:first-child {
+.user_modal_important_infos_button:first-child {
 margin-left:0;	
 }
 
-.user_modal_3_infos_button_num {
-font-size:20px;
+.user_modal_important_infos_button_num {
+font-size:19px;
 color:black;
 font-weight:600;
-line-height:16px;
+line-height:20px;
 }
 
-.user_modal_3_infos_button_label {
-font-size:12px;
+.user_modal_important_infos_button_label {
+font-size:10px;
+font-weight:500;
 color:#aaaaaa;
 text-transform:uppercase;
 }

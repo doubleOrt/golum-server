@@ -9,6 +9,7 @@ var USER_LETTER_AVATAR_SIZE = 120;
 var PROFILE_CONTAINER_ELEMENT;
 var USER_PROFILE_FOLLOWER_COUNTER;
 var USER_PROFILE_FOLLOWING_COUNTER;
+var USER_PROFILE_TAGS_COUNTER;
 var USER_PROFILE_POSTS_COUNTER;
 var USER_PROFILE_KNOWN_INFO_CONTAINER;
 var USER_PROFILE_POSTS_CONTAINER;
@@ -31,8 +32,8 @@ userModalShouldServerSide = false;
 $.get({
 url:"components/userModalGet.php",
 data:{"user_id":userId},
-success:function(data,status){					  
-
+success:function(data){					  
+console.log(data);
 var dataArr = JSON.parse(data);
 
 // gives us an object called "info" that is populated with info about this user.
@@ -104,10 +105,13 @@ set_user_profile_posts_num(data["total_posts_num"]);
 set_user_profile_followers_num(data["followers_num"]);
 // set the user's followings num
 set_user_profile_followings_num(data["followings_num"]);
+// set the user's tags num
+set_user_profile_tags_num(data["following_tags_num"]);
 
 // set the data-user-id for the show-followers and show-followings buttons, which is required in order for them to show what they are supposed to show when clicked.
 USER_PROFILE_FOLLOWER_COUNTER.attr("data-user-id", data["id"]);
 USER_PROFILE_FOLLOWING_COUNTER.attr("data-user-id", data["id"]);
+USER_PROFILE_TAGS_COUNTER.attr("data-user-id", data["id"]);
 
 
 
@@ -161,7 +165,6 @@ selectYears: 80,
 today: null,
 clear: null
 }).pickadate("picker").set("select" , data["birthdate"] , {format: "d mmmm, yyyy"});
-
 
 
 callback();
@@ -223,10 +226,20 @@ function set_user_profile_followings_num(followings_num) {
 USER_PROFILE_FOLLOWING_COUNTER.find(".profile_stats_num").html(followings_num);
 USER_PROFILE_FOLLOWING_COUNTER.find(".profile_stats_label").html((followings_num != 1 ? " Followings" : " Following"));
 }
-	
+// call this function to set the user's followings number on the profile section.
+function set_user_profile_tags_num(tags_num) {
+USER_PROFILE_TAGS_COUNTER.find(".profile_stats_num").html(tags_num);
+USER_PROFILE_TAGS_COUNTER.find(".profile_stats_label").html((tags_num != 1 ? " Tags" : " Tag"));
+}
+
+
 function get_user_profile_followers_num() {
 return parseFloat(USER_PROFILE_FOLLOWER_COUNTER.find(".profile_stats_num").html());	
 }	
+
+function get_user_profile_tags_num() {
+return parseFloat(USER_PROFILE_TAGS_COUNTER.find(".profile_stats_num").html());	
+}
 	
 	
 function user_profile_section_tabs_changed() {
@@ -253,6 +266,7 @@ $(document).ready(function(){
 PROFILE_CONTAINER_ELEMENT = $("#user_profile_container");	
 USER_PROFILE_FOLLOWER_COUNTER = $("#user_profile_follower_count");
 USER_PROFILE_FOLLOWING_COUNTER = $("#user_profile_following_count");
+USER_PROFILE_TAGS_COUNTER = $("#user_profile_tags_count");
 USER_PROFILE_POSTS_COUNTER = $("#user_profile_posts_count");
 USER_PROFILE_TABS_STATE_HOLDER = PROFILE_CONTAINER_ELEMENT;	
 USER_PROFILE_KNOWN_INFO_CONTAINER = $("#userModalKnownInfoContainer");

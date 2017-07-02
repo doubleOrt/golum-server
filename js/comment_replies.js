@@ -199,7 +199,7 @@ getReplies($(this).attr("data-comment-id"),0,$(this).attr("data-pin-comment-to-t
 // infinite scrolling the replies
 REPLIES_CONTAINER_ELEMENT.scroll(function(){
 
-if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 100) && repliesPreventMultipleCalls == false) {
+if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) == 0) && repliesPreventMultipleCalls == false) {
 getReplies($(this).attr("data-comment-id"), REPLIES_CONTAINER_ELEMENT.find(".singleComment").length, 0, get_replies_callback);
 }
 

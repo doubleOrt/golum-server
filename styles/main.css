@@ -12,7 +12,11 @@
 
 @import url(bottom_sheet_modals.css);
 
+@import url(list_rows.css);
+
 @import url(userModal.css);
+
+@import url(user_tags.css);
 
 @import url(search.css);
 

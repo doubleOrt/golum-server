@@ -14,7 +14,10 @@ if(isset($_GET["user_id"]) && (is_integer(intval($_GET["user_id"])) || intval($_
 because "0" is not the id of any user,  it is just something we send that this page understands. */
 $user_id = (intval($_GET["user_id"]) === 0 ? $_SESSION["user_id"] : $_GET["user_id"]);
 
-$user_modal_info_arr = $con->query("select * from users where id = ". $user_id)->fetch();
+$prepared = $con->prepare("select *, (select count(id) from following_tags where id_of_user = :user_id) as following_tags_num from users where id = :user_id");
+$prepared->bindParam(":user_id", $user_id);
+$prepared->execute();
+$user_modal_info_arr = $prepared->fetch();
 
 $user_age_in_years = date_diff(date_create(date("Y-m-d")),date_create(str_replace(",","",$user_modal_info_arr["birthdate"])))->y;
 
@@ -91,6 +94,7 @@ $echo_arr[0] = "var info = {
 'followers_num': ". htmlspecialchars($user_followed_by_num) .",
 'followings_num': ". htmlspecialchars($user_following_num) .",
 'followed_by_base_user': '". htmlspecialchars($followed_by_base_user) ."',
+'following_tags_num': '". htmlspecialchars($user_modal_info_arr["following_tags_num"]) ."',
 'user_blocked_state': '". htmlspecialchars($user_blocked_state) ."',
 'total_posts_num': ". htmlspecialchars($number_of_posts_shared_by_this_user) ."
 }";

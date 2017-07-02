@@ -308,22 +308,27 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 
 <div class='userModalBasicInfoContainer'>
 
-<div id="user_modal_3_infos_container">
-<div id="user_modal_3_infos_container_child">
+<div id="user_modal_important_infos_container">
+<div id="user_modal_important_infos_container_child">
 
-<div id="user_profile_posts_count" class="user_modal_3_infos_button">
-<div class="user_modal_3_infos_button_num profile_stats_num">0</div>
-<div class="user_modal_3_infos_button_label profile_stats_label">Posts</div>
+<div id="user_profile_posts_count" class="user_modal_important_infos_button">
+<div class="user_modal_important_infos_button_num profile_stats_num">0</div>
+<div class="user_modal_important_infos_button_label profile_stats_label">Posts</div>
 </div>
 
-<div id="user_profile_follower_count" class="user_modal_3_infos_button modal-trigger get_followers" data-user-id="0" data-target="followingMeModal">
-<div class="user_modal_3_infos_button_num profile_stats_num">0</div>
-<div class="user_modal_3_infos_button_label profile_stats_label">Followers</div>
+<div id="user_profile_follower_count" class="user_modal_important_infos_button modal-trigger get_followers" data-user-id="0" data-target="followingMeModal">
+<div class="user_modal_important_infos_button_num profile_stats_num">0</div>
+<div class="user_modal_important_infos_button_label profile_stats_label">Followers</div>
 </div>
 
-<div id="user_profile_following_count" class="user_modal_3_infos_button modal-trigger get_followings" data-user-id="0" data-target="contactsModal">
-<div class="user_modal_3_infos_button_num profile_stats_num">0</div>
-<div class="user_modal_3_infos_button_label profile_stats_label">Followings</div>
+<div id="user_profile_following_count" class="user_modal_important_infos_button modal-trigger get_followings" data-user-id="0" data-target="contactsModal">
+<div class="user_modal_important_infos_button_num profile_stats_num">0</div>
+<div class="user_modal_important_infos_button_label profile_stats_label">Followings</div>
+</div>
+
+<div id="user_profile_tags_count" class="user_modal_important_infos_button modal-trigger get_user_tags" data-target="user_tags_modal" data-user-id="0">
+<div class="user_modal_important_infos_button_num profile_stats_num">0</div>
+<div class="user_modal_important_infos_button_label profile_stats_label">Tags</div>
 </div>
 
 </div>
@@ -1016,6 +1021,31 @@ Identification Info
 </div>
 
 </div><!-- end #contactsModal -->
+
+
+<!-- user-tags modal -->
+<div id="user_tags_modal" class="modal hasHeader fullScreenModal"> 
+
+<div id='user_tags_modal_content' class='modal-content'>
+<div id='user_tags_modal_content_child' class='row'>
+
+
+</div><!-- end #contactsModalContentChild -->
+</div><!-- end #contactsModalContent -->
+
+<div class="modalHeaderContainer">
+<div class='modal-header'>
+<a class='waves-effect wavesCustom modalCloseButton' data-modal='user_tags_modal' href='#'>
+<i class='material-icons'>arrow_back</i>
+</a>
+<span class='modalHeaderFullName'>Tags</span>
+<div class='modalLinks navRightItemsAll'>
+</div>
+</div><!-- end modal header -->
+</div>
+
+</div><!-- end #contactsModal -->
+
 
 
 
