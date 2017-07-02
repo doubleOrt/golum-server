@@ -1249,8 +1249,13 @@ Identification Info
 
 <div id="tagPostsModalContent" class="modal-content">
 	  
-<div id="tagPostsContainer" class="postModalsPostsContainer">
+<<<<<<< HEAD
+<div id="tagPostsContainer">
 </div><!-- end #tagPostsContainer -->
+=======
+<div id="tagPostsContainer" class="postModalsPostsContainer">
+</div>
+>>>>>>> 258ec79... -This commit adds a modal version of viewing user-profiles.
 
 </div><!-- end #tagPostsModalContent -->
 
