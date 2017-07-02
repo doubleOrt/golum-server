@@ -33,7 +33,7 @@ return `<div class='singleComment scaleHorizontallyCenteredItem myGreyBackground
 </div><!-- end .avatarContainer -->
 </div><!-- end .commenterAvatarContainerParent -->
 <div class='actualComment col l10 m10 s10'>
-<a href='#modal1' class='commenterFullName showUserModal ` + (data["comment_by_poster"] == true ? "commentByPoster" : "") + `' data-user-id='` + data["comment_owner_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'><span class='` + (data["comment_by_base_user"] == true ? "baseUserFullNameContainers" : "") + `'>` + comment_owner_full_name + `</span></a><!-- end .commenterFullName -->
+<a href='#modal1' class='commenterFullName showUserModal modal-trigger ` + (data["comment_by_poster"] == true ? "commentByPoster" : "") + `' data-user-id='` + data["comment_owner_info"]["id"] + `' data-target='user_modal'><span class='` + (data["comment_by_base_user"] == true ? "baseUserFullNameContainers" : "") + `'>` + comment_owner_full_name + `</span></a><!-- end .commenterFullName -->
 ` + (data["comment_owner_vote"] != "" ? ("<span class='commenterVotedThis'>" + comment_owner_vote[data["comment_owner_vote"]] + "</span>") : "") + `
 <div class='actualCommentComment' >` + handle_tags(data["comment_text"]) + `</div>
 <div class='postCommentActions' data-comment-id='` + data["comment_id"] + `'>

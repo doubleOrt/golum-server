@@ -44,7 +44,7 @@ return `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:`+notification_arr["notification_sender_info"]["avatar_positions"][0]+`%;margin-left:`+notification_arr["notification_sender_info"]["avatar_positions"][1]+`%;'>
 <div class='avatarRotateDiv' data-rotate-degree='`+notification_arr["notification_sender_info"]["avatar_rotate_degree"]+`' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -57,7 +57,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'`+ notification_arr[`notification_from`] +`'>`+ notification_sender_full_name +`</a>  `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Reacted To Your Post.
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a>  `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Reacted To Your Post.
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -75,7 +75,7 @@ return `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:`+notification_arr["notification_sender_info"]["avatar_positions"][0]+`%;margin-left:`+notification_arr["notification_sender_info"]["avatar_positions"][1]+`%;'>
 <div class='avatarRotateDiv' data-rotate-degree='`+notification_arr["notification_sender_info"]["avatar_rotate_degree"]+`' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -88,7 +88,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'`+ notification_arr[`notification_from`] +`'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Commented On Your <a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>Post</a>.
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Commented On Your <a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>Post</a>.
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -105,7 +105,7 @@ return `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:`+notification_arr["notification_sender_info"]["avatar_positions"][0]+`%;margin-left:`+notification_arr["notification_sender_info"]["avatar_positions"][1]+`%;'>
 <div class='avatarRotateDiv' data-rotate-degree='`+notification_arr["notification_sender_info"]["avatar_rotate_degree"]+`' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -118,7 +118,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'`+ notification_arr[`notification_from`] +`'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Replied To Your Comment+ <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra2"] +`'>View Post</a>)</span>
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Replied To Your Comment+ <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra2"] +`'>View Post</a>)</span>
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -136,7 +136,7 @@ return `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:` + notification_arr["notification_sender_info"]["avatar_positions"][0] + `%;margin-left:`+notification_arr["notification_sender_info"]["avatar_positions"][1]+`%;'>
 <div class='avatarRotateDiv' data-rotate-degree='` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -149,7 +149,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'`+ notification_arr[`notification_from`] +`'>`+ notification_sender_full_name +`</a> Wants To Share a Post With You.
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> Wants To Share a Post With You.
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -166,7 +166,7 @@ return `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:`+notification_arr["notification_sender_info"]["avatar_positions"][0]+`%;margin-left:`+notification_arr["notification_sender_info"]["avatar_positions"][1]+`%;'>
 <div class='avatarRotateDiv' data-rotate-degree='`+notification_arr["notification_sender_info"]["avatar_rotate_degree"]+`' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -179,7 +179,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'`+ notification_arr[`notification_from`] +`'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Favorited Your Post.
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Favorited Your Post.
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -190,13 +190,13 @@ return `
 // user started following you
 if(notification_arr["notification_type"] == 6) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive showUserModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-user-id='`+ notification_arr["notification_sender_info"]["id"] +`' data-open-main-screen='#main_screen_user_profile'>
+<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive showUserModal modal-trigger' data-notification-id='`+ notification_arr["notification_id"] +`' data-target='user_modal' data-user-id='`+ notification_arr["notification_sender_info"]["id"] +`' >
 
 ` + (notification_arr["notification_read_yet"] == "0" ? "<div class='focusStealer'><i class='material-icons'>check</i></div>" : "") + `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:` + notification_arr["notification_sender_info"]["avatar_positions"][0] + `%;margin-left:`+notification_arr["notification_sender_info"]["avatar_positions"][1]+`%;'>
 <div class='avatarRotateDiv' data-rotate-degree='` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -209,7 +209,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'`+ notification_arr[`notification_from`] +`'>`+ notification_sender_full_name +`</a>  `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Started Following You.
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a>  `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Started Following You.
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -226,7 +226,7 @@ return `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:`+notification_arr["notification_sender_info"]["avatar_positions"][0]+`%;margin-left:`+notification_arr["notification_sender_info"]["avatar_positions"][1]+`%;'>
 <div class='avatarRotateDiv' data-rotate-degree='`+notification_arr["notification_sender_info"]["avatar_rotate_degree"]+`' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -239,7 +239,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'`+ notification_arr[`notification_from`] +`'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Upvoted Your Comment+<br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Upvoted Your Comment+<br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -256,7 +256,7 @@ return `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:`+notification_arr["notification_sender_info"]["avatar_positions"][0]+`%;margin-left:`+notification_arr["notification_sender_info"]["avatar_positions"][1]+`%;'>
 <div class='avatarRotateDiv' data-rotate-degree='`+notification_arr["notification_sender_info"]["avatar_rotate_degree"]+`' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -269,7 +269,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'`+ notification_arr[`notification_from`] +`'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Downvoted Your Comment+  <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Downvoted Your Comment+  <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -286,7 +286,7 @@ return `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:`+notification_arr["notification_sender_info"]["avatar_positions"][0]+`%;margin-left:`+notification_arr["notification_sender_info"]["avatar_positions"][1]+`%;'>
 <div class='avatarRotateDiv' data-rotate-degree='`+notification_arr["notification_sender_info"]["avatar_rotate_degree"]+`' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -299,7 +299,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'`+ notification_arr[`notification_from`] +`'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) + ` Upvoted Your Reply.  <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) + ` Upvoted Your Reply.  <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -316,7 +316,7 @@ return `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:`+notification_arr["notification_sender_info"]["avatar_positions"][0]+`%;margin-left:` + notification_arr["notification_sender_info"]["avatar_positions"][1] + `%;'>
 <div class='avatarRotateDiv' data-rotate-degree='`+notification_arr["notification_sender_info"]["avatar_rotate_degree"]+`' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -329,7 +329,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'`+ notification_arr[`notification_from`] +`'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Downvoted Your Reply.  <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra2"] +`'>View Post</a>)</span>
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Downvoted Your Reply.  <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra2"] +`'>View Post</a>)</span>
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -346,7 +346,7 @@ return `
 
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
-<div class='avatarContainerChild showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
 <div class='rotateContainer' style='margin-top:`+ notification_arr["notification_sender_info"]["avatar_positions"][0]+`%;margin-left:`+notification_arr["notification_sender_info"]["avatar_positions"][1]+`%;'>
 <div class='avatarRotateDiv' data-rotate-degree='`+ notification_arr["notification_sender_info"]["avatar_rotate_degree"]+`' style='transform: rotate(` + notification_arr["notification_sender_info"]["avatar_rotate_degree"] + `deg)'>
 <img id='avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (notification_arr["notification_sender_info"]["avatar"] != "" ? notification_arr["notification_sender_info"]["avatar"] : LetterAvatar(notification_arr["notification_sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
@@ -359,7 +359,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'` + notification_arr[`notification_from`] + `'>`+ notification_sender_full_name +`</a> Reacted To The Post Sent By You.
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> Reacted To The Post Sent By You.
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>

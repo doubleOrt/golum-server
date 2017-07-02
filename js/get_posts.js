@@ -223,7 +223,7 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 </div><!-- end .avatarContainer -->
 
 <div class='posterInfoChild'>
-<a href='#modal1' class='commonLink showUserModal' data-user-id='` + data["post_owner_info"]["id"] + `' data-open-main-screen='#main_screen_user_profile'>` + poster_full_name + `</a>
+<a href='#modal1' class='commonLink showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["post_owner_info"]["id"] + `'>` + poster_full_name + `</a>
 <div class='postDate'></div><!-- end .postDate -->
 </div><!-- end .posterInfoChild -->
 </div><!-- end .posterInfoMegaContainer -->

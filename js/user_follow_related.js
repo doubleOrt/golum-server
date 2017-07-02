@@ -166,7 +166,7 @@ function get_follow_related_row_markup(data) {
 var avatar_image_id = "avatar" + Math.floor(Math.random()*1000000);
 var row_id = "contact" + Math.floor(Math.random()*1000000);
 
-return `<div class='contactsSingleRow row showUserModal' id='` + row_id + `' data-user-id='` + data["id"] +`' data-open-main-screen='#main_screen_user_profile'>
+return `<div id='` + row_id + `' class='contactsSingleRow row showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["id"] +`'>
 
 <div class='col l2 m3 s3 contactsAvatarRow'>
 <div class='contactsAvatarContainer'>
