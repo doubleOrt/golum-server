@@ -2,10 +2,9 @@ var openedModals = [];
 
 var marks_stack = [];
 
-var z_index_stack;
+var z_index_stack = 1001;
 
 var longpollingVar; 
-
 
 function openModalCustom(modalId, callback) {
 
@@ -19,6 +18,9 @@ callback();
 }
 return false;	
 }
+
+$(".modal-overlay").last().attr("data-modal", modalId);
+$("#" + modalId).css("opacity", 1);
 
 var is_not_already_opened = true;
 
@@ -39,8 +41,10 @@ break;
 }
 
 
-if(is_not_already_opened == true) {
+if(is_not_already_opened == true) {	
 $("#" + modalId).css("z-index", z_index_stack + 2);
+$("#" + modalId).hide();
+$("#" + modalId).fadeIn(300);
 var modal_overlay_new_zindex = z_index_stack + 1;
 this_modal_modal_overlay.css("z-index", modal_overlay_new_zindex);
 } else {
@@ -102,6 +106,7 @@ callback();
 
 
 $(document).ready(function(){
+	
 
 // initialize the modals
 $('.modal').modal({
@@ -123,9 +128,6 @@ setTimeout(function(){thisModalTrigger.css("pointer-events","auto");},500);
 	
 // grab the modal's id
 var modalId = ( typeof $(this).attr("data-target") != "undefined" ? $(this).attr("data-target") : $(this).attr("href").substr(1,this.length));
-
-$(".modal-overlay").last().attr("data-modal", modalId);
-$("#" + modalId).css("opacity", 1);
 
 openModalCustom(modalId);
 });
