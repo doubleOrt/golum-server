@@ -130,7 +130,6 @@ $(this).remove();
 
 
 
-
 // a mini library for showing things when an element is clicked
 $(document).on("click",".onclickShow",function(){	
 var onclickShowElement = $(this);
@@ -153,49 +152,6 @@ $(elemsArr[i]).css("display","block");
 }
 }
 });
-
-
-
-
-
-
-// when users want to follow tags
-
-$(document).on("click",".addTagFromTagPostsModal",function(){
-	
-var this_button = $(this);	
-this_button.addClass("disabledButton");	
-
-if($(this).attr("data-current-state") == "0") {	
-addTagsToUserById($(this).attr("data-tag"),function(){
-// if the base user's profile is open, then we need to update its "tags" counter. else we just do nothing 	
-if(PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user") == "1") {
-set_user_profile_tags_num(get_user_profile_tags_num() + 1);	
-}	
-this_button.removeClass("disabledButton");
-this_button.attr("data-current-state","1");
-this_button.html("Unfollow");
-});	
-
-}
-else {	
-removeTagsFromUserById($(this).attr("data-tag"),function(){
-// if the base user's profile is open, then we need to update its "tags" counter. else we just do nothing 	
-if(PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user") == "1") {
-set_user_profile_tags_num(get_user_profile_tags_num() - 1);	
-}		
-this_button.removeClass("disabledButton");	
-this_button.attr("data-current-state","0");	
-this_button.html("Follow +");
-});		
-
-}
-
-});
-
-
-
-
 
 
 

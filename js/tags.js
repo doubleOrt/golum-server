@@ -117,7 +117,6 @@ $(document).ready(function(){
 USER_TAGS_CONTAINER = $("#user_tags_modal_content_child");
 	
 	
-	
 /* when users want to see the tags that another user or they are following */	
 $(document).on("click", ".get_user_tags", function(){
 
@@ -137,6 +136,45 @@ get_user_tags(USER_TAGS_CONTAINER.attr("data-user-id"), USER_TAGS_CONTAINER.find
 }
 });
 	
+	
+	
+	
+	
+
+// when users want to follow or unfollow tags
+
+$(document).on("click",".addTagFromTagPostsModal",function(){
+	
+var tag = $(this).attr("data-tag").toLowerCase();	
+var this_tag_buttons = $(".addTagFromTagPostsModal[data-tag='" + tag + "']");	
+this_tag_buttons.addClass("disabledButton");	
+
+if($(this).attr("data-current-state") == "0") {	
+addTagsToUserById(tag,function(){
+// if the base user's profile is open, then we need to update its "tags" counter. else we just do nothing 	
+if(PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user") == "1") {
+set_user_profile_tags_num(get_user_profile_tags_num() + 1);	
+}	
+this_tag_buttons.removeClass("disabledButton");
+this_tag_buttons.attr("data-current-state","1");
+this_tag_buttons.html("Unfollow");
+});	
+
+}
+else {	
+removeTagsFromUserById(tag,function(){
+// if the base user's profile is open, then we need to update its "tags" counter. else we just do nothing 	
+if(PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user") == "1") {
+set_user_profile_tags_num(get_user_profile_tags_num() - 1);	
+}		
+this_tag_buttons.removeClass("disabledButton");	
+this_tag_buttons.attr("data-current-state","0");	
+this_tag_buttons.html("Follow +");
+});		
+
+}
+
+});	
 	
 	
 });

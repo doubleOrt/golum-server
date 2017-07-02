@@ -412,7 +412,7 @@ if(typeof $(this).attr("data-tag") == "undefined" && typeof $("#tagPostsModal").
 return false;	
 }
 
-var tag = (typeof $(this).attr("data-tag") != "undefined" ? $(this).attr("data-tag") : $("#tagPostsModal").attr("data-tag"));
+var tag = (typeof $(this).attr("data-tag") != "undefined" ? $(this).attr("data-tag") : $("#tagPostsModal").attr("data-tag")).toLowerCase();
 
 if(typeof $(this).attr("data-hot-or-new") == "undefined") {
 var hotOrNew = 0;	
