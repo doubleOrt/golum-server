@@ -29,7 +29,7 @@ var this_modal_modal_overlay = $(".modal-overlay[data-modal='" + modalId + "']")
 for(var i = 0;i<openedModals.length;i++) {
 if(openedModals[i] == modalId) {	
 $("#" + modalId).attr("data-marked", $("#" + modalId).css("z-index"));
-marks_stack.push({"modal_id": "#" + modalId, "z-index": $("#" + modalId).css("z-index")});
+marks_stack.push({"modal_id": "#" + modalId, "z-index": $("#" + modalId).css("z-index"), "state": $("#" + modalId).html()});
 $("#" + modalId).hide();
 $("#" + modalId).css("z-index", z_index_stack + 4);
 $("#" + modalId).fadeIn(300);
@@ -64,10 +64,35 @@ callback();
 		
 }
 
+function initialize_all_things_again() {
+		
+$('.dropdown-button').dropdown({
+inDuration: 300,
+outDuration: 225,
+constrainWidth: false, // Does not change width of dropdown to that of the activator
+hover: true, // Activate on hover
+gutter: 0, // Spacing from edge
+belowOrigin: false, // Displays dropdown below the button
+alignment: 'left', // Displays dropdown with edge aligned to the left of button
+stopPropagation: false // Stops event propagation
+}
+);
+
+// initialize the #birthdate datepicker and preselect it with the user's birthdate. in case you need to make some modifications, go to the documentation for pickadate.js
+$('#birthdate').pickadate({
+max:-3939,
+selectMonths: true,
+selectYears: 80,
+today: null,
+clear: null
+});
+
+}
+
 
 
 function closeModal(modalId, callback) {
-
+	
 var this_modal_modal_overlay = $(".modal-overlay[data-modal=" + modalId + "]");
 
 for(var i = 0;i<openedModals.length;i++) {
@@ -88,6 +113,12 @@ $("#" + modalId).css("opacity", "1");
 $("#" + modalId).css("z-index", zindex);		
 $("#" + modalId).show();		
 });		
+$("#" + modalId).html(marks_stack[marks_stack.length - 1]["state"]);	
+if(modalId == "user_modal") {	
+// see bug 3 in the bugs.txt file.
+my_hotfix_for_bug_3();
+}
+initialize_all_things_again();
 marks_stack.splice(i,1);
 if(typeof callback == "function") {	
 callback();

@@ -447,10 +447,12 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 
 <div id='userModalInfoChangers'>
 
+<div id="user_modal_info_changers_selects">
+
 <div class='row'>
 <div class='input-field col l8 m8 s8 offset-l2 offset-m2 offset-s2'>
 <select class='icons genderSelect userModalChangeAbles' data-change-name='gender'>
-<option value='' disabled>Your Gender</option><!-- you have to preselect the user's gender -->
+<option value='' selected disabled>Gender</option><!-- you have to preselect the user's gender -->
 <option value='female' data-icon='icons/female.png' class='right circle' >Female</option>
 <option value='male' data-icon='icons/male.png' class='right circle'>Male</option>
 <option value='other' data-icon='icons/other.png' class='right circle'>Other</option>
@@ -461,6 +463,7 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 <div class='row'>
 <div class='input-field col l8 m8 s8 offset-s2 offset-l2 offset-m2'>
 <select class='icons countrySelect userModalChangeAbles' data-change-name='country'>
+<option value='' selected disabled>Country</option>
 <option value='AF'>Afghanistan</option>
 <option value='AX'>&Aring;land Islands</option>
 <option value='AL'>Albania</option>
@@ -687,13 +690,13 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 <option value='TN'>Tunisia</option>
 <option value='TR'>Turkey</option>
 <option value='TM'>Turkmenistan</option>
-<option value='TC' id='TC'>Turks and Caicos Islands</option>
+<option value='TC'>Turks and Caicos Islands</option>
 <option value='TV'>Tuvalu</option>
 <option value='UG'>Uganda</option>
 <option value='UA'>Ukraine</option>
 <option value='AE'>United Arab Emirates</option>
 <option value='GB'>United Kingdom</option>
-<option value='US' selected>United States</option>
+<option value='US'>United States</option>
 <option value='UM'>United States Minor Outlying Islands</option>
 <option value='UY'>Uruguay</option>
 <option value='UZ'>Uzbekistan</option>
@@ -709,16 +712,15 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 <option value='ZW'>Zimbabwe</option>
 </select>
 
-<!-- this script selects the default country when base user views his modal. -->
-<script>$('.countrySelect[value=""]').attr('selected','selected');</script><!-- insert the user's country in place of the empty value -->
-
 </div>
 
 </div>
+
+</div><!-- end #user_modal_info_changers_selects -->
 
 <div class='row'>
 <div class='input-field col l8 m8 s8 offset-l2 offset-m2 offset-s2'>
-<input id='birthdate' class='datepicker birthdateSelect userModalChangeAbles' data-change-name='birthdate' type='date' value='1996-01-01' />
+<input id='birthdate' class='datepicker birthdateSelect userModalChangeAbles' data-change-name='birthdate' type='date' value='Birthdate'/>
 </div>
 </div>
 

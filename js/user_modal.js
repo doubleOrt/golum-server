@@ -14,10 +14,16 @@ var USER_PROFILE_POSTS_COUNTER;
 var USER_PROFILE_KNOWN_INFO_CONTAINER;
 var USER_PROFILE_POSTS_CONTAINER;
 
+// these 2 variables exist for the sake of hotfixing bug 3 in the bugs.txt file
+var USER_PROFILE_SELECTS_CONTAINER;
+var USER_PROFILE_SELECTS_CONTAINER_HTML;
+
 
 
 // this var will block any calls to the "userModalGet.php" file as soon as a call is made, and will re-allow these calls after the call succeeds.
 var userModalShouldServerSide = true;	
+
+
 
 // first parameter is the id of the user, second parameter is the element that the markup for that user should be added to, and the last function is a callback that must have 1 parameter (because we pass to it an array of info related to the requested user).
 function getUser(userId, callback) {
@@ -33,7 +39,7 @@ $.get({
 url:"components/userModalGet.php",
 data:{"user_id":userId},
 success:function(data){					  
-console.log(data);
+
 var dataArr = JSON.parse(data);
 
 // gives us an object called "info" that is populated with info about this user.
@@ -62,7 +68,9 @@ userModalShouldServerSide = true;
 
 
 function handleUserInfo(data, callback) {
-	
+
+set_user_profile_constants();
+
 PROFILE_CONTAINER_ELEMENT.attr("data-user-id", data["id"]);
 PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user", data["is_base_user"]);
 
@@ -164,8 +172,9 @@ selectMonths: true,
 selectYears: 80,
 today: null,
 clear: null
-}).pickadate("picker").set("select" , data["birthdate"] , {format: "d mmmm, yyyy"});
+});
 
+$("#birthdate").val("Birthdate");
 
 callback();
 }
@@ -259,10 +268,7 @@ else if(active_tab == "1"){
 
 	
 	
-var changeInfosGetObj = {};
-
-$(document).ready(function(){	
-
+function set_user_profile_constants() {
 PROFILE_CONTAINER_ELEMENT = $("#user_profile_container");	
 USER_PROFILE_FOLLOWER_COUNTER = $("#user_profile_follower_count");
 USER_PROFILE_FOLLOWING_COUNTER = $("#user_profile_following_count");
@@ -270,7 +276,32 @@ USER_PROFILE_TAGS_COUNTER = $("#user_profile_tags_count");
 USER_PROFILE_POSTS_COUNTER = $("#user_profile_posts_count");
 USER_PROFILE_TABS_STATE_HOLDER = PROFILE_CONTAINER_ELEMENT;	
 USER_PROFILE_KNOWN_INFO_CONTAINER = $("#userModalKnownInfoContainer");
-USER_PROFILE_POSTS_CONTAINER = $("#user_profile_posts_container");
+USER_PROFILE_POSTS_CONTAINER = $("#user_profile_posts_container");	
+USER_PROFILE_SELECTS_CONTAINER = $("#user_modal_info_changers_selects");
+}	
+	
+	
+var changeInfosGetObj = {};
+
+
+
+
+function my_hotfix_for_bug_3() {
+USER_PROFILE_SELECTS_CONTAINER = $("#user_modal_info_changers_selects");	
+USER_PROFILE_SELECTS_CONTAINER.html(USER_PROFILE_SELECTS_CONTAINER_HTML);
+USER_PROFILE_SELECTS_CONTAINER.find("select").material_select();	
+}
+
+
+
+$(document).ready(function(){	
+
+
+set_user_profile_constants();
+
+// this one MUST NOT be in the constant initialization function else it will become pointless.
+USER_PROFILE_SELECTS_CONTAINER_HTML = USER_PROFILE_SELECTS_CONTAINER.html();
+
 
 $(document).on("click", "#user_profile_tabs .tab", function() {
 /* if we didn't add a disabled class and then overwrote that disabled tab's styles to look like a not-disabled tab, we would have to manually reset the 
@@ -302,6 +333,7 @@ e.stopPropagation();
 getUser($(this).attr("data-user-id"), function(data){
 handleUserInfo(data, function(){
 $("#user_profile_container").appendTo("#main_screen_user_profile");	
+my_hotfix_for_bug_3();	
 });	
 });
 });

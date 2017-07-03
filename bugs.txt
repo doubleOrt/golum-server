@@ -6,3 +6,5 @@
 whenever you were on the user-profile main screen and you opened some modals from there and then one of these 
 modals ended up being a user-profile modal, when you closed all the modals, the base user-profile would be a
 desolate and empty element, with no content. The following lines are supposed to address this bug.
+
+3- This bug is detailed in a Github issue i raised to dogfalo/Materializecss (in that issue i explain 2 bugs, the latter is this supposed to be this bug).
