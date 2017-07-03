@@ -355,7 +355,7 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 </div>
 
 <!-- show this only if the user has uploaded an avatar -->
-<div id='repositionAvatarDiv'>
+<div id='repositionAvatarDiv' class='always_hidden_initially'>
 <!-- these "trending flat" icons are actually used for repositioning the avatar -->
 <i class='material-icons repositionAvatar' data-direction='up' style='top:0;left:50%;transform:translate(-50%,0) scale(1,.8) rotate(270deg);'>trending_flat</i>
 <i class='material-icons repositionAvatar' data-direction='right' style='right:0;top:50%;transform:translate(0%,-50%) scale(.8,1) rotate(0deg);'>trending_flat</i>
@@ -366,7 +366,7 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 </div><!-- END #userModalAvatarImage -->
 
 <!-- the user uses this button to rotate their avatar, so this should be only visible if the user has uploaded an avatar -->
-<button id='rotateAvatarButton' data-change-name='avatar_rotation'><i class='material-icons'>rotate_right</i></button>
+<button id='rotateAvatarButton' class='always_hidden_initially' data-change-name='avatar_rotation'><i class='material-icons'>rotate_right</i></button>
 
 </div><!-- END #userModalAvatarImageContainer -->
 

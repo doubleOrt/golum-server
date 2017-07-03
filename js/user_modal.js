@@ -102,6 +102,8 @@ $("#user_profile_follow_button").html("unfollow");
 
 }
 
+$(".always_hidden_initially").hide();
+
 
 
 $("#profileBackground").css({"background":"url('" + data["background"] + "')", "background-position": "center", "background-size": "cover"});
@@ -277,8 +279,11 @@ USER_PROFILE_POSTS_COUNTER = $("#user_profile_posts_count");
 USER_PROFILE_TABS_STATE_HOLDER = PROFILE_CONTAINER_ELEMENT;	
 USER_PROFILE_KNOWN_INFO_CONTAINER = $("#userModalKnownInfoContainer");
 USER_PROFILE_POSTS_CONTAINER = $("#user_profile_posts_container");	
-USER_PROFILE_SELECTS_CONTAINER = $("#user_modal_info_changers_selects");
+set_user_profile_selects_container_constant();
 }	
+function set_user_profile_selects_container_constant() {
+USER_PROFILE_SELECTS_CONTAINER = $("#user_modal_info_changers_selects");	
+}
 	
 	
 var changeInfosGetObj = {};
@@ -287,7 +292,7 @@ var changeInfosGetObj = {};
 
 
 function my_hotfix_for_bug_3() {
-USER_PROFILE_SELECTS_CONTAINER = $("#user_modal_info_changers_selects");	
+set_user_profile_selects_container_constant();
 USER_PROFILE_SELECTS_CONTAINER.html(USER_PROFILE_SELECTS_CONTAINER_HTML);
 USER_PROFILE_SELECTS_CONTAINER.find("select").material_select();	
 }
