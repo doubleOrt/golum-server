@@ -3,7 +3,6 @@ var openedModals = [];
 var marks_stack = [];
 
 var z_index_stack = 1001;
-
 var longpollingVar; 
 
 function openModalCustom(modalId, callback) {
@@ -19,12 +18,13 @@ callback();
 return false;	
 }
 
-$(".modal-overlay").last().attr("data-modal", modalId);
+
+var this_modal_modal_overlay;
+
+setTimeout(function(){$(".modal-overlay").last().attr("data-modal", modalId);this_modal_modal_overlay = $(".modal-overlay[data-modal='" + modalId + "']");},300);
 $("#" + modalId).css("opacity", 1);
 
 var is_not_already_opened = true;
-
-var this_modal_modal_overlay = $(".modal-overlay[data-modal='" + modalId + "']");
 
 for(var i = 0;i<openedModals.length;i++) {
 if(openedModals[i] == modalId) {	
@@ -42,11 +42,11 @@ break;
 
 
 if(is_not_already_opened == true) {	
-$("#" + modalId).css("z-index", z_index_stack + 2);
+var modal_overlay_new_zindex = z_index_stack + 1;
+var modal_new_zindex = z_index_stack + 2;
 $("#" + modalId).hide();
 $("#" + modalId).fadeIn(300);
-var modal_overlay_new_zindex = z_index_stack + 1;
-this_modal_modal_overlay.css("z-index", modal_overlay_new_zindex);
+setTimeout(function(){this_modal_modal_overlay.css("z-index", modal_overlay_new_zindex);$("#" + modalId).css("z-index",modal_new_zindex);},300);
 } else {
 setTimeout(function(){
 this_modal_modal_overlay.css("z-index", modal_overlay_new_zindex);
@@ -63,6 +63,53 @@ callback();
 }
 		
 }
+
+function closeModal(modalId, callback) {
+	
+var this_modal_modal_overlay = $(".modal-overlay[data-modal=" + modalId + "]");
+
+for(var i = 0;i<openedModals.length;i++) {
+if(openedModals[i] == modalId) {
+openedModals.splice(i,1);
+break;
+}	
+}
+
+
+// if only one element is remaining from the stack, then remove its data-marked attribute
+for(var i = marks_stack.length - 1; i > -1; i--) {
+if(marks_stack[i]["modal_id"] == ("#" + modalId)) {	
+var zindex = marks_stack[i]["z-index"];
+this_modal_modal_overlay.css("z-index", zindex - 1);	
+$("#" + modalId).animate({"top": "100%", "opacity": "0"}, 150, function(){
+$("#" + modalId).css("opacity", "1");		
+$("#" + modalId).css("z-index", zindex);		
+$("#" + modalId).show();		
+});		
+$("#" + modalId).html(marks_stack[marks_stack.length - 1]["state"]);	
+if(modalId == "user_modal") {	
+// see bug 3 in the bugs.txt file.
+my_hotfix_for_bug_3();
+}
+initialize_all_things_again();
+marks_stack.splice(i,1);
+if(typeof callback == "function") {	
+callback();
+}
+return;
+}	
+}
+
+
+
+$("#" + modalId).modal('close');
+
+if(typeof callback == "function") {	
+callback();
+}
+
+}
+
 
 function initialize_all_things_again() {
 		
@@ -91,50 +138,6 @@ clear: null
 
 
 
-function closeModal(modalId, callback) {
-	
-var this_modal_modal_overlay = $(".modal-overlay[data-modal=" + modalId + "]");
-
-for(var i = 0;i<openedModals.length;i++) {
-if( openedModals[i] == modalId) {
-openedModals.splice(i,1);
-break;
-}	
-}
-
-
-// if only one element is remaining from the stack, then remove its data-marked attribute
-for(var i = marks_stack.length - 1; i > -1; i--) {
-if(marks_stack[i]["modal_id"] == ("#" + modalId)) {	
-var zindex = marks_stack[i]["z-index"];
-this_modal_modal_overlay.css("z-index", zindex-1);	
-$("#" + modalId).animate({"top": "100%", "opacity": "0"}, 150, function(){
-$("#" + modalId).css("opacity", "1");		
-$("#" + modalId).css("z-index", zindex);		
-$("#" + modalId).show();		
-});		
-$("#" + modalId).html(marks_stack[marks_stack.length - 1]["state"]);	
-if(modalId == "user_modal") {	
-// see bug 3 in the bugs.txt file.
-my_hotfix_for_bug_3();
-}
-initialize_all_things_again();
-marks_stack.splice(i,1);
-if(typeof callback == "function") {	
-callback();
-}
-return;
-}	
-}
-
-
-$("#" + modalId).modal('close');
-
-if(typeof callback == "function") {	
-callback();
-}
-}
-
 
 $(document).ready(function(){
 	
@@ -146,13 +149,16 @@ outDuration: 150, // Transition out duration
 startingTop: "100%",
 endingTop: "50%",	
 ready:function(){
-z_index_stack = parseFloat($(this).css("z-index"));
+var this_modal = $(this);	
+setTimeout(function(){z_index_stack = parseFloat(this_modal.css("z-index"));},300);
 }
 });
 
+
+
 $(document).on("click",".modal-trigger",function(){
 	
-// we need to disable the button so the user cannot make multiple calls to the openModalCustom .	
+// we need to disable the button so the user cannot make multiple calls to openModalCustom
 $(this).css("pointer-events","none");
 var thisModalTrigger = $(this);	
 setTimeout(function(){thisModalTrigger.css("pointer-events","auto");},500);

@@ -1,3 +1,8 @@
+
+var SETTINGS_CONFIRM_EMAIL_SECTION_CONTAINER;
+
+
+
 function ValidateItem(ref,regEx,onWrong) {
 // a reference to the element (document.getElementById for example)	
 this.ref = ref;
@@ -24,10 +29,52 @@ return true;
 
 
 
+// if the user has requested to link their account with an email address, then show them the confirmation code things. 
+function show_email_confirmation() {
+// if user has requested us to link his account with an email address and we have sent him a confirmation code, show him the enter confirmation code form.
+$.get({
+url:"components/show_confirmation_code_form.php",
+success:function(data) {	
+
+var data_arr = JSON.parse(data);
+
+if(data_arr[0] === "1") {
+$("#confirm_email_modal").modal("open", {
+inDuration: 300, // Transition in duration
+outDuration: 150, // Transition out duration	
+startingTop: "100%",
+endingTop: "50%",	
+ready:function(){
+var this_modal = $(this);	
+setTimeout(function(){z_index_stack = parseFloat(this_modal.css("z-index"));},300);
+}
+});
+openModalCustom("confirm_email_modal");
+$("#confirm_email_modal_email_address_in_text").html(data_arr[1]);
+SETTINGS_CONFIRM_EMAIL_SECTION_CONTAINER.show();
+}
+else if(data_arr[0] === "0") {
+return false;	
+}
+
+}	
+});	
+
+}
+
+
+
+
 
 
 $(document).ready(function(){
 
+
+SETTINGS_CONFIRM_EMAIL_SECTION_CONTAINER = $("#settings_email_confirmation_section");
+
+
+// if the user has requested to link their account with an email address, then show them the confirmation code modal on logging in.
+show_email_confirmation();
 
 
 var default_first_name;
@@ -144,15 +191,7 @@ defaultCheckObject['change_first_name'].value = $("#change_first_name").val();
 defaultCheckObject['change_last_name'].value = $("#change_last_name").val();
 defaultCheckObject['change_user_name'].value = $("#change_user_name").val();
 if(defaultCheckObject["add_email"].value != $("#add_email").val() && $(".confirmEmailContainer").length == 0) {
-
-// if user has requested us to link his account with an email address and we have sent him a confirmation code, show him the enter confirmation code form.
-$.get({
-url:"components/show_confirmation_code_form.php",
-success:function(data) {	
-$("#accountContainerRow").prepend(data);
-}	
-});	
-
+show_email_confirmation();
 }
 
 defaultCheckObject['add_email'].value = $("#add_email").val();
@@ -200,7 +239,18 @@ data:{
 "confirmation_code":confirmation_code
 },
 success:function(data) {
-eval(data);	
+
+var data_arr = JSON.parse(data);
+
+if(data_arr[0] === 1) {
+Materialize.toast("Email address successfully linked with your account :)", 5000, "green");	
+closeModal("confirm_email_modal");
+SETTINGS_CONFIRM_EMAIL_SECTION_CONTAINER.hide();
+}
+else {
+Materialize.toast('Invalid confirmation code :(',5000,'red');
+}
+
 }	
 });
 }

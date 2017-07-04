@@ -26,15 +26,21 @@ padding:0;
 
 
 .settingsSingleSectionContainer {
-display:inline-block;
+display:block;
+height:auto;
 margin:0;	
 margin-top:25px;	
 width:100%;
-height:auto;
 }
 
 .settingsSingleSectionContainer:first-child {
 margin-top:0;	
+}
+
+.settings_single_section_child {
+display:block;
+height:auto;
+overflow:auto;	
 }
 
 .settingsTitleHeading {
@@ -62,6 +68,9 @@ text-transform:uppercase;
 padding:15px 0;	
 }
 
+#settings_email_confirmation_section {
+display:none; /* this section should be hidden initially, it will be set to visible if our "check-if-i-should-ask-for-the-confirmation-code" ajax call returns true */	
+}
 
 
 #accountSettings .input-field input[type=text],.input-field input[type=password],.input-field input[type=email] {

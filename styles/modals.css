@@ -5,7 +5,7 @@ overflow:hidden;
 width:90%;
 height:45%;
 max-height:80%;
-top:50%;
+top:50% !important;
 transform:translate(0%,-50%) !important;
 }
 

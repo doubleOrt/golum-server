@@ -24,6 +24,8 @@
 
 @import url(settings.css);
 
+@import url(confirmation_code.css);
+
 @import url(add_tags.css);
 
 @import url(new_post.css);
@@ -457,6 +459,22 @@ background-color:white;
 box-shadow:0 1px 2px rgba(0,0,0,.2);
 border-radius:4px;	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+.big_font {
+font-size:200% !important;	
+}
+
 
 
 /* styling for hashtags */

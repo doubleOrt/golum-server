@@ -58,19 +58,6 @@ showLoading();
 
 
 
-
-
-// if user has requested us to link his account with an email address and we have sent him a confirmation code, show him the enter confirmation code form.
-$.get({
-url:"components/show_confirmation_code_form.php",
-success:function(data) {	
-$("#accountContainerRow").prepend(data);
-}	
-});	
-
-
-
-
 $(".baseUserAvatarRotateDivs").each(function(){
 //we are adding this because of pages where this script page is included but the page isn't a page where the user has logged in, otherwise there would be a userAvatarImageRotateDegree is not defined error.
 if(typeof $(this).attr("data-rotate-degree") == "undefined") {

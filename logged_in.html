@@ -777,7 +777,7 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 	<div class="row">
 	<form autocomplete="off">
 		<div class="input-field col l10 m10 s12 offset-l1 offset-m1" style="margin-bottom:0;">
-			<input id="current_password" type="password" autocomplete="off" name="current_password" style="font-size:200%;">
+			<input class="big_font" id="current_password" type="password" autocomplete="off" name="current_password">
 			<label for="current_password">Your Current Password</label>
 		</div>	
 		</form>
@@ -787,7 +787,7 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 	<div class="modalHeaderContainer">
 	<div class="modal-header mobileOnly">
 	<a class="modalCloseButton waves-effect wavesCustom" data-modal="modal2" href="#">
-	<i class="material-icons">arrow_back</i>
+	<i class="material-icons">close</i>
 	</a>
 	<span class="modalHeaderFullName">Save Changes</span>
 	</div><!-- end modal header -->
@@ -821,6 +821,19 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 <div id="accountSettingsInputsContainer" class="col l12 m12 s12">
 
 
+<div id="settings_email_confirmation_section" class="settingsSingleSectionContainer">
+
+<div class='settings_single_section_child myHorizontalCardStyle cardStyles scaleHorizontallyCenteredItem'>
+
+<div class="input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1" style="margin-bottom:10px;">
+<a class="fullWidthAndCenteredText waves-effect waves-ff3333 btn commonButton modal-trigger modal-action" href="#confirm_email_modal">Confirm Email</a>
+</div>
+
+</div>
+
+</div>
+
+
 <div class="settingsSingleSectionContainer">
 
 <div class="formTitleSmall col l12 m12 s12">
@@ -829,7 +842,7 @@ Identification Info
 </h5>
 </div>
 
-<div class='myHorizontalCardStyle cardStyles scaleHorizontallyCenteredItem'>
+<div class='settings_single_section_child myHorizontalCardStyle cardStyles scaleHorizontallyCenteredItem'>
 
 <div class="input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1">
 <input id="change_first_name" type="text" name="change_first_name" value="">
@@ -862,7 +875,7 @@ Identification Info
 <h6 class="tooltipped settingsTitle" data-position="bottom" data-delay="20" data-tooltip="Useful For Retrieving Your Username Or Password">Sync With Email Address</h6>
 </div>	
 
-<div class='myHorizontalCardStyle cardStyles scaleHorizontallyCenteredItem'>
+<div class='settings_single_section_child myHorizontalCardStyle cardStyles scaleHorizontallyCenteredItem'>
 
 <div class="input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1" style="margin-bottom:0;">
 <input id="add_email" type="text" name="add_email" value="">
@@ -882,14 +895,14 @@ Identification Info
 </div>
 
 
-<div class='myHorizontalCardStyle cardStyles scaleHorizontallyCenteredItem'>
+<div class='settings_single_section_child myHorizontalCardStyle cardStyles scaleHorizontallyCenteredItem'>
 
 <div class="input-field col l8 m8 s10 offset-l2 offset-m2 offset-s1" style="margin-bottom:0;margin-top:0;">
-<a href="#modal2" class="waves-effect waves-ff3333 btn commonButton modal-trigger" id="deactivateButton" style="width:100%;text-align:center">Deactivate Account</a>
+<a  id="deactivateButton" class="fullWidthAndCenteredText waves-effect waves-ff3333 btn commonButton modal-trigger" href="#modal2">Deactivate Account</a>
 </div>
 
 <div class="input-field col l8 m8 s10 offset-l2 offset-m2 offset-s1" style="margin-bottom:0;">
-<a href="#modal2" class="waves-effect waves-ff3333 btn commonButton modal-trigger" id="deleteButton" style="width:100%;text-align:center;">Delete Account</a>
+<a  id="deleteButton" class="fullWidthAndCenteredText waves-effect waves-ff3333 btn commonButton modal-trigger" href="#modal2">Delete Account</a>
 </div>
 
 </div>
@@ -1287,7 +1300,7 @@ Identification Info
 </div><!-- end #tagPostsModalContent -->
 
 <div class="modalHeaderContainer">
-<div class='modal-header' id="tagPostsModalHeader" data-register-to-scroll-effect="true" data-scroll-targets="#tagPostsModalContent" data-minimum-scrolltop-to-activate="0">
+<div class='modal-header' id="tagPostsModalHeader">
 <a class='modalCloseButton waves-effect wavesCustom waves-circle' data-modal='tagPostsModal'>
 <i class='material-icons'>arrow_back</i>
 </a>
@@ -1304,24 +1317,50 @@ Identification Info
 
 </div><!-- end .modalHeaderContainer -->
 
-</div>
+</div><!-- end #tagPostsModal -->
 
 
-<div class="modal" id="abc">
+<div  id="confirm_email_modal" class="modal hasFooterAndHeader">
+
 <div class="modal-content">
-<div class='col l12 m12 s12 row confirmEmailContainer smallFormContainer smallFormTopAndShadowed'>
+<div class="row">
+<div class='col l12 m12 s12 row'>
 
-<div class='input-field col l8 m8 s8'>
+
+<div id="helper_text_container" class="col l12 m12 s12">
+<p>
+Type the code that you received with <b id="confirm_email_modal_email_address_in_text"></b> into this textbox:
+</p>
+</div>
+<div class='input-field col l12 m12 s12'>
 <input id='confirmation_code' name='confirmation_code' type='text'>
 <label for='confirmation_code'>Confirmation Code</label>
 </div>
 
-<div class='input-field col l4 m4 s4 smallFormButtonContainer'>
-<a href='#' id='confirmEmail' class='waves-effect waves-ff3333 btn commonButton'>Confirm</a>
+</div><!-- end .col -->
+</div><!-- end .row -->
+</div><!-- end .modal-content -->
+
+<div class="modalHeaderContainer">
+<div class="modal-header mobileOnly">
+<a class="modalCloseButton waves-effect wavesCustom" href="#" data-modal="confirm_email_modal">
+<i class="material-icons">close</i>
+</a>
+<span class="modalHeaderFullName">Confirm email</span>
+</div><!-- end modal header -->
 </div>
 
+<div class="modal-footer col l12 m12 s12 row" style="box-shadow:0 -5px 8px rgba(0,0,0,.1);margin:0;">
+<div class="col l5 m12 s12 offset-l7">
+<div class="col l6 m6 s6" style="padding:0 1%;">
+<a href="#" class="waves-effect wavesCustom btn commonButtonWhite modalCloseButton" data-modal="confirm_email_modal" style="width:100%;">Cancel</a>
 </div>
+<div class="col l6 m6 s6" style="padding:0 1%;">
+<a href="#" id="confirmEmail" class="waves-effect wavesCustom btn commonButton" style="width:100%;">Confirm</a>
+</div>	
 </div>
+</div><!-- .modal-footer -->
+
 </div>
  
  
@@ -1345,7 +1384,8 @@ Identification Info
 </div>
 
 </div>
-
+ 
+ 
  
  
  

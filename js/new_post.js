@@ -79,6 +79,16 @@ Materialize.toast("Post Successful!",2000,"green");
 
 //if the post was successfully posted, then open the singlePostModal and populate its innerHTML with the new post's markup.
 if(!isNaN(data)) {
+$("#singlePostModal").modal("open", {
+inDuration: 300, // Transition in duration
+outDuration: 150, // Transition out duration	
+startingTop: "100%",
+endingTop: "50%",	
+ready:function(){
+var this_modal = $(this);	
+setTimeout(function(){z_index_stack = parseFloat(this_modal.css("z-index"));},300);
+}
+});
 openModalCustom("singlePostModal");
 getPosts("components/get_single_post.php",{"post_id":data},function(data_arr){
 markUpProcessor(data_arr,$("#singlePostsContainer"));	

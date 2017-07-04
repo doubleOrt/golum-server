@@ -2,6 +2,7 @@
 
 require_once "common_requires.php";
 
+$echo_arr = [];
 
 if(isset($_GET["confirmation_code"]) && is_numeric($_GET["confirmation_code"])) {
 
@@ -9,16 +10,15 @@ $valid_confirmation_code = $con->query("select activated from users where id = "
 
 if($valid_confirmation_code == $_GET["confirmation_code"]) {
 $con->exec("update users set activated = 'true' where id = ". $_SESSION["user_id"]);
-echo "Materialize.toast('Email Address Successfully Linked With Your Account!',4000,'green');
-$('.confirmEmailContainer').fadeOut();";
-die();	 
+$echo_arr[0] = 1;
 }	
 else {
-echo "Materialize.toast('Invalid Code!',4000,'red');";
-die();	
+$echo_arr[0] = 0;
 }
 	
 }
+
+echo json_encode($echo_arr);
 
 
 ?>

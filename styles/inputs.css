@@ -14,7 +14,7 @@ box-shadow:none;
 }
 
 .input-field input[type=text]:focus,.input-field input[type=password]:focus,.input-field input[type=email]:focus {
-border-bottom: 2px solid yellowgreen;
+border-bottom: 2px solid green;
 color:black;
 box-shadow:none;
 }
@@ -26,7 +26,7 @@ color: grey;
 
 
 .input-field input[type=text]:focus + label,.input-field input[type=email]:focus + label,.input-field input[type=password]:focus + label {
-color: white !important;
+color: green !important;
 }
 
 
