@@ -14,9 +14,14 @@ box-shadow:none;
 }
 
 .input-field input[type=text]:focus,.input-field input[type=password]:focus,.input-field input[type=email]:focus {
-border-bottom: 2px solid green;
+border-image: -webkit-linear-gradient(36deg, yellow, green) 10 !important;
+border-style: solid;
+border-top: none;
+border-left: none;
+border-right: none;
+border-bottom-width: 2px !important;
 color:black;
-box-shadow:none;
+box-shadow:none !important;
 }
 
 
@@ -26,7 +31,7 @@ color: grey;
 
 
 .input-field input[type=text]:focus + label,.input-field input[type=email]:focus + label,.input-field input[type=password]:focus + label {
-color: green !important;
+color: yellowgreen !important;
 }
 
 

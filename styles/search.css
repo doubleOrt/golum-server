@@ -22,7 +22,7 @@ background-size:30px;
 background-position:10px;
 background-repeat:no-repeat;
 border-bottom:none;
-box-shadow:0 2px 2px rgba(0,0,0,.2);	
+box-shadow:0 2px 2px rgba(0,0,0,.2) !important;	
 border-radius:2px;
 text-indent:50px;
 font-size:1.1rem;

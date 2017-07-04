@@ -71,24 +71,3 @@ padding:15px 0;
 #settings_email_confirmation_section {
 display:none; /* this section should be hidden initially, it will be set to visible if our "check-if-i-should-ask-for-the-confirmation-code" ajax call returns true */	
 }
-
-
-#accountSettings .input-field input[type=text],.input-field input[type=password],.input-field input[type=email] {
-border-bottom:1px solid #e2e2e2;
-font-family:roboto;
-}
-   
-#accountSettings .input-field input[type=text]:focus,.input-field input[type=password]:focus,.input-field input[type=email]:focus {
-border-color:#f95462;
-box-shadow:0 1px 0 #f95462 !important;
-}
-   
-#accountSettings .input-field input[type=text]:focus + label,.input-field input[type=email]:focus + label,.input-field input[type=password]:focus + label {
-color: #f95462 !important;
-box-shadow:none;
-}
-
-
-.input-field input {
-text-indent:2%;
-}
