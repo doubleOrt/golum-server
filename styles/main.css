@@ -211,7 +211,12 @@ transition:none;
 
 .commonButton:hover {
 color:white;	
-background-color:yellowgreen;	
+background:-webkit-linear-gradient(36deg, yellow 10%, green 70%);
+}
+
+.commonButtonWhite:focus {
+color:white;	
+background:-webkit-linear-gradient(36deg, yellow 10%, green 70%);
 }
 
 .commonButtonWhite {
@@ -230,6 +235,63 @@ background-color:white;
 color:yellowgreen !important;
 background-color:white !important;
 }
+
+.commonButtonWhite:focus {
+color:yellowgreen !important;
+background-color:white !important;
+}
+
+.red_button_light {
+color:red;
+background-color:white;	
+padding:0 15px;
+text-align:center;
+font-weight:bold;
+letter-spacing:1px;
+transition:none;
+}
+
+.red_button_light:hover {
+color:red;
+background-color:white;
+}
+
+.red_button_light:active {
+color:red !important;
+background-color:white !important;
+}
+
+.red_button_light:focus {
+color:red !important;
+background-color:white !important;
+}
+
+
+.red_button_heavy {
+color:white;
+background-color:red;	
+padding:0 15px;
+text-align:center;
+font-weight:bold;
+letter-spacing:1px;
+transition:none;
+}
+
+.red_button_heavy:hover {
+color:white;
+background-color:red;
+}
+
+.red_button_heavy:active {
+color:white !important;
+background-color:red !important;
+}
+
+.red_button_heavy:focus {
+color:white !important;
+background-color:red !important;
+}
+
 
 
 
