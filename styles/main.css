@@ -168,7 +168,7 @@ font-weight:bold;
 /* common link stylings */
 
 .commonLink {
-color:#4683af;
+color:#2d8ace;
 }
 
 .commonLinkMainColor {
@@ -541,7 +541,7 @@ font-size:200% !important;
 
 /* styling for hashtags */
 .hashtag {
-color:#4683af;
+color:#2d8ace;
 font-weight:500;
 }
 
@@ -550,12 +550,12 @@ font-weight:500;
 .focusStealer {
 display:inline-block;	
 color: white;
-background-color: #4683af;
+background-color: #2d8ace;
 border-radius: 100%;
 line-height: 0;
 padding: 2px;
 border: 2px solid white;
-box-shadow: 0 1px 1px rgba(0,0,0,.3), 0 0 0 15px rgba(108, 203, 238,.2); /* #4683af but in rgba since we need some transparency */;
+box-shadow: 0 1px 1px rgba(0,0,0,.3), 0 0 0 15px rgba(108, 203, 238,.2); /* #2d8ace but in rgba since we need some transparency */;
 }
 
 .focusStealer i {

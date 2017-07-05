@@ -184,31 +184,17 @@ fitToParent('#` + image_id + `');
 /* this .loadPostComponents class is just so we can distinguish between already loaded classes and the newly loaded so we don't load post components for posts that we already have those
 components, we remove this class from a post immediately after we have loaded its components */
 return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m12 s12' data-actual-post-id='` + data["post_id"] + `' data-post-type='` + data["post_type"] + `' data-poster-id='` + data["post_posted_by"] + `' data-positive-icon='` + (data["post_type"] != 1 ? "check" : "thumb_up") + `' data-negative-icon='` + (data["post_type"] != 1 ? "close" : "thumb_down") + `' data-already-voted='` + (data["base_user_already_voted"] == true ? "true" : "false") + `'>
-<div class='postTop'>
-<div class='postTitle scaleItem'>
-` +   handle_tags(data["post_title"]) + `
-</div><!-- end .postTitle -->
-<a href='#' class='postSettingsButton dropdown-button opacityChangeOnActive' data-activates='postSettings` + random_num + `'><i class='material-icons'>more_vert</i></a>
-</div><!-- end .postTop -->
+
+
 
 <div class='postImagesContainer row'>
 ` + imagesContainerChildren + `
-</div>
-
-<div class='postBottomContainer row'>
-
-<ul id='postSettings` + random_num + `' class='dropdown-content'>
-<li class='reportPost' data-actual-post-id='` + data["post_id"] + `'><a href='#!' class='waves-effect waves-lightgrey'>Report</a></li>
-` + (data["posted_by_base_user"] == true ? `<li class='deletePost' data-actual-post-id='` + data["post_owner_info"]["id"] + `'><a href='#!' class='waves-effect waves-lightgrey'>Delete</a></li>` : "") + `
-</ul>
 
 
-
-<div class='postActionsContainer'>
+<div class='post_images_container_bottom_overlay'>
 
 <div class='postButtonsContainer'>
 </div><!-- end .postButtonsContainer -->
-
 
 <div class='posterInfoMegaContainer'><!-- contains the user's avatar, their fullname and the time of the post -->
 
@@ -224,11 +210,34 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 
 <div class='posterInfoChild'>
 <a href='#modal1' class='commonLink showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["post_owner_info"]["id"] + `'>` + poster_full_name + `</a>
-<div class='postDate'></div><!-- end .postDate -->
 </div><!-- end .posterInfoChild -->
+
 </div><!-- end .posterInfoMegaContainer -->
 
-</div>
+</div><!-- end .post_images_container_bottom_overlay -->
+</div><!-- end .postImagesContainer -->
+
+<div class='postBottomContainer row'>
+
+<ul id='postSettings` + random_num + `' class='dropdown-content'>
+<li class='reportPost' data-actual-post-id='` + data["post_id"] + `'><a href='#!' class='waves-effect waves-lightgrey'>Report</a></li>
+` + (data["posted_by_base_user"] == true ? `<li class='deletePost' data-actual-post-id='` + data["post_owner_info"]["id"] + `'><a href='#!' class='waves-effect waves-lightgrey'>Delete</a></li>` : "") + `
+</ul>
+
+<div class='post_text_container'>
+
+<div class='postTitle scaleItem'>
+` +   handle_tags(data["post_title"]) + `
+</div><!-- end .postTitle -->
+
+<div class='post_text_container_child'>
+<div class='post_comments_number opacityChangeOnActive'>View 12201 comments...</div>
+<div class='postDate'></div>
+</div><!-- end .post_text_container_child -->
+
+</div><!-- end .post_text_container -->
+
+<a href='#' class='postSettingsButton dropdown-button opacityChangeOnActive' data-activates='postSettings` + random_num + `'><i class='material-icons'>more_vert</i></a>
 
 </div><!-- end .postBottomContainer -->
 </div><!-- end .singlePost -->

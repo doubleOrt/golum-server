@@ -16,6 +16,9 @@ $(".emojisContainerChild").append("<img class='emoji' src='icons/emojis/" + i + 
 }
 
 
+ 
+ 
+ 
 
 // we want all images on our app to be not draggable.
 $("img").on("dragstart",function(e){

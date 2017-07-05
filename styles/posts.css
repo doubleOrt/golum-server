@@ -11,9 +11,7 @@ position:relative;
 left:50% !important;
 transform:translate(-50%,0);
 margin-top:70px;
-border-radius:0 0 5px 5px;
-border-top:1px solid #ebeaea;
-border-bottom:1px solid #ebeaea;
+box-shadow:0 2px 5px rgba(0,0,0,.2);
 }
 
 
@@ -22,52 +20,30 @@ border-bottom:1px solid #ebeaea;
 margin-bottom:100px;	
 }
 
-.postTop {
-margin:0;
-font-family:roboto;
-position:relative;
-background-color:white;
-}
-
-
-.postTitle {
-display:inline-block;
-color:black;
-background-color:white;
-position:relative;	
-z-index:1;	
-padding:10px 5px 10px 15px;
-width:auto;
-height:100%;
-font-size:12px;
-font-weight:500;
-text-align:center;
-}
-
-.postSettingsButton {
-color:#aaaaaa;		
-line-height:0;
-border-radius:3px;	
-float:right;
-margin-top:7px;
-}
-
 .postImagesContainer {
 width:100%;
-height:300px;
+height:335px;
 position:relative;
 margin:0;
 padding:0;
 overflow:hidden;
-background:-webkit-linear-gradient(-320deg,#a79f30,#fff22c);
-background:linear-gradient(-320deg,#a79f30,#fff22c);
+}
+
+.post_images_container_bottom_overlay {
+display:block;	
+height:35px;
+width:100%;
+background:rgba(0,0,0,.7);	
+position:absolute;
+bottom:0;
+left:0;
 }
 
 .postSingleImageContainer {
 padding:0 !important;
 overflow:hidden;	
 position:relative;
-background:transparent;
+background:lightsteelgreen;
 }
 
 .postSingleImageContainerImage {
@@ -133,67 +109,42 @@ visibility:hidden;
 
 .postBottomContainer {
 width:100%;
+min-height:90px;
 background-color:white;	
-padding:0;
+padding:10px 5px 30px 15px;
 margin:0;
 position:relative;
 border-radius:0 0 5px 5px;
 }
 
-
-.postTagsContainer {
-font-size:60%;	
-padding:15px 0 0 10px !important;
-display:none;
+.post_text_container {
+display:inline-block;	
+width:80%;
+height:auto;	
+overflow:visible;
+float:left;
 }
 
-.postTagsContainer .chip {
-font-size:100%;	
+.postTitle {
+display:inline-block;
+color:black;
+background-color:white;
+position:relative;	
+z-index:1;	
 width:auto;
-height:20px;
-line-height:20px;
-margin:0;
-margin-left:3px;
-margin-top:5px;
-padding:0 8px 0 10px;
-}
-
-.postTagsContainer .close {
-line-height:22px;
-padding:0 2px;
-font-size:120%;	
-}
-
-.postAddTagCircle {	
-display:inline-block;
-line-height:0;
-color:#aaaaaa;
-position:absolute;
-margin-left:5px;
-margin-top:5px;
-}
-
-.postAddTagCircle:active {
-opacity:.3;	
-}
-
-.postAddTagCircle i {
-font-size:20px;	
-}
-
-.postActionsContainer {
-font-size:80%;	
-margin:0;
-padding:0;
-display:inline-block;
-width:100%;	
-height:45px;
-}
-
-.postButtonsContainer {
-display:table;	
 height:100%;
-float:right;	
+font-size:12px;
+font-weight:500;
+line-height:16px;
+margin-bottom:5px;
+}
+
+.postSettingsButton {
+color:#aaaaaa;		
+line-height:0;
+border-radius:3px;	
+float:right;
+margin-top:7px;
 }
 
 /* poster avatar and name */
@@ -203,13 +154,13 @@ display:table;
 position:relative;
 top:50%;
 transform:translate(0,-50%);	
-margin-left:5px;
+margin-left:10px;
 }
 
 .posterAvatarContainer {
 display:table-cell;	
-width:33px;
-height:33px;	
+width:25px;
+height:25px;	
 vertical-align:middle;
 display:inline-block !important;
 float:left;
@@ -219,7 +170,7 @@ float:left;
 display:table-cell;
 vertical-align:middle;	
 padding-left:10px;
-font-weight:600;
+font-weight:bold;
 }
 
 .posterInfoChild a {
@@ -229,10 +180,20 @@ text-transform:capitalize;
 line-height:12px;
 }
 
-.posterInfoChild .postDate {
+.post_text_container_child {
 color:#aaaaaa;	
-font-size:8px;
-font-weight:bold;	
+font-size:9px;
+font-weight:500;
+user-select:none;
+}
+
+.postDate {
+display:inline-block;	
+margin-left:1px;
+}
+
+.post_comments_number {
+font-size:12px;	
 }
 
 
@@ -251,21 +212,32 @@ margin-left:8px;
 
 
 .postCommentsButtonCommentsNumberContainer {
+display:inline-block;	
 font-size:85%;
-line-height:0;
-position:relative;
-top:-1px;
 font-weight:bold;
+line-height:35px;
+position:relative;
+top:-7px;
+}
+
+.postButtonsContainer {
+display:block;	
+height:100%;
+position:relative;
+top:50%;
+transform:translate(0,-50%);
+float:right;	
+padding-right:5px;
 }
 
 .postButtonsContainer .btn {
 height:100%;
-min-width:50px;
+padding:0 5px;
 text-align:center;
 box-sizing:border-box;
-padding: 0 10px;
-color:#494949;
+color:white;
 border-radius:0 !important;
+font-size:12px;
 user-select:none;
 }
 
@@ -278,7 +250,6 @@ background:transparent;
 }
 
 .postButtonsContainer .btn i {
-font-size:160%;	
 display:inline-block;
 position:relative;
 top:50%;
