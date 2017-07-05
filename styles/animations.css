@@ -79,6 +79,7 @@ transform:skew(0deg,0deg) scale(1) translate(0,-50%);
 .scaleItem {
 -webkit-animation:scaleItem .3s ease-out .2s 1 normal forwards !important; 		
 -webkit-transform:scale(0) !important;
+transform-origin:center;
 }
 
 
@@ -113,6 +114,7 @@ you need to give these two to anything you want and they will be animated:
 .scaleVerticallyCenteredItem {
 -webkit-animation:scaleVerticallyCenteredItem .3s ease-out .2s 1 normal forwards !important; 		
 transform:scale(0) translate(0,-50%) !important;
+transform-origin:center;
 }
 
 @keyframes scaleVerticallyCenteredItem {
@@ -126,6 +128,7 @@ transform:scale(1) translate(0,-50%);
 .scaleHorizontallyCenteredItem {
 -webkit-animation:scaleHorizontallyCenteredItem .2s ease-out .2s 1 normal forwards !important; 		
 transform:scale(0) translate(-50%,0) !important;
+transform-origin:center;
 }
 
 @keyframes scaleHorizontallyCenteredItem {

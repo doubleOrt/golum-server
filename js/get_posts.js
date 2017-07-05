@@ -76,9 +76,9 @@ success:function(data) {
 var dataArr = JSON.parse(data);
 for(var i = 0;i<dataArr.length;i++) {
 $(".singlePost[data-actual-post-id=" + dataArr[i][0] + "]").find(".postDate").html(dataArr[i][1]);
-$(".singlePost[data-actual-post-id=" + dataArr[i][0] + "]").find(".postFavoritesNum").html(dataArr[i][2]);
-$(".singlePost[data-actual-post-id=" + dataArr[i][0] + "]").find(".postFavoritesNum").attr("data-total-number",dataArr[i][2]);
-$(".singlePost[data-actual-post-id=" + dataArr[i][0] + "] .postButtonsContainer").html(dataArr[i][3]);
+$(".singlePost[data-actual-post-id=" + dataArr[i][0] + "]").find(".comments_number").attr("data-total-number", dataArr[i][2]);
+set_post_comments_number_string($(".singlePost[data-actual-post-id=" + dataArr[i][0] + "]"), dataArr[i][2]);
+$(".singlePost[data-actual-post-id=" + dataArr[i][0] + "]").find(".favoritePost i").html((dataArr[i][3] !== 0 ? "bookmark" : "bookmark_border"));
 }
 }	
 });
@@ -86,15 +86,13 @@ $(".singlePost[data-actual-post-id=" + dataArr[i][0] + "] .postButtonsContainer"
 
 getVotedPostsVotesMarkup();
 
-// check if the callback parameter has an actual callback function, if so, call it.
+// favorite if the callback parameter has an actual callback function, if so, call it.
 if(typeof callback != "undefined") {
 callback();
 }
 
 $(".loadPostComponents").removeClass("loadPostComponents");
 }
-
-
 
 
 
@@ -183,22 +181,25 @@ fitToParent('#` + image_id + `');
 	
 /* this .loadPostComponents class is just so we can distinguish between already loaded classes and the newly loaded so we don't load post components for posts that we already have those
 components, we remove this class from a post immediately after we have loaded its components */
-return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m12 s12' data-actual-post-id='` + data["post_id"] + `' data-post-type='` + data["post_type"] + `' data-poster-id='` + data["post_posted_by"] + `' data-positive-icon='` + (data["post_type"] != 1 ? "check" : "thumb_up") + `' data-negative-icon='` + (data["post_type"] != 1 ? "close" : "thumb_down") + `' data-already-voted='` + (data["base_user_already_voted"] == true ? "true" : "false") + `'>
+return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m12 s12' data-actual-post-id='` + data["post_id"] + `' data-post-type='` + data["post_type"] + `' data-poster-id='` + data["post_owner_info"]["id"] + `' data-positive-icon='` + (data["post_type"] != 1 ? "check" : "thumb_up") + `' data-negative-icon='` + (data["post_type"] != 1 ? "close" : "thumb_down") + `' data-already-voted='` + (data["base_user_already_voted"] == true ? "true" : "false") + `'>
 
 
 
 <div class='postImagesContainer row'>
-` + imagesContainerChildren + `
 
+` + imagesContainerChildren + `
 
 <div class='post_images_container_bottom_overlay'>
 
 <div class='postButtonsContainer'>
+<a href='#sendToFriendModal' class='btn btn-flat modal-trigger sendPostToFriend scaleItem' data-actual-post-id='` + data["post_id"] + `'><i class='material-icons'>send</i></a>
+<a href='#commentsModal' class='btn btn-flat showPostComments modal-trigger scaleItem' data-actual-post-id='` + data["post_id"] + `'><i class='material-icons'>comment</i></a>
+<a href='#' class='btn btn-flat favoritePost scaleItem' data-actual-post-id='` + data["post_id"] + `'><i class='material-icons'>bookmark</i></a>
 </div><!-- end .postButtonsContainer -->
 
 <div class='posterInfoMegaContainer'><!-- contains the user's avatar, their fullname and the time of the post -->
 
-<div class='avatarContainer posterAvatarContainer'>
+<div class='avatarContainer posterAvatarContainer scaleItem'>
 <div class='avatarContainerChild posterAvatarContainerChild showUserModal modal-trigger' data-user-id='` + data["post_owner_info"]["id"] + `' data-target='user_modal'>
 <div class='rotateContainer' style='margin-top:` + data["post_owner_info"]["avatar_positions"][0] + `%;margin-left:` + data["post_owner_info"]["avatar_positions"][1] + `%;'>
 <div class='avatarRotateDiv ` + (data["posted_by_base_user"] == true ? "baseUserAvatarRotateDivs" : "") + `' data-rotate-degree='` + data["post_owner_info"]["avatar_rotate_degree"] + `' style='transform:rotate(` + data["post_owner_info"]["avatar_rotate_degree"] + `deg)'>
@@ -210,6 +211,7 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 
 <div class='posterInfoChild'>
 <a href='#modal1' class='commonLink showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["post_owner_info"]["id"] + `'>` + poster_full_name + `</a>
+<div class='post_views'><span class='views_number_container'>` + data["post_views"] + `</span> Views</div>
 </div><!-- end .posterInfoChild -->
 
 </div><!-- end .posterInfoMegaContainer -->
@@ -220,8 +222,7 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 <div class='postBottomContainer row'>
 
 <ul id='postSettings` + random_num + `' class='dropdown-content'>
-<li class='reportPost' data-actual-post-id='` + data["post_id"] + `'><a href='#!' class='waves-effect waves-lightgrey'>Report</a></li>
-` + (data["posted_by_base_user"] == true ? `<li class='deletePost' data-actual-post-id='` + data["post_owner_info"]["id"] + `'><a href='#!' class='waves-effect waves-lightgrey'>Delete</a></li>` : "") + `
+` + (data["posted_by_base_user"] == true ? `<li class='deletePost' data-actual-post-id='` + data["post_owner_info"]["id"] + `'><a href='#!' class='waves-effect waves-lightgrey'>Delete</a></li>` : "<li class='reportPost' data-actual-post-id='" + data["post_id"] + "'><a href='#!' class='waves-effect waves-lightgrey'>Report</a></li>") + `
 </ul>
 
 <div class='post_text_container'>
@@ -231,13 +232,13 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 </div><!-- end .postTitle -->
 
 <div class='post_text_container_child'>
-<div class='post_comments_number opacityChangeOnActive'>View 12201 comments...</div>
+<a class='post_comments_number showPostComments modal-trigger opacityChangeOnActive' href='#commentsModal' data-actual-post-id='` + data["post_id"] + `'>View all <span class='comments_number_container'><span class='comments_number' data-total-number='0'></span></span> Comments...</a>
 <div class='postDate'></div>
 </div><!-- end .post_text_container_child -->
 
 </div><!-- end .post_text_container -->
 
-<a href='#' class='postSettingsButton dropdown-button opacityChangeOnActive' data-activates='postSettings` + random_num + `'><i class='material-icons'>more_vert</i></a>
+<a class='postSettingsButton dropdown-button opacityChangeOnActive' href='#' data-activates='postSettings` + random_num + `'><i class='material-icons'>more_vert</i></a>
 
 </div><!-- end .postBottomContainer -->
 </div><!-- end .singlePost -->
@@ -249,6 +250,16 @@ adaptRotateWithMargin($(this), ` + data["post_owner_info"]["avatar_rotate_degree
 </script>
 `;	
 }
+
+
+function get_post_comments_number_string(number_of_comments) {
+return ("View " + (number_of_comments != 1 ? "all" : "") + " <span class='comments_number_container'><span class='comments_number' data-total-number='" + number_of_comments + "'>" + (number_of_comments != 0 ? number_of_comments : "") + "</span></span> Comment" + (number_of_comments != 1 ? "s" : "") + "...");	
+}
+
+function set_post_comments_number_string(post_element, number_of_comments) {
+post_element.find(".post_comments_number").html(get_post_comments_number_string(number_of_comments));
+}
+
 
 
 

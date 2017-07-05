@@ -51,15 +51,12 @@ $posts_query_string .= "posts.id = ". $_GET["post_ids"][$i];
 }
 
 
-$all_posts_arr = $con->query("select distinct posts.id, posts.time, favorites.id as added_to_favorites, (select count(id) from post_comments where post_id = posts.id) as post_comments_num, (select count(id) from favorites where favorites.post_id = posts.id) as total_favorites from posts left join favorites on posts.id = favorites.post_id and favorites.user_id = ". $_SESSION["user_id"] ." left join post_comments on post_comments.post_id = posts.id where (". $posts_query_string .")")->fetchAll();
+$all_posts_arr = $con->query("select distinct posts.id, posts.time, favorites.id as added_to_favorites, (select count(id) from post_comments where post_id = posts.id) as post_comments_num from posts left join favorites on posts.id = favorites.post_id and favorites.user_id = ". $_SESSION["user_id"] ." left join post_comments on post_comments.post_id = posts.id where (". $posts_query_string .")")->fetchAll();
 
 $echo_arr = [];
 
 foreach($all_posts_arr as $post_arr) {
-array_push($echo_arr,[$post_arr["id"],time_to_string($post_arr["time"]),$post_arr["total_favorites"],"
-<a href='#commentsModal' class='btn btn-flat showPostComments modal-trigger' data-actual-post-id='". $post_arr["id"] ."'><i class='material-icons'>comment</i> <span class='postCommentsButtonCommentsNumberContainer'><span class='commentButtonCommentsNumber' data-total-number='". $post_arr["post_comments_num"] ."'>". ($post_arr["post_comments_num"] > 0 ? "(".$post_arr["post_comments_num"].")" : "") ."</span></span></a>
-<a href='#' class='btn btn-flat favoritePost' data-actual-post-id='". $post_arr["id"] ."'><i class='material-icons'>". ($post_arr["added_to_favorites"] != "" ? "star" : "star_border") ."</i></a>
-<a href='#sendToFriendModal' class='btn btn-flat modal-trigger sendPostToFriend' data-actual-post-id='". $post_arr["id"] ."'><i class='material-icons'>send</i></a>"]);
+array_push($echo_arr,[$post_arr["id"], time_to_string($post_arr["time"]), $post_arr["post_comments_num"], ($post_arr["added_to_favorites"] == "" ? 0 : 1)]);
 }
 
 }

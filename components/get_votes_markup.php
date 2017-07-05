@@ -22,7 +22,7 @@ $votes_line_max_height = 105;
 
 return "<div class='votesContainer z-depth-2'>
 <div class='votesContainerChild'>
-<div class='votesIcon fullyRoundedBorder z-depth-1 white-text ". ($index_is_majority == true ? "majorityVoteBackgroundColor" : "minorityVoteBackgroundColor") ."' ". ($vote_index == $user_vote_index ? "data-user-vote='true'"  : "" ) ."><i class='material-icons'>". ($post_type == 1 ? ($vote_index == 0 ? $positive_icon : $negative_icon) : ($vote_index == $user_vote_index ? "check" : "close")) ."</i></div>
+<div class='votesIcon fullyRoundedBorder z-depth-1 white-text ". ($index_is_majority == true ? "majorityVoteBackgroundColor" : "minorityVoteBackgroundColor") ."' ". ($vote_index == $user_vote_index ? "data-user-vote='true'"  : "" ) ."><i class='material-icons'>". ($post_type == 1 ? ($vote_index == 0 ? $positive_icon : $negative_icon) : ($vote_index == $user_vote_index ? $positive_icon : $negative_icon)) ."</i></div>
 <div class='totalVotesNumber' ". ($vote_index == $user_vote_index ? "data-user-vote='true'"  : "" ) ." data-votes-number='". $index_votes_number ."'>". $index_votes_number . " Vote" . ($index_votes_number != 1 ? "s" : "") ."</div>
 <div class='totalVotesPercentage'>". $total_votes_percentage ."%</div>
 </div>

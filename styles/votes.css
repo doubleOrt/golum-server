@@ -40,7 +40,7 @@ font-size:20px;
 
 
 .majorityVoteBackgroundColor {
-background-color:#f95462;	
+background-color:red;	
 }
 
 .minorityVoteBackgroundColor {
@@ -58,11 +58,11 @@ border-radius:1000px;
 }
 
 .votesIcon.majorityVoteBackgroundColor {
-background-color:rgba(255,73,69,.7);	
+background-color:rgba(255,0,0,.5);	
 }
 
 .votesIcon.minorityVoteBackgroundColor {
-background-color:rgba(255,255,255,.4);	
+background:transparent;	
 }
 
 

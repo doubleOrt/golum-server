@@ -19,10 +19,6 @@ else {
 $con->exec("insert into notifications (notification_from,notification_to,time,type,extra) values (". $_SESSION["user_id"] .",". $_POST["poster_id"] .",". time() .",1,". $_POST["post_id"] .");");	
 }
 
-$shmid = $_POST["poster_id"] . "" . 6; 
-$shm = shmop_open($shmid, 'c', 0777, 1024);
-shmop_write($shm, str_to_nts("true"), 0);
-shmop_close($shm);	
 }
 
 $vote_time = time();

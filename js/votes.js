@@ -66,7 +66,7 @@ singlePostObject.find(".postSingleImageContainer .votesContainer").remove();
 for(var i = 0;i<dataArr.length;i++) {	
 singlePostObject.find(".postSingleImageContainer[data-option-index=" + dataArr[i][0] + "]").prepend(dataArr[i][1]);
 if(doAnimations == true) {
-singlePostObject.attr("data-post-type") == "3" || singlePostObject.attr("data-post-type") == "4" ? singlePostObject.find(".votesContainerChild").addClass("skewScaleItem") : singlePostObject.find(".votesContainerChild").addClass("skewScaleVerticallyCenteredItem");
+singlePostObject.attr("data-post-type") == "3" || singlePostObject.attr("data-post-type") == "4" ? singlePostObject.find(".votesContainerChild").addClass("skewScaleItem") : singlePostObject.find(".votesContainerChild").addClass("scaleVerticallyCenteredItem");
 }
 }
 
@@ -105,8 +105,8 @@ singlePostElement.find(".postSingleImageContainer[data-option-index='" + userOpt
 setNewNumber(singlePostElement.find(".postSingleImageContainer .totalVotesNumber[data-user-vote='true']"),"data-votes-number",true,false," Vote" + (newVotesNewNum == 1 ? "" : "s"));	
 
 if(singlePostElement.attr("data-post-type") != "1") {
-singlePostElement.find(".votesIcon i").html("close");	
-singlePostElement.find(".totalVotesNumber[data-user-vote='true']").parent().find(".votesIcon i").html("check");	
+singlePostElement.find(".votesIcon i").html("favorite_border");	
+singlePostElement.find(".totalVotesNumber[data-user-vote='true']").parent().find(".votesIcon i").html("favorite");	
 } 
 
 var allVotesNumber = 0;

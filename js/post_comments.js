@@ -178,7 +178,7 @@ Materialize.toast(data_arr[1] ,5000 ,"red")
 setNewNumber($("#totalNumberOfComments"),"data-total-number",true,true,"");
 if(commentSinglePostElement.length > 0) {
 // update the comments button's comment number element
-setNewNumber(commentSinglePostElement.find(".commentButtonCommentsNumber"),"data-total-number",true,true,"");
+set_post_comments_number_string(commentSinglePostElement, parseFloat(commentSinglePostElement.find(".comments_number").attr("data-total-number")) + 1);
 }
 	
 }

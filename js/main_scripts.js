@@ -192,10 +192,10 @@ favoritePost($(this).attr("data-actual-post-id"),favoritePostCallback);
 
 function favoritePostCallback(postIsNowFavorited) {
 if(postIsNowFavorited == true) {
-thisPostElement.find('.favoritePost').find('i').html('star');	
+thisPostElement.find('.favoritePost').find('i').html('bookmark');	
 }	
 else {
-thisPostElement.find('.favoritePost').find('i').html('star_border');	
+thisPostElement.find('.favoritePost').find('i').html('bookmark_border');	
 }
 }
 
