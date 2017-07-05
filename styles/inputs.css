@@ -7,13 +7,13 @@ color:#aaaaaa;
 font-weight:500;
 }
 
-.input-field input[type=text],.input-field input[type=password],.input-field input[type=email] {
+.input-field input[type=text]:not(.independent_styles), .input-field input[type=password]:not(.independent_styles), .input-field input[type=email]:not(.independent_styles) {
 border-bottom: 2px solid lightgrey;
 color:grey;
 box-shadow:none;
 }
 
-.input-field input[type=text]:focus,.input-field input[type=password]:focus,.input-field input[type=email]:focus {
+.input-field input[type=text]:not(.independent_styles):focus, .input-field input[type=password]:not(.independent_styles):focus, .input-field input[type=email]:not(.independent_styles):focus {
 border-image: -webkit-linear-gradient(36deg, yellow, green) 10 !important;
 border-style: solid;
 border-top: none;
@@ -25,12 +25,12 @@ box-shadow:none !important;
 }
 
 
-.input-field input[type=text] + label,.input-field input[type=email] + label,.input-field input[type=password] + label {
+.input-field input[type=text]:not(.independent_styles) + label, .input-field input[type=email]:not(.independent_styles) + label, .input-field input[type=password]:not(.independent_styles) + label {
 color: grey;
 }
 
 
-.input-field input[type=text]:focus + label,.input-field input[type=email]:focus + label,.input-field input[type=password]:focus + label {
+.input-field input[type=text]:not(.independent_styles):focus + label, .input-field input[type=email]:not(.independent_styles):focus + label, .input-field input[type=password]:focus + label {
 color: yellowgreen !important;
 }
 
