@@ -1,4 +1,5 @@
 
+var VOTES_LINE_MAX_HEIGHT = 100;
 
 
 function postVote(postObject, voteOptionIndex) {
@@ -35,58 +36,80 @@ function getVotedPostsVotesMarkup() {
 
 $(".loadPostComponents").each(function(){	
 if($(this).find(".selectedOptionContainer").length == 0 && $(this).find(".votesContainer").length == 0) {	
-getVotesMarkup($(this),true,false);	
+var this_post_element = $(this); 
+getVotesMarkup(this_post_element.attr("data-actual-post-id"), this_post_element.attr("data-post-type"), function(data){
+get_post_votes_callback(this_post_element, data, true);	
+});	
 }
 });
 
 }
 
 
-function getVotesMarkup(singlePostObject,doAnimations,reactToPost) {	
+function getVotesMarkup(post_id, post_type, callback) {	
 
-if(typeof singlePostObject == "undefined" || typeof singlePostObject.attr("data-actual-post-id") == "undefined" || typeof singlePostObject.attr("data-post-type") == "undefined" || typeof singlePostObject.attr("data-positive-icon") == "undefined" || typeof singlePostObject.attr("data-negative-icon") == "undefined") {
-return "";
+if(typeof post_id == "undefined" || typeof post_type == "undefined") {
+return false;	
 }
 
 $.post({
 url:"components/get_votes_markup.php",
 data:{
-"post_id":singlePostObject.attr("data-actual-post-id"),
-"post_type":singlePostObject.attr("data-post-type"),
-"positive_icon":singlePostObject.attr("data-positive-icon"),
-"negative_icon":singlePostObject.attr("data-negative-icon")
+"post_id": post_id,
+"post_type": post_type
 },
 success:function(data) {
-
-var dataArr = JSON.parse(data);	
-
-// remove markup if it already exists.
-singlePostObject.find(".postSingleImageContainer .votesContainer").remove();
-
-for(var i = 0;i<dataArr.length;i++) {	
-singlePostObject.find(".postSingleImageContainer[data-option-index=" + dataArr[i][0] + "]").prepend(dataArr[i][1]);
-if(doAnimations == true) {
-singlePostObject.attr("data-post-type") == "3" || singlePostObject.attr("data-post-type") == "4" ? singlePostObject.find(".votesContainerChild").addClass("skewScaleItem") : singlePostObject.find(".votesContainerChild").addClass("scaleVerticallyCenteredItem");
+var data_arr = JSON.parse(data);	
+if(typeof callback == "function") {
+callback(data_arr);	
 }
-}
-
-
-// show the user's friends who voted 
-getFriendsWhoVotedOnThisPost(singlePostObject,doAnimations);
-
-
-if(singlePostObject.attr("data-already-voted") == "true") {
-singlePostObject.find(".votesContainer").show();	
-
-// if the user has already voted.
-singlePostObject.find(".posterInfoMegaContainer").css("display","table");
-}
-
 }	
 });
 }
 
 
+function get_post_votes_callback(post_element ,data, do_animations) {
+
+
+// remove markup if it already exists.
+post_element.find(".postSingleImageContainer .votesContainer").remove();
+
+var post_type = post_element.attr("data-post-type");
+
+for(var i = 0;i<data[1].length;i++) {	
+data[1][i]["post_type"] = post_type;
+data[1][i]["user_vote_index"] = data[0]["user_vote_index"];
+data[1][i]["index_is_majority"] = (i == data[0]["majority_vote_index"] ? true : false);
+post_element.find(".postSingleImageContainer[data-option-index=" + data[1][i]["vote_index"] + "]").prepend( get_vote_markup(data[1][i], post_element.attr("data-positive-icon"), post_element.attr("data-negative-icon")) );
+if(do_animations == true) {
+post_element.attr("data-post-type") == "3" || post_element.attr("data-post-type") == "4" ? post_element.find(".votesContainerChild").addClass("skewScaleItem") : post_element.find(".votesContainerChild").addClass("scaleVerticallyCenteredItem");
+}
+}
+
+// show the user's friends who voted 
+getFriendsWhoVotedOnThisPost(post_element,do_animations);
+
+// if the user has already voted.
+if(post_element.attr("data-already-voted") == "true") {
+post_element.find(".votesContainer").show();	
+post_element.find(".posterInfoMegaContainer").css("display","inline-block");
+}
+	
+}
+
+
+function get_vote_markup(data, positive_icon, negative_icon) {
+return `<div class='votesContainer z-depth-2'>
+<div class='votesContainerChild'>
+<div class='votesIcon fullyRoundedBorder z-depth-1 white-text ` + (data["index_is_majority"] == true ? `majorityVoteBackgroundColor` : `minorityVoteBackgroundColor`) + `' ` + (data["vote_index"] == data["user_vote_index"] ? `data-user-vote='true'`  : `` ) +`><i class='material-icons'>`+ (data["post_type"] == 1 ? (data["vote_index"] == 0 ? positive_icon : negative_icon) : (data["vote_index"] == data["user_vote_index"] ? positive_icon : negative_icon)) +`</i></div>
+<div class='totalVotesNumber' `+ (data["vote_index"] == data["user_vote_index"] ? `data-user-vote='true'`  : ``) +` data-votes-number='`+ data["index_total_votes"] +`'>`+ data["index_total_votes"] + ` Vote` + (data["index_total_votes"] != 1 ? `s` : ``) +`</div>
+<div class='totalVotesPercentage'>`+ data["index_votes_percentage_in_total"] +`%</div>
+</div>
+<div class='votesLineContainer' style='height:`+ ((data["index_votes_percentage_in_total"] / 100) * VOTES_LINE_MAX_HEIGHT) +`px' data-max-height='`+ VOTES_LINE_MAX_HEIGHT +`'>
+<div class='votesLine `+ (data["index_is_majority"] == true ? `majorityVoteBackgroundColor` : `minorityVoteBackgroundColor`) +`'></div>
+</div>
+</div>`;
+}
 
 
 
@@ -240,3 +263,5 @@ singlePostObject.find(".friendsWhoVotedThisChild").addClass(".scaleItem");
 });
 	
 }
+
+
