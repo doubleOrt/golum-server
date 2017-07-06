@@ -6,6 +6,7 @@ height:calc(100% - 35px); /* have to compensate for the bottom overlay */
 padding:10px 0;
 position:relative;
 z-index:1;
+user-select:none;
 }
 
 .votesContainerChild {
@@ -15,7 +16,7 @@ transform:translate(0,-50%);
 }
 
 .singlePost[data-post-type="3"] .votesContainerChild, .singlePost[data-post-type="4"] .votesContainerChild {
-top:0%;
+top:15%;
 transform:translate(0,0);
 }
 
@@ -38,15 +39,6 @@ font-size:20px;
 
 
 
-
-.majorityVoteBackgroundColor {
-background-color:red;	
-}
-
-.minorityVoteBackgroundColor {
-background-color:white;	
-}
-
 .votesIcon {
 display:inline-block;	
 position:relative;
@@ -55,10 +47,23 @@ transform:translate(-50%,0%);
 padding:10px;
 border:2px solid white;
 border-radius:1000px;
+box-shadow:1px 2px 0 rgba(0,0,0,1);
 }
 
-.votesIcon.majorityVoteBackgroundColor {
-background-color:rgba(255,0,0,.5);	
+.votesIcon i {
+text-shadow: 1px 3px 0 rgba(0,0,0,.6);	
+}
+
+.votesIcon[data-user-vote=true] {
+background:-webkit-linear-gradient(36deg, crimson, lightsalmon);
+}
+
+.singlePost[data-post-type="1"] .votesIcon[data-user-vote=true], .singlePost[data-post-type="2"] .votesIcon[data-user-vote=true] {
+box-shadow:1px 2px 0 rgba(0,0,0,1), 0 0 0 3px rgba(0,0,0,1) inset
+}
+
+.singlePost[data-post-type="3"] .votesIcon[data-user-vote=true], .singlePost[data-post-type="4"] .votesIcon[data-user-vote=true] {
+box-shadow:1px 2px 0 rgba(0,0,0,1), 0 0 0 2px rgba(0,0,0,1) inset
 }
 
 .votesIcon.minorityVoteBackgroundColor {
@@ -91,34 +96,5 @@ font-weight:bold;
 line-height:24px;
 }
 
-.votesLineContainer {
-width:5px;
-position:absolute;
-left:50%;
-bottom:0;
-transform:translate(-50%,0);
-}
-
-.votesLine {
-width:100%;
-height:0%;
-position:absolute;
-left:0;
-bottom:0;
--webkit-animation:votesLineAnimation 2s ease-out 0s 1 normal forwards !important; 
-border-radius:3px 3px 0 0;
-}
-
-@keyframes votesLineAnimation {
-
-80% {
-height:105%;	
-}
-
-100% {
-height:100%;
-}
-
-}
 
 

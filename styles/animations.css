@@ -22,26 +22,6 @@
 
 
 
-
-.skewScaleItem {
--webkit-animation:skewScaleItem .3s ease-out 0s 1 normal forwards !important; 
-transform:skew(30deg,30deg) scale(0);
-transform-origin:0 0;
-}
-
-
-/* 
-this one we use to create a skew-scale animation effect for the .votesContainer, it basically animates the elements skew and scale properties, and make sure that the element has no transforms before using this.
-*/
-@keyframes skewScaleItem {
-
-100% {
-transform:skew(0deg,0deg) scale(1);
-}
-
-}
-
-
 @keyframes tab_indicator_animation {
 
 0% {
@@ -200,3 +180,24 @@ opacity:1;
 }
 
 
+
+
+
+
+.skewScaleItem {
+-webkit-animation:skewScaleItem .3s ease-out .2s 1 normal forwards !important; 
+transform:skew(30deg,30deg) scale(0) !important;	
+transform-origin:center;
+}
+
+
+/* 
+this one we use to create a skew-scale animation effect for the .votesContainer, it basically animates the elements skew and scale properties, and make sure that the element has no transforms before using this.
+*/
+@keyframes skewScaleItem {
+
+100% {
+transform:skew(0deg,0deg) scale(1);
+}
+
+}

@@ -233,9 +233,8 @@ openFullScreenFileViewTimeout = setTimeout(function(){openFullScreenFileView(pos
 }
 });
 
-
 // when the user votes
-$(document).on("doubletap",".postSingleImageContainer",function(){
+$(document).on("doubletap",".postSingleImageContainer",function(event){
 	
 doubleClicked = true;	
 clearTimeout(openFullScreenFileViewTimeout);
@@ -246,10 +245,10 @@ var voteOptionIndex = $(this).attr("data-option-index");
 
 // show the votes for this post.	
 showNewPostVotes(thisSinglePostObject,voteOptionIndex);	
-reactToVote(thisSinglePostObject);
+reactToVote(thisSinglePostObject, event.pageX, event.pageY);
 postVote(thisSinglePostObject,voteOptionIndex);
+thisSinglePostObject.find(".post_images_container_bottom_overlay").animate({"height": "100%"}, 300);
 });
-
 
 
 /* ----- END post activities ----- */

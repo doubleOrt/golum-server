@@ -1,6 +1,4 @@
 
-var VOTES_LINE_MAX_HEIGHT = 100;
-
 
 function postVote(postObject, voteOptionIndex) {
 
@@ -72,7 +70,7 @@ function get_post_votes_callback(post_element ,data, do_animations) {
 
 
 // remove markup if it already exists.
-post_element.find(".postSingleImageContainer .votesContainer").remove();
+post_element.find(".vote_holder .votesContainer").remove();
 
 var post_type = post_element.attr("data-post-type");
 
@@ -80,7 +78,7 @@ for(var i = 0;i<data[1].length;i++) {
 data[1][i]["post_type"] = post_type;
 data[1][i]["user_vote_index"] = data[0]["user_vote_index"];
 data[1][i]["index_is_majority"] = (i == data[0]["majority_vote_index"] ? true : false);
-post_element.find(".postSingleImageContainer[data-option-index=" + data[1][i]["vote_index"] + "]").prepend( get_vote_markup(data[1][i], post_element.attr("data-positive-icon"), post_element.attr("data-negative-icon")) );
+post_element.find(".vote_holder[data-option-index=" + data[1][i]["vote_index"] + "]").prepend( get_vote_markup(data[1][i], post_element.attr("data-positive-icon"), post_element.attr("data-negative-icon")) );
 if(do_animations == true) {
 post_element.attr("data-post-type") == "3" || post_element.attr("data-post-type") == "4" ? post_element.find(".votesContainerChild").addClass("skewScaleItem") : post_element.find(".votesContainerChild").addClass("scaleVerticallyCenteredItem");
 }
@@ -99,14 +97,11 @@ post_element.find(".posterInfoMegaContainer").css("display","inline-block");
 
 
 function get_vote_markup(data, positive_icon, negative_icon) {
-return `<div class='votesContainer z-depth-2'>
+return `<div class='votesContainer'>
 <div class='votesContainerChild'>
-<div class='votesIcon fullyRoundedBorder z-depth-1 white-text ` + (data["index_is_majority"] == true ? `majorityVoteBackgroundColor` : `minorityVoteBackgroundColor`) + `' ` + (data["vote_index"] == data["user_vote_index"] ? `data-user-vote='true'`  : `` ) +`><i class='material-icons'>`+ (data["post_type"] == 1 ? (data["vote_index"] == 0 ? positive_icon : negative_icon) : (data["vote_index"] == data["user_vote_index"] ? positive_icon : negative_icon)) +`</i></div>
+<div class='votesIcon fullyRoundedBorder white-text' ` + (data["vote_index"] == data["user_vote_index"] ? `data-user-vote='true'`  : `` ) +`><i class='material-icons'>`+ (data["post_type"] == 1 ? (data["vote_index"] == 0 ? positive_icon : negative_icon) : (data["vote_index"] == data["user_vote_index"] ? positive_icon : negative_icon)) +`</i></div>
 <div class='totalVotesNumber' `+ (data["vote_index"] == data["user_vote_index"] ? `data-user-vote='true'`  : ``) +` data-votes-number='`+ data["index_total_votes"] +`'>`+ data["index_total_votes"] + ` Vote` + (data["index_total_votes"] != 1 ? `s` : ``) +`</div>
 <div class='totalVotesPercentage'>`+ data["index_votes_percentage_in_total"] +`%</div>
-</div>
-<div class='votesLineContainer' style='height:`+ ((data["index_votes_percentage_in_total"] / 100) * VOTES_LINE_MAX_HEIGHT) +`px' data-max-height='`+ VOTES_LINE_MAX_HEIGHT +`'>
-<div class='votesLine `+ (data["index_is_majority"] == true ? `majorityVoteBackgroundColor` : `minorityVoteBackgroundColor`) +`'></div>
 </div>
 </div>`;
 }
@@ -119,17 +114,17 @@ function showNewPostVotes(singlePostElement,userOptionIndex) {
 	
 singlePostElement.find(".votesContainer").show();
 
-var oldVotesNewNum = parseFloat(singlePostElement.find(".postSingleImageContainer .totalVotesNumber[data-user-vote='true']").attr("data-votes-number")) - 1;
-var newVotesNewNum = parseFloat(singlePostElement.find(".postSingleImageContainer[data-option-index='" + userOptionIndex + "']").find(".totalVotesNumber").attr("data-votes-number")) + 1;
+var oldVotesNewNum = parseFloat(singlePostElement.find(".vote_holder .totalVotesNumber[data-user-vote='true']").attr("data-votes-number")) - 1;
+var newVotesNewNum = parseFloat(singlePostElement.find(".vote_holder[data-option-index='" + userOptionIndex + "']").find(".totalVotesNumber").attr("data-votes-number")) + 1;
 
-setNewNumber(singlePostElement.find(".postSingleImageContainer .totalVotesNumber[data-user-vote='true']"),"data-votes-number",false,false," Vote"  + (oldVotesNewNum == 1 ? "" : "s"));	
-singlePostElement.find(".postSingleImageContainer").find(".totalVotesNumber, .votesIcon").attr("data-user-vote","false");	
-singlePostElement.find(".postSingleImageContainer[data-option-index='" + userOptionIndex + "']").find(".totalVotesNumber , .votesIcon").attr("data-user-vote","true");	
-setNewNumber(singlePostElement.find(".postSingleImageContainer .totalVotesNumber[data-user-vote='true']"),"data-votes-number",true,false," Vote" + (newVotesNewNum == 1 ? "" : "s"));	
+setNewNumber(singlePostElement.find(".vote_holder .totalVotesNumber[data-user-vote='true']"),"data-votes-number",false,false," Vote"  + (oldVotesNewNum == 1 ? "" : "s"));	
+singlePostElement.find(".vote_holder").find(".totalVotesNumber, .votesIcon").attr("data-user-vote","false");	
+singlePostElement.find(".vote_holder[data-option-index='" + userOptionIndex + "']").find(".totalVotesNumber , .votesIcon").attr("data-user-vote","true");	
+setNewNumber(singlePostElement.find(".vote_holder .totalVotesNumber[data-user-vote='true']"),"data-votes-number",true,false," Vote" + (newVotesNewNum == 1 ? "" : "s"));	
 
 if(singlePostElement.attr("data-post-type") != "1") {
-singlePostElement.find(".votesIcon i").html("favorite_border");	
-singlePostElement.find(".totalVotesNumber[data-user-vote='true']").parent().find(".votesIcon i").html("favorite");	
+singlePostElement.find(".votesIcon i").html(singlePostElement.attr("data-negative-icon"));	
+singlePostElement.find(".votesIcon[data-user-vote=true] i").html(singlePostElement.attr("data-positive-icon"));	
 } 
 
 var allVotesNumber = 0;
@@ -155,7 +150,7 @@ $(this).find(".votesLineContainer").css("height",newVotesLineHeight);
 singlePostElement.find(".votesIcon, .votesLine").removeClass("majorityVoteBackgroundColor").addClass("minorityVoteBackgroundColor");
 var majorityVotes = getMajorityVoteIndex(singlePostElement);
 for(var i = 0;i < majorityVotes.length;i++) {
-singlePostElement.find(".postSingleImageContainer[data-option-index='" + majorityVotes[i] + "'] .votesIcon, .postSingleImageContainer[data-option-index='" + majorityVotes[i] + "'] .votesLine").removeClass("minorityVoteBackgroundColor").addClass("majorityVoteBackgroundColor");	
+singlePostElement.find(".vote_holder[data-option-index='" + majorityVotes[i] + "'] .votesIcon, .vote_holder[data-option-index='" + majorityVotes[i] + "'] .votesLine").removeClass("minorityVoteBackgroundColor").addClass("majorityVoteBackgroundColor");	
 }
 
 
@@ -168,11 +163,11 @@ function getMajorityVoteIndex(singlePostElement) {
 
 var majorityVotes = [];
 
-singlePostElement.find(".postSingleImageContainer").each(function(){
+singlePostElement.find(".vote_holder").each(function(){
 if(typeof $(this).attr("data-option-index") != "undefined") {
 var thisTotalVotesNumber = $(this).find(".totalVotesNumber").attr("data-votes-number");
 var thisIsMajority = true;
-singlePostElement.find(".postSingleImageContainer").each(function(){
+singlePostElement.find(".vote_holder").each(function(){
 var thatTotalVotesNumber = $(this).find(".totalVotesNumber").attr("data-votes-number");
 if(thisTotalVotesNumber < thatTotalVotesNumber) {
 thisIsMajority = false;
@@ -201,7 +196,7 @@ var userVoteTotalVotes = 0;
 var counter = 0;
 
 
-singlePostElement.find(".postSingleImageContainer").each(function(){
+singlePostElement.find(".vote_holder").each(function(){
 if(typeof $(this).attr("data-option-index") != "undefined") {
 var totalVotesElement = $(this).find(".totalVotesNumber");
 totalVotes += parseFloat(totalVotesElement.attr("data-votes-number"));	
@@ -221,18 +216,18 @@ return (userOptionPercentageOfAllVotes > 40 ? (userOptionPercentageOfAllVotes > 
 
 
 // adds those fancy emoji scaling up effect upon voting
-function reactToVote(postObject) {
+function reactToVote(postObject, x_position, y_position) {
 
 var value = isVoteMajorityOrMinorityOrAverage(postObject);
 
 if(value == 1) {	
-postObject.find(".postImagesContainer").append("<div class='postReaction postReactionAnimation'><img src='icons/emojis/14.svg' alt='Trendy'/><br><div class='postReactionText'>Trendy</div></div>");	
+$("body").append("<div class='postReaction postReactionAnimation' style='position:fixed;left:" + x_position + "px;top:" + y_position + "px'><img src='icons/emojis/14.svg' alt='Trendy'/><br><div class='postReactionText'>Trendy</div></div>");	
 }
 else if(value == 2) {
-postObject.find(".postImagesContainer").append("<div class='postReaction postReactionAnimation'><img src='icons/emojis/73.svg' alt='Trendy'/><br><div class='postReactionText'>Grumpy</div></div>");	
+$("body").append("<div class='postReaction postReactionAnimation' style='position:fixed;left:" + x_position + "px;top:" + y_position + "px'><img src='icons/emojis/73.svg' alt='Trendy'/><br><div class='postReactionText'>Grumpy</div></div>");	
 }
 else if(value == 3) {
-postObject.find(".postImagesContainer").append("<div class='postReaction postReactionAnimation'><img src='icons/emojis/85.svg' alt='Trendy'/><br><div class='postReactionText'>Average</div></div>");		
+$("body").append("<div class='postReaction postReactionAnimation' style='position:fixed;left:" + x_position + "px;top:" + y_position + "px'><img src='icons/emojis/85.svg' alt='Trendy'/><br><div class='postReactionText'>Average</div></div>");		
 }
 	
 }
@@ -251,8 +246,8 @@ success:function(data) {
 var dataArr = JSON.parse(data);
 
 for(var i = 0;i<dataArr.length;i++) {
-singlePostObject.find(".postSingleImageContainer[data-option-index=" + dataArr[i][0] + "] .votesContainer").find(".friendsWhoVotedThis").remove();	
-singlePostObject.find(".postSingleImageContainer[data-option-index=" + dataArr[i][0] + "] .votesContainer").append(dataArr[i][1]);
+singlePostObject.find(".vote_holder[data-option-index=" + dataArr[i][0] + "] .votesContainer").find(".friendsWhoVotedThis").remove();	
+singlePostObject.find(".vote_holder[data-option-index=" + dataArr[i][0] + "] .votesContainer").append(dataArr[i][1]);
 }
 
 if(scaleModalAnimation == true) {

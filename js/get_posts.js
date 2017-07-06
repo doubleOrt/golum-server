@@ -97,7 +97,7 @@ $(".loadPostComponents").removeClass("loadPostComponents");
 
 
 
-function get_post_markup(data , requested_by) {
+function get_post_markup(data) {
 		
 var poster_full_name = data["post_owner_info"]["first_name"] + " " +  data["post_owner_info"]["last_name"];
 
@@ -137,12 +137,15 @@ for(x = 0; x < data["post_type"]; x++) {
 	
 var image_src = "posts/" + data["post_id"] + "-" + x + "." + data["post_file_types"][x];
 
-var image_id = "image" + random_num;
+var random_num1 = Math.floor(Math.random()*1000000);
+var image_id = "image" + random_num1;
 
 imagesContainerChildren += `
 <div class='col ` + container_grids[x] + ` postSingleImageContainer' data-option-index='` + x + `' style='` + required_height + `' data-image-path='` + image_src + `'>
 <img class='postSingleImageContainerImage' id='` + image_id + `' src='` + image_src + `' alt='Photo ` + x + `'/>
 </div><!-- end .postSingleImageContainer -->
+<div class='col ` + container_grids[x] + ` postSingleImageContainer vote_holder' data-option-index='` + x + `' style='` + required_height + `position:absolute;left:` + ((x == 1 || x == 3) ? "50%" : "0%") + `;top:` + ((x == 2 || x == 3) ? "50%" : "0%") + `' data-image-path='` + image_src + `'>
+</div>
 <script>
 
 $('#` + image_id + `').on('load',function(){	
@@ -164,9 +167,11 @@ imagesContainerChildren += `
 <div class='col ` + container_grids[0] + ` postSingleImageContainer' style='` + required_height + `' data-image-path='` + image_src + `'>
 <img class='postSingleImageContainerImage' id='` + image_id + `' src='` + image_src + `' alt='Photo 0'/>
 </div><!-- end .postSingleImageContainer -->
+<div class='col l6 m6 s6 postSingleImageContainer vote_holder' data-option-index='` + 0 + `' style='` + required_height + `position:absolute;left:0%;top:0%;' data-image-path='` + image_src + `'>
+</div>
 <div class='col l6 m6 s6 postSingleImageContainer' data-option-index='0' data-image-path='` + image_src +`' style='height:100%;transform:translate(0,-100%);background:transparent'>
 </div><!-- end .postSingleImageContainer -->
-<div class='col l6 m6 s6 postSingleImageContainer' data-option-index='1' data-image-path='` + image_src +`' style='height:100%;transform:translate(0,-100%);background:transparent'>
+<div class='col l6 m6 s6 postSingleImageContainer vote_holder' data-option-index='` + 1 + `' style='` + required_height + `position:absolute;left:50%;top:0%;' data-image-path='` + image_src + `'>
 </div><!-- end .postSingleImageContainer -->
 <script>
 
@@ -181,7 +186,7 @@ fitToParent('#` + image_id + `');
 	
 /* this .loadPostComponents class is just so we can distinguish between already loaded classes and the newly loaded so we don't load post components for posts that we already have those
 components, we remove this class from a post immediately after we have loaded its components */
-return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m12 s12' data-actual-post-id='` + data["post_id"] + `' data-post-type='` + data["post_type"] + `' data-poster-id='` + data["post_owner_info"]["id"] + `' data-positive-icon='` + (data["post_type"] != 1 ? "check" : "thumb_up") + `' data-negative-icon='` + (data["post_type"] != 1 ? "close" : "thumb_down") + `' data-already-voted='` + (data["base_user_already_voted"] == true ? "true" : "false") + `'>
+return `<div class='singlePost loadPostComponents col l12 m12 s12' data-actual-post-id='` + data["post_id"] + `' data-post-type='` + data["post_type"] + `' data-poster-id='` + data["post_owner_info"]["id"] + `' data-positive-icon='favorite' data-negative-icon='close' data-already-voted='` + (data["base_user_already_voted"] == true ? "true" : "false") + `'>
 
 
 
@@ -189,8 +194,10 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 
 ` + imagesContainerChildren + `
 
-<div class='post_images_container_bottom_overlay'>
+<div class='post_images_container_overlay'>
+</div><!-- end .post_images_container_overlay -->
 
+<div class='post_images_container_bottom'>
 <div class='postButtonsContainer'>
 <a href='#sendToFriendModal' class='btn btn-flat modal-trigger sendPostToFriend scaleItem' data-actual-post-id='` + data["post_id"] + `'><i class='material-icons'>send</i></a>
 <a href='#commentsModal' class='btn btn-flat showPostComments modal-trigger scaleItem' data-actual-post-id='` + data["post_id"] + `'><i class='material-icons'>comment</i></a>
@@ -216,7 +223,7 @@ return `<div class='singlePost loadPostComponents ` + requested_by + ` col l12 m
 
 </div><!-- end .posterInfoMegaContainer -->
 
-</div><!-- end .post_images_container_bottom_overlay -->
+</div><!-- end .post_images_container_bottom -->
 </div><!-- end .postImagesContainer -->
 
 <div class='postBottomContainer row'>
