@@ -18,6 +18,11 @@ left:50%;
 transform:translate(-50%,-50%);	
 }
 
+.sendToFriendSingleRow .avatarContainerChild {
+width:45px;
+height:45px;
+}
+
 .sendToFriendRightCol {
 display:table;	
 padding-left:20px !important;	
@@ -30,6 +35,9 @@ transform:translate(0,-50%);
 display:table-cell;
 text-transform:capitalize;	
 vertical-align:middle;
+color:#494949 !important;
+font-weight:bold;
+font-size:100%;
 }
 
 .sendToFriendButton {	

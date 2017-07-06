@@ -67,8 +67,8 @@ font-size:14px;
 .notificationFromFullName  {
 color:#494949 !important;	
 text-transform:capitalize !important;	
+font-size:100%;
 font-weight:bold;
-font-weight:100%;
 }
 
 .notificationTime {
