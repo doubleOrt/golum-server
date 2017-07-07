@@ -34,8 +34,8 @@ closeFullScreenFileView();
 
 
 
-$(document).on("click",".stopPropagationOnClick",function(e){
-e.stopPropagation();	
+$(document).on("click",".stopPropagationOnClick",function(event){
+event.stopPropagation();	
 });
 
 

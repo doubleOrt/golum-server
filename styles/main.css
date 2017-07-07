@@ -92,7 +92,7 @@ color:#f95462;
 }
 
 .waves-effect.wavesCustom .waves-ripple {
-background:rgba(205,58,55,.5) !important;	
+background:rgba(0,0,0,.2) !important;	
 }
 
 .myBackground {
@@ -130,7 +130,7 @@ background-color:white;
 
 #allPostsContainer {
 width:100%;
-height:calc(100% - 200px);	
+height:100%;
 }
 
 
@@ -146,6 +146,22 @@ z-index:4;
 display:none;	
 }
 
+
+.postModals .modal-content {
+padding:0;	
+}
+
+.postModalsPostsContainer {
+width:100%;
+height:100%;
+margin:0;
+padding:0;	
+padding-bottom:60px;
+overflow:auto;
+}
+
+	
+	
 
 /* buttons floating at the bottom of the page, this gives them a f95462 background, scales the icons up a little bit, and changes their color to white. */
 .bottomFloating {
@@ -210,11 +226,6 @@ transition:none;
 }
 
 .commonButton:hover {
-color:white;	
-background:-webkit-linear-gradient(36deg, yellow 10%, green 70%);
-}
-
-.commonButtonWhite:focus {
 color:white;	
 background:-webkit-linear-gradient(36deg, yellow 10%, green 70%);
 }
@@ -579,7 +590,7 @@ font-weight:500;
 }
 
 .tabs .tab a:hover, .tabs .tab a:active {
-color:#f95462;	
+color:yellowgreen;	
 }
 
 .tabs .tab a.active {

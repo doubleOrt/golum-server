@@ -75,6 +75,7 @@ PROFILE_CONTAINER_ELEMENT.attr("data-user-id", data["id"]);
 PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user", data["is_base_user"]);
 
 $("#user_profile_tabs .tab[data-tab-index=1]").attr({"data-user-id": data["id"], "data-first-name": data["first_name"]});
+USER_PROFILE_POSTS_COUNTER.attr({"data-user-id": data["id"], "data-first-name": data["first_name"]});
 
 
 // showing and hiding things that should be only visible when the base-user or only when not-base-user profiles are being viewed. 
@@ -633,9 +634,12 @@ $(document).on("change","#newBackgroundInput",function(){
 setNewBackground($(this) , callback_to_background_set);
 
 function callback_to_background_set(data){
+	
 // if the image was uploaded successfully, then set the user's profile's background image to that uploaded image. 	
 if(data[0] != "") {
 $("#profileBackground").css({"background":"url('" + data[0] + "')","background-size":"cover","background-position":"center center"});	
+// hide the #changeBackgroundButton so the newly uploaded background looks good.
+$("#changeBackgroundButton").hide();
 Materialize.toast("Background Changed",5000,"green");	
 }
 else {

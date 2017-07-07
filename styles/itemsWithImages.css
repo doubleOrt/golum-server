@@ -29,6 +29,10 @@ overflow:hidden;
 margin-left:0;	
 }
 
+.itemWithImage:active {
+filter:brightness(50%);	
+}
+
 .itemWithImageName {
 display:block;	
 color:white;
@@ -41,10 +45,4 @@ left:0;
 bottom:0;
 background:-webkit-linear-gradient(bottom,rgba(0,0,0,.6) 40%,transparent);
 text-align:center;
-}
-
-
-
-#main_screen_main_posts_container {
-margin-top:48px;	
 }
