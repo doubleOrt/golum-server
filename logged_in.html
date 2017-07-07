@@ -399,6 +399,7 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 <ul id="user_profile_tabs" class="tabs">
 <li class="tab col s4" data-tab-index="0"><a class="active" href="#">Profile</a></li>
 <li class="tab col s4 getUserPosts modal-trigger disabled" data-tab-index="1" data-target="userPostsModal" data-user-id='' data-first-name=''><a href="#">Posts</a></li>
+<li class="tab col s4 get_favorite_posts modal-trigger disabled" data-tab-index="2" data-target="favorite_posts_modal" data-user-id=''><a href="#">Favs</a></li>
 </ul>
 
 
@@ -1252,6 +1253,39 @@ Identification Info
 </div>
 
 </div>
+
+
+
+
+<div id="favorite_posts_modal" class="modal postModals fullScreenModal hasMobileOnlyHeader">
+
+<div class="modal-content">
+<div id="favorite_posts_container" class="postModalsPostsContainer">
+</div><!-- end #favorite_posts_container -->
+
+<div id='favorite_posts_modal_back_to_top' class='fixed-action-btn scale-transition scale-out' style="position:fixed;bottom:15;right:15px;" data-back-to-top-target="#favorite_posts_container">
+<a class='btn-floating btn-large waves-effect wavesCustom myBackground'>
+<i class='large material-icons'>arrow_upward</i>
+</a>
+</div>
+
+</div><!-- end .modal-content -->
+
+<div class="modalHeaderContainer">
+<div class='modal-header'>
+<a class='modalCloseButton waves-effect wavesCustom' data-modal='favorite_posts_modal'>
+<i class='material-icons'>arrow_back</i>
+</a>
+<span class='modalHeaderFullName'>Favs</span>
+<div class='modalLinks navRightItemsMobile'>
+<a href='#' class='btn commonButton follow_user navRightItemsMobileCommonButton scaleVerticallyCenteredItem opacityChangeOnActive' data-user-id=''>Follow +</a>
+</div>
+</div><!-- end .modal-header -->
+</div><!-- end modalHeaderContainer -->
+
+</div><!-- #favorite_posts_modal -->
+
+
 
 
 

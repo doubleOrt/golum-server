@@ -305,6 +305,14 @@ $("#user_posts_modal_back_to_top").removeClass("scale-out");
 $("#user_posts_modal_back_to_top").addClass("scale-out");
 });
 
+register_to_do_things_on_scroll($("#favorite_posts_container"), 1000, 60, 60, function(){
+$("#favorite_posts_modal_back_to_top").addClass("scale-out");	
+}, function(){
+$("#favorite_posts_modal_back_to_top").removeClass("scale-out");
+}, function(){
+$("#favorite_posts_modal_back_to_top").addClass("scale-out");
+});
+
 
 
 // the back-to-top buttons:
@@ -440,6 +448,51 @@ markUpProcessor(data_arr[0], $("#userPostsContainer"), "This user does not have 
 });
 }
 });
+
+
+
+
+
+
+
+// when a user wants to view another's posts via clicking the "posts" button on their user modal 
+$(document).on("click",".get_favorite_posts",function(){
+
+if(typeof $(this).attr("data-user-id") == "undefined") {
+return false;	
+}
+
+
+//empty the #userPostsContainer of the last query's posts
+$("#favorite_posts_container").html("");
+
+$(favorite_posts_container).attr("data-user-id",$(this).attr("data-user-id"));
+$("#favorite_posts_modal .navRightItemsMobile .follow_user").attr("data-user-id", $(this).attr("data-user-id"));
+
+/* if base user is looking at their own favs, hide the "follow" button (because not hiding it would not make any sense), if they are looking 
+at someone else's posts, show it. */
+if($(this).attr("data-user-id") == BASE_USER_ID_HOLDER.attr("data-user-id")) {
+$("#favorite_posts_modal .navRightItemsMobile .follow_user").hide();
+}
+else {
+$("#favorite_posts_modal .navRightItemsMobile .follow_user").show();	
+}
+
+getPosts("components/get_favorite_posts.php",{"user_id": $(this).attr("data-user-id"), "row_offset": 0},function(data_arr){
+markUpProcessor(data_arr[0], $("#favorite_posts_container"), "This user has not faved a single post, such a loser.");		
+$("#favorite_posts_modal .navRightItemsMobile .follow_user").html((data_arr[1] == 0 ? "Follow +" : "Unfollow"));
+});
+});
+// user is infinite scrolling the user posts modal
+$("#favorite_posts_container").scroll(function(){
+if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".singlePost").length > 0) {
+getPosts("components/get_favorite_posts.php",{"user_id": $(this).attr("data-user-id"), "row_offset": $(this).find(".singlePost").length},function(data_arr){
+markUpProcessor(data_arr[0], $("#favorite_posts_container"), "This user has not faved a single post, such a loser.");		
+});
+}
+});
+
+
 
 
 /*

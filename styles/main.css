@@ -597,8 +597,8 @@ color:#aaaaaa;
 font-weight:500;
 }
 
-.tabs .tab a:hover, .tabs .tab a:active {
-color:yellowgreen;	
+.tabs .tab a:not(.active):hover, .tabs .tab a:not(.active):active, .tabs .tab.disabled a:hover, .tabs .tab.disabled a:active {
+color:yellowgreen !important;	
 }
 
 .tabs .tab a.active {

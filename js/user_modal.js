@@ -75,6 +75,7 @@ PROFILE_CONTAINER_ELEMENT.attr("data-user-id", data["id"]);
 PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user", data["is_base_user"]);
 
 $("#user_profile_tabs .tab[data-tab-index=1]").attr({"data-user-id": data["id"], "data-first-name": data["first_name"]});
+$("#user_profile_tabs .tab[data-tab-index=2]").attr({"data-user-id": data["id"]});
 USER_PROFILE_POSTS_COUNTER.attr({"data-user-id": data["id"], "data-first-name": data["first_name"]});
 
 

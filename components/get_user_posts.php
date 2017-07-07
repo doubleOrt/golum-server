@@ -13,7 +13,6 @@ if(isset($_GET["user_id"]) && is_integer(intval($_GET["user_id"])) && isset($_GE
 if($_GET["row_offset"] < 1) {	
 $echo_arr[1] = $con->query("select * from contacts where contact_of = ".$_SESSION["user_id"]." and contact = ".$_GET["user_id"])->fetch()[0] == "" ? 0 : 1;
 }
-
 	
 $prepared = $con->prepare("select * from posts where posted_by = :posted_by order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
 $prepared->bindParam(":posted_by", $_GET["user_id"]);
