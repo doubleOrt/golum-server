@@ -8,3 +8,6 @@ modals ended up being a user-profile modal, when you closed all the modals, the 
 desolate and empty element, with no content. The following lines are supposed to address this bug.
 
 3- This bug is detailed in a Github issue i raised to dogfalo/Materializecss (in that issue i explain 2 bugs, the latter is this supposed to be this bug).
+
+4- this snippet extensively deals with an issue where if you hold an element and then release it, 
+it won't count as a click, but we want it to count as a click, since all the apps on my S7 count a hold-release as a click.

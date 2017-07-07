@@ -170,15 +170,34 @@ openModalCustom(modalId);
 });
 
 
-$(document).on("click",".modalCloseButton, .modal-overlay",function(){	
+
+/* bugs.txt bug-4 */
+var click_on_touch_end;
+$(document).on("touchstart", ".modal-header .modalCloseButton", function(){
+click_on_touch_end = true;
+}).on("touchmove", ".modal-header .modalCloseButton", function(event){
+var mouse_x_pos = event.originalEvent.touches[0].pageX;	
+var mouse_y_pos = event.originalEvent.touches[0].pageY;	
+var this_x_pos = $(this).offset().left;
+var this_y_pos = $(this).offset().top;
+var this_width = $(this).innerWidth();
+var this_height = $(this).innerHeight();
+console.log(mouse_x_pos + "-" + mouse_y_pos + "\n" + this_x_pos + "-" + this_y_pos + "\n" + this_width + "-" + this_height);
+if(mouse_x_pos > (this_x_pos + this_width) || mouse_y_pos > (this_y_pos + this_height) || mouse_x_pos < this_x_pos || mouse_y_pos < this_y_pos) {
+click_on_touch_end = false;	
+}
+}).on("touchend", ".modal-header .modalCloseButton", function(){
+if(click_on_touch_end == true) {	
+
 closeModal($(this).attr("data-modal"), function(){
 /* See bugs.txt: bug 2 */	
 if($(".modal.open").length < 1 && PROFILE_CONTAINER_ELEMENT.parents("#main_screen_user_profile").length < 1 && $("#bottomNav #bottom_nav_user_profile").hasClass("active")) {
 $("#bottomNav #bottom_nav_user_profile").click();	
 }
 });
-});
 
+}
+});
 
 
 })
