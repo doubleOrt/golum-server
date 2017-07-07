@@ -63,6 +63,17 @@ return false;
 }
 
 
+function resend_confirmation_code(callback) {
+$.post({
+url: "components/resend_confirmation_code.php",
+success: function(data) {
+var data_arr = JSON.parse(data);
+callback(data_arr);	
+}	
+});	
+}
+
+
 
 
 
@@ -75,6 +86,21 @@ SETTINGS_CONFIRM_EMAIL_SECTION_CONTAINER = $("#settings_email_confirmation_secti
 
 // if the user has requested to link their account with an email address, then show them the confirmation code modal on logging in.
 show_email_confirmation();
+
+$(document).on("click", "#resend_confirmation_code", function(){
+var this_element = $(this);
+this_element.addClass("disabledButton");
+resend_confirmation_code(function(data){
+this_element.removeClass("disabledButton");	
+if(data[0] == "1") {
+Materialize.toast("We just sent you another confirmation code :)", 5000, "green");	
+show_email_confirmation();
+}	
+else {
+Materialize.toast("Sorry, we weren't able to send you another confirmation code :(", 5000, "red");		
+}
+});	
+});
 
 
 var default_first_name;
