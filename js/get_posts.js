@@ -229,7 +229,7 @@ return `<div class='singlePost loadPostComponents col l12 m12 s12' data-actual-p
 <div class='postBottomContainer row'>
 
 <ul id='postSettings` + random_num + `' class='dropdown-content'>
-` + (data["posted_by_base_user"] == true ? `<li class='deletePost' data-actual-post-id='` + data["post_owner_info"]["id"] + `'><a href='#!' class='waves-effect waves-lightgrey'>Delete</a></li>` : "<li class='reportPost' data-actual-post-id='" + data["post_id"] + "'><a href='#!' class='waves-effect waves-lightgrey'>Report</a></li>") + `
+` + (data["posted_by_base_user"] == true ? `<li class='deletePost' data-actual-post-id='` + data["post_id"] + `'><a href='#!' class='waves-effect waves-lightgrey'>Delete</a></li>` : "<li class='reportPost' data-actual-post-id='" + data["post_id"] + "'><a href='#!' class='waves-effect waves-lightgrey'>Report</a></li>") + `
 </ul>
 
 <div class='post_text_container'>
