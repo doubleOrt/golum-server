@@ -11,10 +11,12 @@ this.regEx = regEx;
 // the message that should be toasted to the page when the value does not match the regex
 this.onWrong = onWrong;	
 
-this.validate = function() {
+this.validate = function(make_toasts) {
 if(this.regEx.test(this.ref.value) == false) {
 this.ref.style.borderBottom = "1px solid red";		
-Materialize.toast(this.onWrong, 5000,"red")
+if(make_toasts === true) {
+Materialize.toast(this.onWrong, 5000,"red");
+}
 return false;	
 }
 /* this is necessary to override the red borders, e.g you have 2 form elements you click submit, they're both false, now they have red borders, you correct one, 
@@ -103,6 +105,9 @@ Materialize.toast("Sorry, we weren't able to send you another confirmation code 
 });
 
 
+
+
+
 var default_first_name;
 var default_last_name;
 var default_user_name;
@@ -159,21 +164,41 @@ var check_add_email = new ValidateItem(document.getElementById("add_email"),/^((
 var check_current_password = new ValidateItem(document.getElementById("current_password"),/^(?=.*[A-Za-z])(?=.*\d)(?=.*([$@$!%*#?& ]*))[A-Za-z\d($@$!%*#?& )*]{8,50}$/i,"Wrong Password");
 
 
+var should_enable_save_changes_button_timeout;
 $("#change_first_name, #change_last_name, #change_user_name, #change_password, #add_email").on("change",function(){
+if(typeof should_enable_save_changes_button_timeout != "undefined") {
+clearTimeout(should_enable_save_changes_button_timeout);	
+}	
+should_enable_save_changes_button(true);
+}).on("keyup", function(){
+should_enable_save_changes_button(false);	
+if(typeof should_enable_save_changes_button_timeout != "undefined") {
+clearTimeout(should_enable_save_changes_button_timeout);	
+}
+should_enable_save_changes_button_timeout = setTimeout(function(){should_enable_save_changes_button(true);}, 1500);	
+});
 
 
+function should_enable_save_changes_button(make_toasts) {
+
+var anything_changed = false;
 for(var prop in defaultCheckObject) {
-if($("#" + prop).val() != defaultCheckObject[prop]["value"]) {
+if($("#" + prop).val().trim() != defaultCheckObject[prop]["value"]) {	
+anything_changed = true;
+$("#saveChangesModalOpener").removeClass("disabledButton");		
 if(defaultCheckObject[prop]["regexHandler"] != undefined) {	
-if(defaultCheckObject[prop]["regexHandler"].validate() == false) {
+if(defaultCheckObject[prop]["regexHandler"].validate(make_toasts) == false) {
+$("#saveChangesModalOpener").addClass("disabledButton");	
 break;
 }
 }
 }
+else if(anything_changed == false) {
+$("#saveChangesModalOpener").addClass("disabledButton");		
 }
-
-
-});
+}
+	
+}
 
 
 $("#deactivateButton").click(function(){
@@ -192,7 +217,7 @@ $("#deactivateOrDelete").val("");
 
 
 $(document).on("click","#saveChanges",function(){
-if(check_current_password.validate() == true) {
+if(check_current_password.validate(true) === true) {
 
 $.get({
 url: 'components/change_settings.php',
@@ -212,6 +237,8 @@ success:function(data,status) {
 var dataArr = JSON.parse(data);
 
 eval(dataArr[0]);
+
+$("#saveChangesModalOpener").addClass("disabledButton");
 
 defaultCheckObject['change_first_name'].value = $("#change_first_name").val();
 defaultCheckObject['change_last_name'].value = $("#change_last_name").val();
