@@ -14,8 +14,6 @@ $("#showOnBodyLoad").show();
 for(var i = 0;i<285;i++) {
 $(".emojisContainerChild").append("<img class='emoji' src='icons/emojis/" + i + ".svg' alt='Emoji' style='width:55px;height:55px;'/>");
 }
-
-
  
  
  
@@ -343,7 +341,6 @@ openFullScreenFileView($(this).find("img").attr("src"));
 
 
 
-
 // these two are used mainly by input elements so that when they are focused they don't look messy (because when they are focused the keyboard becomes visible which causes everything to resize)
 $(document).on("focus","[data-onfocus-toggle]",function(){
 $($(this).attr("data-onfocus-toggle")).hide();
@@ -353,6 +350,8 @@ $($(this).attr("data-onfocus-toggle")).fadeIn();
 });
 
 
+
+/* main screens and their relation to the #bottomNav */
 
 $(document).on("click", "[data-open-main-screen]" , function() {
 $(".main_screen").removeClass("main_screen_active");

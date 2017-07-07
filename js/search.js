@@ -176,7 +176,7 @@ data: {
 "row_offset": offset
 },
 success: function(data){
-console.log(data);
+
 var data_arr = JSON.parse(data);
 
 if(typeof callback == "function") {
@@ -243,7 +243,7 @@ var user_row_markup = `
 
 </div>
 
-<div class='col l11 m11 s10 list_row_right_container'>
+<div class='col l11 m11 s10 list_row_center_container'>
 <div class='col l9 m9 s7 row_infos_container'>
 <div class='row_names_container'>
 <div class='row_name flow-text'>` + full_name + `</div>
@@ -251,7 +251,7 @@ var user_row_markup = `
 </div>
 </div><!-- end .row_infos_container -->
 
-<div class='col l3 m3 s5 skewScaleItem'>
+<div class='col l3 m3 s5 list_row_right_container skewScaleItem'>
 <a href='#' class='row_button myBackground opacityChangeOnActive follow_user stopPropagationOnClick' data-user-id='` + data["id"] + `'>` + (data["current_state"] == 0 ? "Follow +" : "Unfollow") + `</a>
 </div>
 </div>

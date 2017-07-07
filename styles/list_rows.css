@@ -102,6 +102,11 @@ text-transform:lowercase;
 margin-left:5px;
 }
 
+
+.list_row_right_container {
+padding:0 !important;	
+}
+
 .row_button {
 display:inline-block;	
 padding:5px 12px;

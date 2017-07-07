@@ -278,6 +278,45 @@ MAIN_SCREEN_POSTS_CONTAINER = $("#allPostsContainer");
 MAIN_SCREEN_POSTS_SCROLLER = $("#main_screen_main_posts_container");
 	
 	
+	
+// add the disappear-when-scrolling-down-appear-when-scrolling-up effect:
+
+register_to_do_things_on_scroll(MAIN_SCREEN_POSTS_SCROLLER, 1000, 60, 60, function(){
+$("#main_posts_container_back_to_top").addClass("scale-out");	
+}, function(){
+$("#main_posts_container_back_to_top").removeClass("scale-out");
+}, function(){
+$("#main_posts_container_back_to_top").addClass("scale-out");
+});
+
+register_to_do_things_on_scroll($("#tagPostsContainer"), 1000, 60, 60, function(){
+$("#tag_posts_modal_back_to_top").addClass("scale-out");	
+}, function(){
+$("#tag_posts_modal_back_to_top").removeClass("scale-out");
+}, function(){
+$("#tag_posts_modal_back_to_top").addClass("scale-out");
+});
+
+register_to_do_things_on_scroll($("#userPostsContainer"), 1000, 60, 60, function(){
+$("#user_posts_modal_back_to_top").addClass("scale-out");	
+}, function(){
+$("#user_posts_modal_back_to_top").removeClass("scale-out");
+}, function(){
+$("#user_posts_modal_back_to_top").addClass("scale-out");
+});
+
+
+
+// the back-to-top buttons:
+$(document).on("click", "[data-back-to-top-target]", function(){
+$($(this).attr("data-back-to-top-target")).animate({"scrollTop": 0}, 400);	
+});
+
+
+
+
+	
+	
 /* ----- getting posts ----- */
 
 $(document).on("click",".getPosts",function(){

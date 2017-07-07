@@ -101,6 +101,13 @@ background:-webkit-linear-gradient(36deg, yellow 10%, green 70%);
 
 
 
+
+a {
+user-select:none;	
+}
+
+
+
 /* associated with loading progress bars */
 #showOnBodyLoad {
 display:none;	
@@ -554,6 +561,7 @@ font-size:200% !important;
 .hashtag {
 color:#2d8ace;
 font-weight:500;
+user-select:none;
 }
 
 
@@ -603,5 +611,6 @@ border-bottom:2px solid #494949;
 .tabs .indicator {
 display:none;
 }
+
 
 

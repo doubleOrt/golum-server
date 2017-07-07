@@ -76,9 +76,11 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 
 <script src="dependencies/exif.js"></script><!-- need this to deal with EXIF-orientation issues -->
 <script src="dependencies/readmore.js"></script><!-- used to add a "Read more..." to long comments and such -->
+<script src="dependencies/headroom.js"></script>
 <script src="dependencies/jquery_double_tap.js"></script> 
 <script src="dependencies/letter_avatars.js"></script><!-- used to generate letter-avatar images -->
 <script src="js/generic_functions.js"></script> 
+<script src="js/scroll_things.js"></script> 
 <script src="js/chat_portals.js"></script> 
 <script src="js/modals.js"></script> 
 <script src="js/votes.js"></script> 
@@ -204,7 +206,11 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 <div id="allPostsContainer" class="pageContentComponents row">
 </div> 
  
-
+<div id='main_posts_container_back_to_top' class='fixed-action-btn scale-transition scale-out' style="position:fixed;bottom:65px;right:15px;" data-back-to-top-target="#main_screen_main_posts_container">
+<a class='btn-floating btn-large waves-effect wavesCustom myBackground'>
+<i class='large material-icons'>arrow_upward</i>
+</a>
+</div>
 
  
 </div><!-- end #main_screen_main_child --> 
@@ -1224,6 +1230,13 @@ Identification Info
 <div class="modal-content">
 <div id="userPostsContainer" class="postModalsPostsContainer">
 </div><!-- end #userPostsContainer -->
+
+<div id='user_posts_modal_back_to_top' class='fixed-action-btn scale-transition scale-out' style="position:fixed;bottom:15;right:15px;" data-back-to-top-target="#userPostsContainer">
+<a class='btn-floating btn-large waves-effect wavesCustom myBackground'>
+<i class='large material-icons'>arrow_upward</i>
+</a>
+</div>
+
 </div>
 
 <div class="modalHeaderContainer">
@@ -1301,6 +1314,12 @@ Identification Info
 	  
 <div id="tagPostsContainer" class="postModalsPostsContainer">
 </div><!-- end #tagPostsContainer -->
+
+<div id='tag_posts_modal_back_to_top' class='fixed-action-btn scale-transition scale-out' style="position:fixed;bottom:15;right:15px;" data-back-to-top-target="#tagPostsContainer">
+<a class='btn-floating btn-large waves-effect wavesCustom myBackground'>
+<i class='large material-icons'>arrow_upward</i>
+</a>
+</div>
 
 </div><!-- end #tagPostsModalContent -->
 

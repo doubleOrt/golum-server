@@ -92,7 +92,7 @@ return `<div class='row tag_row list_row getTagPosts modal-trigger' data-tag='` 
 </div>
 </div>
 
-<div class='col l11 m11 s9 list_row_right_container'>
+<div class='col l11 m11 s9 list_row_center_container'>
 <div class='col l9 m9 s7 row_infos_container'>
 <div class='row_names_container'>
 <div class='row_name tag_name flow-text fadeIn opacityChangeOnActive'>` + tag + `</div>
@@ -101,7 +101,7 @@ return `<div class='row tag_row list_row getTagPosts modal-trigger' data-tag='` 
 </div>
 </div>
 
-<div class='col l3 m3 s5 skewScaleItem'>
+<div class='col l3 m3 s5 list_row_right_container skewScaleItem'>
 ` + (typeof current_state != "undefined" ? (`<a href='#' class='row_button myBackground opacityChangeOnActive addTagFromTagPostsModal stopPropagationOnClick' data-tag='` + tag + `' data-current-state='` + current_state + `'>` + (current_state == 0 ? "Follow +" : "Unfollow") + `</a>`) : "") + `
 </div>
 

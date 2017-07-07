@@ -182,7 +182,7 @@ var this_x_pos = $(this).offset().left;
 var this_y_pos = $(this).offset().top;
 var this_width = $(this).innerWidth();
 var this_height = $(this).innerHeight();
-console.log(mouse_x_pos + "-" + mouse_y_pos + "\n" + this_x_pos + "-" + this_y_pos + "\n" + this_width + "-" + this_height);
+
 if(mouse_x_pos > (this_x_pos + this_width) || mouse_y_pos > (this_y_pos + this_height) || mouse_x_pos < this_x_pos || mouse_y_pos < this_y_pos) {
 click_on_touch_end = false;	
 }
