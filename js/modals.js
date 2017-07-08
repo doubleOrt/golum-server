@@ -173,9 +173,9 @@ openModalCustom(modalId);
 
 /* bugs.txt bug-4 */
 var click_on_touch_end;
-$(document).on("touchstart", ".modal-header .modalCloseButton", function(){
+$(document).on("touchstart", ".modalCloseButton", function(){
 click_on_touch_end = true;
-}).on("touchmove", ".modal-header .modalCloseButton", function(event){
+}).on("touchmove", ".modalCloseButton", function(event){
 var mouse_x_pos = event.originalEvent.touches[0].pageX;	
 var mouse_y_pos = event.originalEvent.touches[0].pageY;	
 var this_x_pos = $(this).offset().left;
@@ -186,7 +186,7 @@ var this_height = $(this).innerHeight();
 if(mouse_x_pos > (this_x_pos + this_width) || mouse_y_pos > (this_y_pos + this_height) || mouse_x_pos < this_x_pos || mouse_y_pos < this_y_pos) {
 click_on_touch_end = false;	
 }
-}).on("touchend", ".modal-header .modalCloseButton", function(){
+}).on("touchend", ".modalCloseButton", function(){
 if(click_on_touch_end == true) {	
 
 closeModal($(this).attr("data-modal"), function(){

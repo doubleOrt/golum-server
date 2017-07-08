@@ -231,11 +231,11 @@ opacity:.5;
 .commonButton {
 color:white;		
 background:-webkit-linear-gradient(36deg, yellow 10%, green 70%);
-padding:0 15px;
+padding:0 20px;
 text-align:center;
 font-weight:bold;
 letter-spacing:1px;
-transition:none;
+transition:opacity .2s ease-out;
 }
 
 .commonButton:hover {
@@ -248,6 +248,7 @@ color:yellowgreen;
 background-color:white;
 font-weight:bold;
 letter-spacing:1px;
+transition:opacity .2s ease-out;
 }
 
 .commonButtonWhite:hover {

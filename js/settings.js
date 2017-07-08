@@ -217,7 +217,10 @@ $("#deactivateOrDelete").val("");
 
 
 $(document).on("click","#saveChanges",function(){
+	
 if(check_current_password.validate(true) === true) {
+
+$("#saveChanges").html("Saving").addClass("disabledButton");
 
 $.get({
 url: 'components/change_settings.php',
@@ -232,9 +235,16 @@ data: {
 },
 type: "get",
 success:function(data,status) {
-
+	
+$("#saveChanges").html("Save").removeClass("disabledButton");
 
 var dataArr = JSON.parse(data);
+
+/* if the user inserted the right save-changes password, then we want to close the confirm-password 
+modal, regardless of the success of the settings changes. */
+if(dataArr[2] == "true") {
+closeModal("modal2");	
+}
 
 eval(dataArr[0]);
 

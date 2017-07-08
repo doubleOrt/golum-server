@@ -115,7 +115,9 @@ Materialize.toast("Wrong Login Info",5000,'red')
 }	
 //if everything is ok, submit the form.
 else {	
-$("#login").parent().css({"opacity":".4","pointer-events":"none"});
+// materialize edits our button so we have to make our edits on the parent instead.
+$("#login").parent().addClass("disabledButton");
+$("#login").val("Logging in...");
 
 $.ajax({
 url:"components/login.php",
@@ -126,15 +128,17 @@ keep_me_logged_in:$("#keep_me_logged_in:checked").val()
 },
 type:"post",
 success:function(data){
-		
-	if(data == "success") {
-	window.location.href = "logged_in.html";	
-	}
-	else {
-	eval(data);
-	$("#login").parent().css({"opacity":"1","pointer-events":"all"});	
-	$("#login").css({"opacity":"1","pointer-events":"all"});	
-	}
+	
+if(data == "success") {
+window.location.href = "logged_in.html";	
+}
+else {
+eval(data);
+$("#login").parent().css({"opacity":"1","pointer-events":"all"});	
+$("#login").removeClass("disabledButton");	
+$("#login").val("Login");
+}
+
 }
 }); 
 }

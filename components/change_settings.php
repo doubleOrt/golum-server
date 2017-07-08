@@ -13,7 +13,7 @@ require_once '../../phpmailer/PHPMailerAutoload.php';
 
 if(isset($_GET["current_password"])) {
 	
-$echo_arr = ["",true];	
+$echo_arr = ["","true", "true"];	
 
 $current_password = $_GET["current_password"];
 
@@ -143,7 +143,6 @@ $prepare_changes->bindParam(":email_address",$user_info_arr["email_address"]);
 
 if($prepare_changes->execute() === true) {
 $echo_arr[0] .= "Materialize.toast('Changes Made Successfully',5000,'green');";
-$echo_arr[1] = "false";
 clearToasts();
 echo json_encode($echo_arr);	
 die();		
@@ -160,6 +159,7 @@ die();
 else {
 $echo_arr[0] .= "Materialize.toast('Wrong Password',5000,'red');";		
 $echo_arr[1] = "false";
+$echo_arr[2] = "false";
 clearToasts();
 echo json_encode($echo_arr);	
 die();		
@@ -170,6 +170,7 @@ die();
 else {
 $echo_arr[0] .= "Materialize.toast('Wrong Password',5000,'red');";	
 $echo_arr[1] = "false";
+$echo_arr[2] = "false";
 clearToasts();
 echo json_encode($echo_arr);	
 die();		

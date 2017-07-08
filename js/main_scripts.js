@@ -196,22 +196,6 @@ thisPostElement.find('.favoritePost').find('i').html('bookmark_border');
 
 
 
-// user wants to send a post to someone
-$(document).on("click",".sendToFriendButton",function(){
-
-if(typeof $(".sendToFriendContainerCol").attr("data-actual-post-id") == "undefined" || typeof $(this).attr("data-user-id") == "undefined") {
-return false;
-}
-
-var sendToFriendButtonObject = $(this);
-
-sendPost($(".sendToFriendContainerCol").attr("data-actual-post-id") ,$(this).attr("data-user-id"),function(){sendToFriendButtonObject.addClass('disabledButton').html('SENT');});
-});
-
-
-
-
-
 var openFullScreenFileViewTimeout;
 var postSingleImageContainerObject;
 var doubleClicked = false;

@@ -170,4 +170,25 @@ remove_secondary_loading(SEND_TO_FRIEND_ROWS_CONTAINER);
 
 
 
+
+
+// user wants to send a post to someone
+$(document).on("click",".sendToFriendButton",function(){
+
+if(typeof $(".sendToFriendContainerCol").attr("data-actual-post-id") == "undefined" || typeof $(this).attr("data-user-id") == "undefined") {
+return false;
+}
+
+var sendToFriendButtonObject = $(this);
+sendToFriendButtonObject.html("Sending").addClass("disabledButton");
+sendPost($(".sendToFriendContainerCol").attr("data-actual-post-id") ,$(this).attr("data-user-id"),function(){
+sendToFriendButtonObject.html('SENT');
+});
+});
+
+
+
+
+
+
 });

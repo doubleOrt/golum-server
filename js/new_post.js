@@ -65,7 +65,7 @@ data.append("files" + i,$("#new_post_file_" + i)[0].files[0]);
 data.append("title",$("#post_title").val());
 data.append("type",$("#options_num").val());
 
-$(this).addClass("disabledButton");
+$(this).html("Posting...").addClass("disabledButton");
 
 $.post({
 url:"components/new_post.php",
@@ -89,9 +89,15 @@ var this_modal = $(this);
 setTimeout(function(){z_index_stack = parseFloat(this_modal.css("z-index"));},300);
 }
 });
+// empty #singlePostsContainer
+$("#singlePostsContainer").html("");
+showLoading($("#singlePostsContainer"), "50%");
+closeModal("shareNewModal");
 openModalCustom("singlePostModal");
 getPosts("components/get_single_post.php",{"post_id":data},function(data_arr){
-markUpProcessor(data_arr,$("#singlePostsContainer"));	
+markUpProcessor(data_arr,$("#singlePostsContainer"), "We don't know why the post didn't appear either :(", function(){
+removeLoading($("#singlePostsContainer"));	
+});		
 });		
 }
 
@@ -106,7 +112,7 @@ resetNewPostInputs();
 $('#shareNewModal').find('.modalCloseButton').click();
 
 
-$("#shareNewPostButton").removeClass("disabledButton");
+$("#shareNewPostButton").html("post");
 
 
 }	
