@@ -76,31 +76,65 @@ search_section_tabs_changed();
 });
 	
 	
-	
+
+var search_timeout;	
 // the search box used by users to search for other users or tags
 SEARCH_BOX.keyup(function(e){
 
 SEARCH_USERS_RESULTS_CONTAINER.attr("data-end-of-results", "false");
 SEARCH_TAGS_RESULTS_CONTAINER.attr("data-end-of-results", "false");
 
-// if empty, toggle #searchResultsContainer
-if($(this).val().trim() == "") {
+var active_tab = SEARCH_TABS_STATE_HOLDER.attr("data-active-tab");
+
+clearTimeout(search_timeout);
+
+if(active_tab == "0") {
+SEARCH_USERS_RESULTS_CONTAINER.html(`<div class='emptyNowPlaceholder'>
+<div class='preloader-wrapper active' style='margin:15px 0;'>
+<div class='spinner-layer'>
+<div class='circle-clipper left'>
+<div class='circle'></div>
+</div><div class='gap-patch'>
+<div class='circle'></div>
+</div><div class='circle-clipper right'>
+<div class='circle'></div>
+</div>
+</div>
+</div><br>Loading results for "` + SEARCH_BOX.val() + `"</div>`);
+}
+else if(active_tab == "1") {
+SEARCH_TAGS_RESULTS_CONTAINER.html(`<div class='emptyNowPlaceholder'>
+<div class='preloader-wrapper active' style='margin:15px 0;'>
+<div class='spinner-layer'>
+<div class='circle-clipper left'>
+<div class='circle'></div>
+</div><div class='gap-patch'>
+<div class='circle'></div>
+</div><div class='circle-clipper right'>
+<div class='circle'></div>
+</div>
+</div>
+</div><br>Loading results for "` + SEARCH_BOX.val() + `"</div>`);
+}
+
+search_timeout = setTimeout(function(){// if empty, toggle #searchResultsContainer
+if(SEARCH_BOX.val().trim() == "") {
 SEARCH_USERS_RESULTS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>search</i><br>Please type in something in the search box :)</div>")	
 SEARCH_TAGS_RESULTS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>search</i><br>Please type in something in the search box :)</div>")	
 return false;
 }	
 
-var active_tab = SEARCH_TABS_STATE_HOLDER.attr("data-active-tab");
 if(active_tab == "0") {	
 // empty the SEARCH_USERS_RESULTS_CONTAINER of the last search's markup
 SEARCH_USERS_RESULTS_CONTAINER.html("");
-search_for_user($(this).val() , 0 , search_for_user_callback);
+search_for_user(SEARCH_BOX.val() , 0 , search_for_user_callback);
 }
 else if(active_tab == "1") {
 // empty the SEARCH_TAGS_RESULTS_CONTAINER of the last search's markup	
 SEARCH_TAGS_RESULTS_CONTAINER.html("");
-search_for_tag($(this).val() , 0 , search_for_tag_callback);
+search_for_tag(SEARCH_BOX.val() , 0 , search_for_tag_callback);
 }
+}, 250);
 
 });
 // infinite scrolling

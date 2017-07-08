@@ -119,6 +119,7 @@ $(".sendToFriendContainerCol").attr("data-actual-post-id",$(this).attr("data-act
 });
 
 
+var get_send_to_friend_friends_timeout;
 // user is searching for friends using the search-for-friends input in order to send them a post. 
 SEND_TO_FRIEND_INPUT_ELEMENT.on("keyup",function(){
 
@@ -132,10 +133,26 @@ if(typeof $(".sendToFriendContainerCol").attr("data-actual-post-id") == "undefin
 return false;	
 }
 
+clearTimeout(get_send_to_friend_friends_timeout);
+SEND_TO_FRIEND_ROWS_CONTAINER.html(`<div class='emptyNowPlaceholder'>
+<div class='preloader-wrapper active' style='margin:15px 0;'>
+<div class='spinner-layer'>
+<div class='circle-clipper left'>
+<div class='circle'></div>
+</div><div class='gap-patch'>
+<div class='circle'></div>
+</div><div class='circle-clipper right'>
+<div class='circle'></div>
+</div>
+</div>
+</div><br>Loading results for "` + $(this).val() + `"</div>`);
+
+get_send_to_friend_friends_timeout = setTimeout(function(){
 SEND_TO_FRIEND_ROWS_CONTAINER.html(""); // empty the rows container
 SEND_TO_FRIEND_ROWS_CONTAINER.attr("data-end-of-results", "false");
+get_send_to_friend_friends(SEND_TO_FRIEND_INPUT_ELEMENT.val(), SEND_TO_FRIEND_POST_ID_HOLDER.attr("data-actual-post-id"), 0, get_send_to_friend_friends_callback);	
+}, 250);
 
-get_send_to_friend_friends(SEND_TO_FRIEND_INPUT_ELEMENT.val(), SEND_TO_FRIEND_POST_ID_HOLDER.attr("data-actual-post-id"), 0, get_send_to_friend_friends_callback);
 });
 // user is infinite scrolling
 SEND_TO_FRIEND_ROWS_CONTAINER.scroll(function(){
