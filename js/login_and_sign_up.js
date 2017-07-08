@@ -142,4 +142,34 @@ success:function(data){
 }
 
 
+
+
+
+$(document).on("click", "#switchFormsButton", function(){
+// the login form is now visible
+if(switch_forms() == 0) {
+$(this).html("Sign Up");
+} 
+// the sign-up form is now visible
+else {
+$(this).html("Login");	
+}
+});
+
+function switch_forms() {
+
+if($("#loginForm").is(":visible") === true) {
+$("#loginForm").hide();	
+$("#signUpForm").fadeIn();	
+return 1;
+}
+else if($("#signUpForm").is(":visible") === true) {
+$("#signUpForm").hide();	
+$("#loginForm").fadeIn();	
+return 0;
+}
+	
+}
+
+
 });

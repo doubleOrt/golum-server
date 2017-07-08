@@ -107,14 +107,13 @@ margin-top:-15px !important;
 
 .input-field input[type=text],.input-field input[type=password],.input-field input[type=email] {
 border-bottom: 2px solid #ebeaea;
-color:grey;
+color:white;
 box-shadow:none;
 }
 
 .input-field input[type=text]:focus,.input-field input[type=password]:focus,.input-field input[type=email]:focus {
 border-image: none !important;	
 border-bottom:2px solid white !important;
-color:white;
 box-shadow:none !important;
 }
 

@@ -44,8 +44,8 @@ eval(data);
 </script> 
 
 <script src="js/generic_functions.js"></script>
-<script src="js/main_scripts.js"></script>
 <script src="js/login_and_sign_up.js"></script>
+<script src="js/modals.js"></script>
 <script src="js/forgot_password.js"></script>
 
 
@@ -59,7 +59,6 @@ eval(data);
 
 
 
-<div id="showOnBodyLoad">
 
 <div id="megaContainer">
 
@@ -136,7 +135,7 @@ eval(data);
 
 
 <div class="input-field col l6 m6 s6">
-<input id="last_name" name="last_name" type="text" length="18" data-onfocus-toggle="#switchFormsButton">
+<input id="last_name" class="independent_styles" name="last_name" type="text" length="18" data-onfocus-toggle="#switchFormsButton">
 <label for="last_name">Last Name</label>
 </div>
 
@@ -164,15 +163,13 @@ eval(data);
 </div><!-- end #loginAndSignUpContainer -->
 
 <!-- button used to switch forms -->	
-<a id="switchFormsButton" class="waves-effect waves-lightgrey btn-large onclickShow" data-onclick-show="#signUpForm,#loginForm" data-onclick-changeThis="Sign Up,Login">Sign Up</a>
+<a id="switchFormsButton" class="waves-effect waves-lightgrey btn-large">Sign Up</a>
 
 </div><!-- end #loginAndSignUpContainerParent -->
 
 </div><!-- end .container -->
 
 </div><!-- end #megaContainer -->
-
-</div> <!-- end #showOnBodyLoad -->
 
 
 
