@@ -1,7 +1,9 @@
 
 // value will be set on document load
 var NOTIFICATIONS_CONTAINER_ELEMENT;
-
+var NOTIFICATIONS_TABS_STATE_HOLDER;
+var NOTIFICATIONS_IMPORTANT_CONTAINER;
+var NOTIFICATIONS_ALL_CONTAINER;
 
 
 var notificationsPreventMultipleCalls = false;
@@ -370,18 +372,48 @@ return `
 }
 
 
+function notifications_section_tabs_changed() {
+
+var active_tab = NOTIFICATIONS_TABS_STATE_HOLDER.attr("data-active-tab");
+
+// user switched to the PEOPLE tab
+if(active_tab == "0") {
+NOTIFICATIONS_ALL_CONTAINER.hide();
+NOTIFICATIONS_IMPORTANT_CONTAINER.show();
+}
+// user switched to the TAGS tab
+else if(active_tab == "1"){
+NOTIFICATIONS_IMPORTANT_CONTAINER.hide();	
+NOTIFICATIONS_ALL_CONTAINER.show();
+}
+
+
+
+}
+
 
 
 
 
 $(document).ready(function(){
 	
-NOTIFICATIONS_CONTAINER_ELEMENT = $("#notifications_container");
+NOTIFICATIONS_CONTAINER_ELEMENT = $("#notifications_important_container");
+NOTIFICATIONS_TABS_STATE_HOLDER = $("#notifications_container");
+NOTIFICATIONS_IMPORTANT_CONTAINER = $("#notifications_important_container");
+NOTIFICATIONS_ALL_CONTAINER = $("#notifications_all_container");
+
+$(document).on("click", "#notifications_tabs .tab", function() {
+NOTIFICATIONS_TABS_STATE_HOLDER.attr("data-active-tab", $(this).attr("data-tab-index"));	
+notifications_section_tabs_changed();
+});
+	
+
 
 // the user wants to see their notifications
 $(document).on("click",".openNotificationsModal",function(){
 // empty the notification container element	
 NOTIFICATIONS_CONTAINER_ELEMENT.html("");	
+showLoading(NOTIFICATIONS_CONTAINER_ELEMENT, "50%");
 getNotifications(0, get_notification_callback);
 $("#newNotificationsNumber").find(".notificationNumContainer").remove();
 });
@@ -394,6 +426,8 @@ getNotifications(NOTIFICATIONS_CONTAINER_ELEMENT.find(".singleNotification").len
 
 
 function get_notification_callback(notifications_arr) {
+
+removeLoading(NOTIFICATIONS_CONTAINER_ELEMENT);
 
 /* if the user is not infinite scrolling and they have no notifications (only supposed to happen when the user has never had a notification, 
 not when they don't have any new notifications), add a placeholder div to tell the user there have been no results. */

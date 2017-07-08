@@ -32,12 +32,22 @@ if(SEARCH_BOX.val().trim() != "") {
 if(active_tab == "0") {
 // empty the SEARCH_USERS_RESULTS_CONTAINER of the last search's markup
 SEARCH_USERS_RESULTS_CONTAINER.html("");
-search_for_user(SEARCH_BOX.val() , 0 , search_for_user_callback);
+showLoading(SEARCH_USERS_RESULTS_CONTAINER, "55%");
+search_for_user(SEARCH_BOX.val() , 0 , function(data) {
+search_for_user_callback(data, function(){
+removeLoading(SEARCH_USERS_RESULTS_CONTAINER);
+})
+});
 }
 else if(active_tab == "1") {
 // empty the SEARCH_TAGS_RESULTS_CONTAINER of the last search's markup	
 SEARCH_TAGS_RESULTS_CONTAINER.html("");
-search_for_tag(SEARCH_BOX.val() , 0 , search_for_tag_callback);	
+showLoading(SEARCH_TAGS_RESULTS_CONTAINER, "55%");
+search_for_tag(SEARCH_BOX.val() , 0 , function(data) {
+search_for_tag_callback(data, function(){
+removeLoading(SEARCH_TAGS_RESULTS_CONTAINER);
+})
+});	
 }
 
 }
@@ -142,7 +152,7 @@ prevent_multiple_calls_to_search_for_user = false;
 	
 }
 
-function search_for_user_callback(data) {
+function search_for_user_callback(data, callback) {
 
 // if the user is not infinite scrolling and there have been no results, add a placeholder div to tell the user there have been no results.
 if( data.length < 1 && SEARCH_USERS_RESULTS_CONTAINER.find(".searchResultRow").length < 1) {
@@ -153,6 +163,10 @@ return false;
 
 for(var i = 0;i < data.length; i++) {
 SEARCH_USERS_RESULTS_CONTAINER.append(generate_search_result_user_row_markup(data[i]));
+}
+
+if(typeof callback == "function") {
+callback();	
 }
 
 }
@@ -191,7 +205,7 @@ prevent_multiple_calls_to_search_for_tag = false;
 
 
 
-function search_for_tag_callback(data) {
+function search_for_tag_callback(data, callback) {
 
 // if the user is not infinite scrolling and there have been no results, add a placeholder div to tell the user there have been no results.
 if( data.length < 1 && SEARCH_TAGS_RESULTS_CONTAINER.find(".searchResultRow").length < 1) {
@@ -209,6 +223,10 @@ data[i]["sample_image_path"],
 data[i]["current_state"]
 )
 );
+}
+
+if(typeof callback == "function") {
+callback();	
 }
 	
 }

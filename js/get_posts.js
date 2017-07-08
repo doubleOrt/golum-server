@@ -57,7 +57,7 @@ appendMarkUpTo.html("<div class='emptyNowPlaceholder'><i class='material-icons'>
 for(var i = 0; i < data.length; i++) {	
 appendMarkUpTo.append(get_post_markup(dataArr[i]));
 }
-hideLoading();
+
 appendMarkUpTo.show();	
 
 
@@ -329,12 +329,17 @@ $($(this).attr("data-back-to-top-target")).animate({"scrollTop": 0}, 400);
 
 $(document).on("click",".getPosts",function(){
 emptyAllPostsContainer();
+showLoading(MAIN_SCREEN_POSTS_CONTAINER, "60%");
 getPosts("components/get_posts.php",{"row_offset":0},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Your feed is so empty :(", function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Your feed is so empty :(", function(){
+MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts");
+MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);
+removeLoading(MAIN_SCREEN_POSTS_CONTAINER);
+});	
 });		
 });
 
-// make a call to this function on page load
+// making a call to this function on page load since the user is presented with their feed as soon as they login.
 getPosts("components/get_posts.php",{"row_offset":0},function(data_arr){
 markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Nothing here :(", function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
 });		
@@ -343,16 +348,26 @@ markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Nothing here :(", functio
 /* when a user wants to see the featured posts */
 $(document).on("click",".getFeaturedPosts",function(){
 emptyAllPostsContainer();
+showLoading(MAIN_SCREEN_POSTS_CONTAINER, "60%");
 getPosts("components/get_featured_posts.php",{"row_offset":0},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "We don't know why there is nothing here either :(", function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","featuredPosts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "We don't know why there is nothing here either :(", function(){
+MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","featuredPosts");
+MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);
+removeLoading(MAIN_SCREEN_POSTS_CONTAINER);
+});	
 });		
 });
 
 /* when a user wants to see their favorited posts */
 $(document).on("click",".getMyFavoritePosts",function(){	
 emptyAllPostsContainer();
+showLoading(MAIN_SCREEN_POSTS_CONTAINER, "60%");
 getPosts("components/get_my_favorite_posts.php",{"row_offset":0},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "After you favorite some posts, you should look for them here :)" , function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","favoritePosts");MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "After you favorite some posts, you should look for them here :)" , function(){
+MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","favoritePosts");
+MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);
+removeLoading(MAIN_SCREEN_POSTS_CONTAINER);
+});	
 });		
 });
 
@@ -398,8 +413,11 @@ return false;
 }	
 // empty #singlePostsContainer
 $("#singlePostsContainer").html("");
+showLoading($("#singlePostsContainer"), "50%");
 getPosts("components/get_single_post.php",{"post_id":$(this).attr("data-actual-post-id")},function(data_arr){
-markUpProcessor(data_arr,$("#singlePostsContainer"), "We don't know why the post didn't appear either :(");	
+markUpProcessor(data_arr,$("#singlePostsContainer"), "We don't know why the post didn't appear either :(", function(){
+removeLoading($("#singlePostsContainer"));	
+});	
 });		
 });
 
@@ -423,6 +441,8 @@ $("#userPostsModal .modalHeaderFullName").html(modal_label);
 //empty the #userPostsContainer of the last query's posts
 $("#userPostsContainer").html("");
 
+showLoading($("#userPostsContainer"), "50%");
+
 $("#userPostsContainer").attr("data-user-id",$(this).attr("data-user-id"));
 $("#userPostsModal .navRightItemsMobile .follow_user").attr("data-user-id", $(this).attr("data-user-id"));
 
@@ -436,7 +456,9 @@ $("#userPostsModal .navRightItemsMobile .follow_user").show();
 }
 
 getPosts("components/get_user_posts.php",{"user_id": $(this).attr("data-user-id"), "row_offset": 0},function(data_arr){
-markUpProcessor(data_arr[0], $("#userPostsContainer"), "This user does not have a single post, such a loser.");		
+markUpProcessor(data_arr[0], $("#userPostsContainer"), "This user does not have a single post, such a loser.", function(){
+removeLoading($("#userPostsContainer"));	
+});		
 $("#userPostsModal .navRightItemsMobile .follow_user").html((data_arr[1] == 0 ? "Follow +" : "Unfollow"));
 });
 });
@@ -463,8 +485,10 @@ return false;
 }
 
 
-//empty the #userPostsContainer of the last query's posts
+//empty the #favorite_posts_container of the last query's posts
 $("#favorite_posts_container").html("");
+
+showLoading($("#favorite_posts_container"), "50%");
 
 $(favorite_posts_container).attr("data-user-id",$(this).attr("data-user-id"));
 $("#favorite_posts_modal .navRightItemsMobile .follow_user").attr("data-user-id", $(this).attr("data-user-id"));
@@ -479,7 +503,9 @@ $("#favorite_posts_modal .navRightItemsMobile .follow_user").show();
 }
 
 getPosts("components/get_favorite_posts.php",{"user_id": $(this).attr("data-user-id"), "row_offset": 0},function(data_arr){
-markUpProcessor(data_arr[0], $("#favorite_posts_container"), "This user has not faved a single post, such a loser.");		
+markUpProcessor(data_arr[0], $("#favorite_posts_container"), "This user has not faved a single post, such a loser.", function(){
+removeLoading($("#favorite_posts_container"));	
+});		
 $("#favorite_posts_modal .navRightItemsMobile .follow_user").html((data_arr[1] == 0 ? "Follow +" : "Unfollow"));
 });
 });
@@ -549,11 +575,14 @@ $("#tagPostsContainer").html("");
 //scroll to the top
 $("#tagPostsModal .modal-content").scrollTop(0);	
 
+showLoading($("#tagPostsContainer"), "55%");
 
 // if the user is switching between the tabs
 if($(this).parents(".tabs").length > 0) {
 getPosts("components/get_tag_posts.php",{"row_offset":0,"tag": tag,"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
-markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(");	
+markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(", function(){
+removeLoading($("#tagPostsContainer"));	
+});	
 });
 }
 // user is not switching between the tabs
@@ -563,7 +592,9 @@ $("#tagPostsModal .modal-header .modalHeaderFullName").html(tag);
 $("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").attr("data-tag", tag);
 
 getPosts("components/get_tag_posts.php",{"row_offset":0,"tag": tag,"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){	
-markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(");	
+markUpProcessor(data_arr[0],$("#tagPostsContainer"), "Nothing here :(", function(){
+removeLoading($("#tagPostsContainer"));	
+});	
 // add the "follow tag" button which should be in dataArr[1]
 $("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").attr("data-current-state", data_arr[1]);
 $("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").html(data_arr[1] == 0 ? "Follow +" : "Unfollow");

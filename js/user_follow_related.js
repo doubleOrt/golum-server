@@ -86,15 +86,12 @@ callback(data);
 
 
 // all this letters business deals with having those letter-separators for all a user's followers/followings of the same letter, so it's easier to navigate.
-function get_user_followers_callback(data) {
-
-console.log(data[0][data[0].length-1]);
+function get_user_followers_callback(data, callback) {
 
 var is_first_call = SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.find(".contactsSingleRow").length < 1;
 
 // if there are no rows currently, it means that the previous call was the first and therefore there is a gender-widget-info array in the second (1) index of data.
 if(is_first_call == true) {
-console.log(data[1]);	
 SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.prepend(`<div class='contactsModalTop'>
 <div class='contactsModalSingleElement cardStyles'><img src='icons/male.png' alt='Male'/><span class='contactsModalSingleElementMainText'>`+ Math.round((data[1]["total_male"] / data[1]["total"]) * 100)  +`%</span></div>
 <div class='contactsModalSingleElement cardStyles'><img src='icons/female.png' alt='Female'/><span class='contactsModalSingleElementMainText'>`+ Math.round((data[1]["total_female"] / data[1]["total"]) * 100) +`%</span></div>
@@ -121,11 +118,15 @@ SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.append(`<div class='singleLetterContainer 
 SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.find("#" + letter_rows_container_id).append(get_follow_related_row_markup(data[0][i]));
 }
 
+if(typeof callback == "function") {
+callback();	
+}
+
 }
 
 
 // all this letters business deals with having those letter-separators for all a user's followers/followings of the same letter, so it's easier to navigate.
-function get_user_followings_callback(data) {
+function get_user_followings_callback(data, callback) {
 
 var is_first_call = SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.find(".contactsSingleRow").length < 1;
 
@@ -157,6 +158,9 @@ SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.append(`<div class='singleLetterContainer
 SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.find("#" + letter_rows_container_id).append(get_follow_related_row_markup(data[0][i]));
 }
 
+if(typeof callback != "undefined") {
+callback();
+}
 }
 
 
@@ -212,7 +216,12 @@ SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT = $("#followings_modal_content_child");
 $(document).on("click",".get_followers",function(){
 SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("data-user-id", $(this).attr("data-user-id"))	
 SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.html("");	
-get_user_followers_or_followings(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("data-user-id"), 0, 0, get_user_followers_callback);
+showLoading(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT, "50%");
+get_user_followers_or_followings(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("data-user-id"), 0, 0, function(data){
+get_user_followers_callback(data, function(){
+removeLoading(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT);
+});
+});
 });
 // user is infinite scrolling their notifications section 
 SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.scroll(function(){
@@ -226,7 +235,12 @@ get_user_followers_or_followings(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("dat
 $(document).on("click",".get_followings",function(){	
 SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.attr("data-user-id", $(this).attr("data-user-id"))	
 SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.html("");	
-get_user_followers_or_followings($(this).attr("data-user-id"), 0, 1, get_user_followings_callback);
+showLoading(SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT, "50%");
+get_user_followers_or_followings($(this).attr("data-user-id"), 0, 1, function(data){
+get_user_followings_callback(data, function(){
+removeLoading(SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT);	
+});	
+});
 });
 // user is infinite scrolling their notifications section 
 SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.scroll(function(){

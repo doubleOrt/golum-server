@@ -35,7 +35,7 @@ get_user_tags_prevent_multiple_calls = false;
 
 
 
-function get_user_tags_callback(data) {
+function get_user_tags_callback(data, callback) {
 
 // if the user is not infinite scrolling and there have been no results, add a placeholder div to tell the user there have been no results.
 if( data.length < 1 && USER_TAGS_CONTAINER.find(".list_row").length < 1) {
@@ -53,6 +53,10 @@ data[i]["sample_image_path"]
 )
 );
 }
+	
+if(typeof callback == "function") {
+callback();	
+}	
 	
 }
 
@@ -126,8 +130,14 @@ return false;
 	
 USER_TAGS_CONTAINER.html("");	
 USER_TAGS_CONTAINER.attr("data-user-id", $(this).attr("data-user-id"));	
+
+showLoading(USER_TAGS_CONTAINER, "50%");
 	
-get_user_tags($(this).attr("data-user-id"), 0, get_user_tags_callback);	
+get_user_tags($(this).attr("data-user-id"), 0, function(data){
+get_user_tags_callback(data, function(){
+removeLoading(USER_TAGS_CONTAINER);	
+}); 
+});	
 });
 // infinite scrolling the tags followed by a user
 USER_TAGS_CONTAINER.scroll(function(){

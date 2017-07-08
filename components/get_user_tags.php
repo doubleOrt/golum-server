@@ -5,7 +5,6 @@ require_once "logged_in_importants.php";
 // first index will be filled with search result data rows, second index will be the number of the search results.
 $echo_arr = [];	
 
-
 if(filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== "" && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== "") {
 
 // this query selects only accounts not existing in the account_states database table.

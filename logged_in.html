@@ -115,23 +115,6 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 <input type="text" style="display:none"/>
 
 
-
-<!-- loading spinners -->
-<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:99999;" id="preloader">
-<div class="preloader-wrapper active">
-<div class="spinner-layer">
-<div class="circle-clipper left">
-<div class="circle"></div>
-</div><div class="gap-patch">
-<div class="circle"></div>
-</div><div class="circle-clipper right">
-<div class="circle"></div>
-</div>
-</div>
-</div>
-</div>
-
-
 <div id="showOnBodyLoad">
 
 	
@@ -148,9 +131,9 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 <div id="topBar" class="modalHeaderContainer">
 
 <ul class="tabs">
-<li class="tab col s4 getPosts showLoadingOnClick"><a class="active" href="#">Feed</a></li>
-<li class="tab col s4 getFeaturedPosts showLoadingOnClick"><a href="#">Featured</a></li>
-<li class="tab col s4 getMyFavoritePosts showLoadingOnClick"><a href="#">Discover</a></li>
+<li class="tab col s4 getPosts"><a class="active" href="#">Feed</a></li>
+<li class="tab col s4 getFeaturedPosts"><a href="#">Featured</a></li>
+<li class="tab col s4"><a href="#">Discover</a></li>
 </ul>
 
 </div><!-- end #topBar -->
@@ -219,12 +202,17 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 
 <div id="main_screen_notifications" class="row main_screen">
 
-<ul class="tabs">
-<li class="tab col s4 getPosts showLoadingOnClick"><a class="active" href="#">Important</a></li>
-<li class="tab col s4 getFeaturedPosts showLoadingOnClick"><a href="#">All</a></li>
+<div id="notifications_container" class="main_screen_child" data-active-tab="0">
+
+<ul id="notifications_tabs" class="tabs">
+<li class="tab col s6" data-tab-index="0"><a class="active" href="#">Important</a></li>
+<li class="tab col s6" data-tab-index="1"><a href="#">All</a></li>
 </ul>
 
-<div id="notifications_container" class="main_screen_child">
+<div id="notifications_important_container" class="notifications_container_child"></div>
+
+<div id="notifications_all_container" class="notifications_container_child"></div>
+
 </div>
 </div><!-- end #main_screen_notifications -->
  
@@ -245,8 +233,8 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 <div id="searchResultsContainer" class="row">
 
 <ul id='search_tabs' class="tabs">
-<li class="tab col s4 getPosts showLoadingOnClick" data-tab-index="0"><a class="active" href="#">People</a></li>
-<li class="tab col s4 getFeaturedPosts showLoadingOnClick" data-tab-index="1"><a href="#">Tags</a></li>
+<li class="tab col s4" data-tab-index="0"><a class="active" href="#">People</a></li>
+<li class="tab col s4" data-tab-index="1"><a href="#">Tags</a></li>
 </ul>
 
 <div id="search_users_results_column" class="col l12 m12 s12">

@@ -7,7 +7,7 @@ $(document).ready(function(){
 BASE_USER_ID_HOLDER = $("#megaContainer");
 	 	 
 //hide the loading bar and show the document body
-hideLoading();
+removeLoading($("#main_screen_main_posts_container"));
 $("#showOnBodyLoad").show();
 
 // we got 284 emojis in our emojis file, we need to append them all to our emojisContainerChild element.
@@ -49,13 +49,6 @@ $('select').material_select();
 
 
 
-/* components that require a loading circle to show until they are fully loaded, on clicking those, we hide all the pageContentComponents (these methods are used for them) and show the loading circle, then we have to manually show the div we want to after we know it has fully loaded */
-$(document).on("click",".showLoadingOnClick",function(){	
-$(".pageContentComponents").hide();
-showLoading();
-});
-
-
 
 
 
@@ -80,7 +73,7 @@ adaptRotateWithMargin($(this).find("img"),$(this).attr("data-rotate-degree"),fal
 
 // when the user wants to go to their messages section (chat portals)
 $(document).on("click",".getChatPortal",function(){
-hideLoading();	
+removeLoading($("#main_screen_main_posts_container"));	
 $("#allPostsContainer").hide();
 getChatPortals();	
 });

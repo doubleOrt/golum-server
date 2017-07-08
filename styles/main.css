@@ -138,6 +138,11 @@ background-color:white;
 #allPostsContainer {
 width:100%;
 height:100%;
+position:relative;
+}
+
+#allPostsContainer .emptyNowPlaceholder {
+top:30%;	
 }
 
 

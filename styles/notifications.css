@@ -1,9 +1,14 @@
-
 #notifications_container {
+overflow:hidden;	
+}
+
+.notifications_container_child {
 height:calc(100% - 50px);
 padding-top:40px;
 box-sizing:border-box;
-background-color:white;	
+background-color:white;		
+overflow:hidden;
+overflow-y:scroll;
 }
 
 .singleNotification {

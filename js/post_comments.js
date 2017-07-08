@@ -116,7 +116,7 @@ callback();
 
 
 
-function get_comments_callback(data) {
+function get_comments_callback(data, callback) {
 
 
 $("#totalNumberOfComments").html("(" + data[1] + ")");
@@ -154,6 +154,10 @@ stopPropagation:true
 }
 );
 
+
+if(typeof callback == "function") {
+callback();	
+}
 	
 }
 
@@ -199,16 +203,26 @@ COMMENTS_CONTAINER_ELEMENT.attr("data-actual-post-id",$(this).attr("data-actual-
 
 // empty the COMMENTS_CONTAINER_ELEMENT of the previously viewed post comments 
 COMMENTS_CONTAINER_ELEMENT.html("");
+
+showLoading(COMMENTS_CONTAINER_ELEMENT, "50%");
  	
 // for details concerning these 2 lines, see the first bug in the bugs.txt file.
 commentsPreventMultipleCalls = false;
 abort_request_to_get_comments();
 
 if(typeof $(this).attr("data-pin-comment-to-top") == "undefined") {
-getComments($(this).attr("data-actual-post-id"),0, 0, get_comments_callback);
+getComments($(this).attr("data-actual-post-id"),0, 0, function(data){
+get_comments_callback(data, function(){
+removeLoading(COMMENTS_CONTAINER_ELEMENT);	
+});
+});
 }
 else {
-getComments($(this).attr("data-actual-post-id"), 0, $(this).attr("data-pin-comment-to-top"), get_comments_callback);	
+getComments($(this).attr("data-actual-post-id"), 0, $(this).attr("data-pin-comment-to-top"), function(data){
+get_comments_callback(data, function(){
+removeLoading(COMMENTS_CONTAINER_ELEMENT);	
+});
+});	
 }
 
 });

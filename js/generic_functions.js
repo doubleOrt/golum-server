@@ -198,12 +198,24 @@ return false;
 
 
 // shows the loading spinner
-function showLoading() {
-$("#preloader").show();	
+function showLoading(target_element, top_position) {
+target_element.prepend(`<div class='preloader-wrapper_container' style='position:fixed;top:` + top_position + `;left:50%;transform:translate(-50%,-50%);z-index:99999;'>
+<div class='preloader-wrapper active'>
+<div class='spinner-layer'>
+<div class='circle-clipper left'>
+<div class='circle'></div>
+</div><div class='gap-patch'>
+<div class='circle'></div>
+</div><div class='circle-clipper right'>
+<div class='circle'></div>
+</div>
+</div>
+</div>
+</div>`);
 }
 // hides the loading spinner.
-function hideLoading() {
-$("#preloader").hide();	
+function removeLoading(target_element) {
+target_element.find(".preloader-wrapper_container").remove();	
 }
 
 
