@@ -103,7 +103,7 @@ $(".loadPostComponents").removeClass("loadPostComponents");
 
 
 function get_post_markup(data) {
-		
+				
 var poster_full_name = data["post_owner_info"]["first_name"] + " " +  data["post_owner_info"]["last_name"];
 
 var random_num = Math.floor(Math.random() * 1000000);	
@@ -215,7 +215,7 @@ return `<div class='singlePost loadPostComponents col l12 m12 s12' data-actual-p
 <div class='avatarContainerChild posterAvatarContainerChild showUserModal modal-trigger' data-user-id='` + data["post_owner_info"]["id"] + `' data-target='user_modal'>
 <div class='rotateContainer' style='margin-top:` + data["post_owner_info"]["avatar_positions"][0] + `%;margin-left:` + data["post_owner_info"]["avatar_positions"][1] + `%;'>
 <div class='avatarRotateDiv ` + (data["posted_by_base_user"] == true ? "baseUserAvatarRotateDivs" : "") + `' data-rotate-degree='` + data["post_owner_info"]["avatar_rotate_degree"] + `' style='transform:rotate(` + data["post_owner_info"]["avatar_rotate_degree"] + `deg)'>
-<img id='` + avatar_id + `' class='avatarImages posterAvatarImages' src='` + (data["post_owner_info"]["avatar_picture"] != "" ? data["post_owner_info"]["avatar_picture"] : LetterAvatar(poster_full_name, 120)) + `' alt='Image'/>
+<img id='` + avatar_id + `' class='avatarImages posterAvatarImages' src='` + (data["post_owner_info"]["avatar_picture"] != "" ? data["post_owner_info"]["avatar_picture"] : LetterAvatar(data["post_owner_info"]["first_name"], 120)) + `' alt='Image'/>
 </div><!-- end .avatarRotateDiv -->
 </div><!-- end .rotateContainer -->
 </div><!-- end .avatarContainerChild -->

@@ -31,7 +31,6 @@ postObject.attr("data-already-voted","true");
 
 
 function getVotedPostsVotesMarkup() {
-
 $(".loadPostComponents").each(function(){	
 if($(this).find(".selectedOptionContainer").length == 0 && $(this).find(".votesContainer").length == 0) {	
 var this_post_element = $(this); 
@@ -40,7 +39,6 @@ get_post_votes_callback(this_post_element, data, true);
 });	
 }
 });
-
 }
 
 
@@ -111,7 +109,7 @@ return `<div class='votesContainer'>
 /* we do this to avoid relying on an ajax call to give us the new markup for the votes after the user votes, because it would be slower, so instead whenever the user votes, just pass
 the .singlePost object and the option index of the user's vote to this function and it will handle everything. */
 function showNewPostVotes(singlePostElement,userOptionIndex) {
-	
+		
 singlePostElement.find(".votesContainer").show();
 
 var oldVotesNewNum = parseFloat(singlePostElement.find(".vote_holder .totalVotesNumber[data-user-vote='true']").attr("data-votes-number")) - 1;

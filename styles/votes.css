@@ -55,7 +55,7 @@ text-shadow: 1px 3px 0 rgba(0,0,0,.6);
 }
 
 .votesIcon[data-user-vote=true] {
-background:-webkit-linear-gradient(36deg, crimson, lightsalmon);
+background:-webkit-linear-gradient(36deg, crimson, lightsalmon) !important;
 }
 
 .singlePost[data-post-type="1"] .votesIcon[data-user-vote=true], .singlePost[data-post-type="2"] .votesIcon[data-user-vote=true] {

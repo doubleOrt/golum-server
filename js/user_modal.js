@@ -327,28 +327,29 @@ user_profile_section_tabs_changed();
 // go to a profile
 $(document).on("click",".showUserModal",function(e){
 e.stopPropagation();
-PROFILE_CONTAINER_ELEMENT.hide();
-showLoading(PROFILE_CONTAINER_ELEMENT.parent(), "50%");
+PROFILE_CONTAINER_ELEMENT.find("#user_profile_container_child").hide();
+showLoading(PROFILE_CONTAINER_ELEMENT, "50%");
 getUser($(this).attr("data-user-id"), function(data){
 handleUserInfo(data, function(){
 $("#user_profile_container").appendTo("#user_modal .modal-content");	
+my_hotfix_for_bug_3();	
 $("#user_modal .modal-header .modalHeaderFullName").html("@" + data["user_name"]);
-removeLoading(PROFILE_CONTAINER_ELEMENT.parent());
-PROFILE_CONTAINER_ELEMENT.show();
+removeLoading(PROFILE_CONTAINER_ELEMENT);
+PROFILE_CONTAINER_ELEMENT.find("#user_profile_container_child").show();
 });	
 });
 });
 
 $(document).on("click", "#bottom_nav_user_profile", function(e) {
 e.stopPropagation();
-PROFILE_CONTAINER_ELEMENT.hide();
-showLoading(PROFILE_CONTAINER_ELEMENT.parent(), "50%");
+PROFILE_CONTAINER_ELEMENT.find("#user_profile_container_child").hide();
+showLoading(PROFILE_CONTAINER_ELEMENT, "50%");
 getUser($(this).attr("data-user-id"), function(data){
 handleUserInfo(data, function(){
 $("#user_profile_container").appendTo("#main_screen_user_profile");	
 my_hotfix_for_bug_3();	
-removeLoading(PROFILE_CONTAINER_ELEMENT.parent());
-PROFILE_CONTAINER_ELEMENT.show();
+removeLoading(PROFILE_CONTAINER_ELEMENT);
+PROFILE_CONTAINER_ELEMENT.find("#user_profile_container_child").show();
 });	
 });
 });

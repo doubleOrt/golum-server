@@ -41,7 +41,7 @@ success:function(data) {
 	
 var data_arr = JSON.parse(data);
 
-callback(data_arr)	
+callback(data_arr);	
 
 commentsPreventMultipleCalls = false;
 }	
@@ -215,7 +215,7 @@ commentsPreventMultipleCalls = false;
 abort_request_to_get_comments();
 
 if(typeof $(this).attr("data-pin-comment-to-top") == "undefined") {
-getComments($(this).attr("data-actual-post-id"),0, 0, function(data){
+getComments($(this).attr("data-actual-post-id"),0, 0, function(data) {
 get_comments_callback(data, function(){
 removeLoading(COMMENTS_CONTAINER_ELEMENT);	
 });

@@ -234,6 +234,10 @@ setTimeout(function(){doubleClicked = false;},600);
 var thisSinglePostObject = $(this).parents(".singlePost");
 var voteOptionIndex = $(this).attr("data-option-index");
 
+if(thisSinglePostObject.find(".vote_holder .totalVotesNumber[data-user-vote='true']").parents(".vote_holder").attr("data-option-index") == voteOptionIndex) {
+return false;	
+}	
+
 // show the votes for this post.	
 showNewPostVotes(thisSinglePostObject,voteOptionIndex);	
 reactToVote(thisSinglePostObject, event.pageX, event.pageY);

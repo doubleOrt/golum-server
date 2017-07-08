@@ -7,7 +7,7 @@ var comment_owner_vote = ["a","b","c","d"];
 
 // potential bug awaiting (data['comment_by_base_user'] == true)
 function get_comment_markup(data, comment_or_reply) {
-				
+								
 var random_num = Math.floor(Math.random() * 1000000);	
 
 var commenter_avatar_id = "avatar" + random_num;

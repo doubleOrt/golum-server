@@ -45,7 +45,7 @@ return [
 		"first_name" => $poster_arr["first_name"],
 		"last_name" => $poster_arr["last_name"],
 		"avatar_picture" => $poster_arr["avatar_picture"],
-		"avatar_rotate_degree" => $poster_avatar_arr["rotate_degree"],
+		"avatar_rotate_degree" => ($poster_avatar_arr["rotate_degree"] != "" ? $poster_avatar_arr["rotate_degree"] : 0),
 		"avatar_positions" => $poster_avatar_positions
 	]
 ];

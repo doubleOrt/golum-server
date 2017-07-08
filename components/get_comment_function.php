@@ -50,7 +50,7 @@ return [
 	"first_name" => htmlspecialchars($commenter_arr["first_name"]),
 	"last_name" => htmlspecialchars($commenter_arr["last_name"]),
 	"avatar_picture" => htmlspecialchars($commenter_arr["avatar_picture"]),
-	"avatar_rotate_degree" => htmlspecialchars($commenter_avatar_arr["rotate_degree"]),
+	"avatar_rotate_degree" => ($commenter_avatar_arr["rotate_degree"] != "" ? $commenter_avatar_arr["rotate_degree"] : 0),
 	"avatar_positions" => $commenter_avatar_positions
 	]
 ];
