@@ -127,6 +127,10 @@ if(data[0].length < 1 && COMMENTS_CONTAINER_ELEMENT.find(".singleComment").lengt
 COMMENTS_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>No comments yet :(</div>");
 return false;
 }
+else if(data[0].length < 1) {
+COMMENTS_CONTAINER_ELEMENT.attr("data-end-of-results", "true");	
+COMMENTS_CONTAINER_ELEMENT.append(get_end_of_results_mark_up("End of comments"));	
+}
 
 for(var i = 0; i < data[0].length; i++) {
 COMMENTS_CONTAINER_ELEMENT.append(get_comment_markup(data[0][i], 0));	
@@ -199,7 +203,7 @@ $(document).on("click",".showPostComments",function() {
 
 $("#postCommentButton").attr("data-actual-post-id",$(this).attr("data-actual-post-id"));
 COMMENTS_CONTAINER_ELEMENT.attr("data-actual-post-id",$(this).attr("data-actual-post-id"));
-
+COMMENTS_CONTAINER_ELEMENT.attr("data-end-of-results", "false");
 
 // empty the COMMENTS_CONTAINER_ELEMENT of the previously viewed post comments 
 COMMENTS_CONTAINER_ELEMENT.html("");
@@ -228,9 +232,16 @@ removeLoading(COMMENTS_CONTAINER_ELEMENT);
 });
 // user is infinite scrolling the comments
 COMMENTS_CONTAINER_ELEMENT.scroll(function(){	
+if($(this).attr("data-end-of-results") === "false") {
 if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) == 0)) {
-	last_call_type = 1;
-getComments($(this).attr("data-actual-post-id"), COMMENTS_CONTAINER_ELEMENT.find(".singleComment").length, 0, get_comments_callback);
+last_call_type = 1;
+add_secondary_loading(COMMENTS_CONTAINER_ELEMENT);
+getComments($(this).attr("data-actual-post-id"), COMMENTS_CONTAINER_ELEMENT.find(".singleComment").length, 0, function(data){
+get_comments_callback(data, function(){
+remove_secondary_loading(COMMENTS_CONTAINER_ELEMENT);	
+});
+});
+}
 }
 });
 

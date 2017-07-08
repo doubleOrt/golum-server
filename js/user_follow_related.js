@@ -102,6 +102,10 @@ SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.prepend(`<div class='contactsModalTop'>
 if(data[0].length < 1 && is_first_call == true) {
 SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>Not a single follower to show :(</div>")	
 }	
+else if(data[0].length < 1) {
+SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.append(get_end_of_results_mark_up());
+SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("data-end-of-results", "true");
+}
 
 
 for(var i = 0; i < data[0].length; i++) {
@@ -142,6 +146,10 @@ SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.prepend(`<div class='contactsModalTop'>
 if(data[0].length < 1 && is_first_call == true) {
 SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>Not a single following to show :(</div>")	
 }	
+else if(data[0].length < 1) {
+SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.append(get_end_of_results_mark_up());
+SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.attr("data-end-of-results", "true");
+}
 
 
 for(var i = 0; i < data[0].length; i++) {
@@ -214,7 +222,8 @@ SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT = $("#followings_modal_content_child");
 	
 // users clicked a button that is supposed to retrieve the number of followers for the user specified by the id in the element's data-user-id attribute.
 $(document).on("click",".get_followers",function(){
-SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("data-user-id", $(this).attr("data-user-id"))	
+SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("data-user-id", $(this).attr("data-user-id"));
+SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("data-end-of-results", "false");
 SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.html("");	
 showLoading(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT, "50%");
 get_user_followers_or_followings(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("data-user-id"), 0, 0, function(data){
@@ -225,15 +234,23 @@ removeLoading(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT);
 });
 // user is infinite scrolling their notifications section 
 SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.scroll(function(){
+if($(this).attr("data-end-of-results") === "false") {	
 if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 100) && get_user_followers_or_followings_prevent_multiple_calls == false) {
-get_user_followers_or_followings(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("data-user-id"), SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.find(".contactsSingleRow").length, 0, get_user_followers_callback);
+add_secondary_loading(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT);	
+get_user_followers_or_followings(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.attr("data-user-id"), SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT.find(".contactsSingleRow").length, 0, function(data){
+get_user_followers_callback(data, function(){
+remove_secondary_loading(SHOW_USER_FOLLOWERS_CONTAINER_ELEMENT);	
+});	
+});
+}
 }
 });
 
 
 // users clicked a button that is supposed to retrieve the number of followings for the user specified by the id in the element's data-user-id attribute.
 $(document).on("click",".get_followings",function(){	
-SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.attr("data-user-id", $(this).attr("data-user-id"))	
+SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.attr("data-user-id", $(this).attr("data-user-id"));
+SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.attr("data-end-of-results", "false");
 SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.html("");	
 showLoading(SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT, "50%");
 get_user_followers_or_followings($(this).attr("data-user-id"), 0, 1, function(data){
@@ -244,8 +261,15 @@ removeLoading(SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT);
 });
 // user is infinite scrolling their notifications section 
 SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.scroll(function(){
+if($(this).attr("data-end-of-results") === "false") {	
 if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 100) && get_user_followers_or_followings_prevent_multiple_calls == false) {
-get_user_followers_or_followings(SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.attr("data-user-id"), SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.find(".contactsSingleRow").length, 1, get_user_followings_callback);
+add_secondary_loading(SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT);
+get_user_followers_or_followings(SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.attr("data-user-id"), SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT.find(".contactsSingleRow").length, 1,  function(data){
+get_user_followings_callback(data, function(){
+remove_secondary_loading(SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT);	
+});	
+});
+}
 }
 });
 

@@ -55,11 +55,15 @@ prevent_multiple_calls_to_get_send_to_friend_friends = false;
 	
 }
 
-function get_send_to_friend_friends_callback(data) {
+function get_send_to_friend_friends_callback(data, callback) {
 
 // no results
 if(data.length < 1 && SEND_TO_FRIEND_ROWS_CONTAINER.find(".sendToFriendSingleRow").length < 1) {
 SEND_TO_FRIEND_ROWS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>error</i><br>Not a single friend matched your search term :(</div>");	
+}
+else if(data.length < 1) {
+SEND_TO_FRIEND_ROWS_CONTAINER.attr("data-end-of-results", "true");
+SEND_TO_FRIEND_ROWS_CONTAINER.append(get_end_of_results_mark_up("End of results"));	
 }
 
 for(var i = 0; i < data.length; i++) {
@@ -71,6 +75,9 @@ fitToParent($(this));
 adaptRotateWithMargin($(this), $(this).parent().attr("data-rotate-degree"), false);	
 });
 
+if(typeof callback == "function") {
+callback();	
+}
 
 }
 
@@ -126,13 +133,21 @@ return false;
 }
 
 SEND_TO_FRIEND_ROWS_CONTAINER.html(""); // empty the rows container
+SEND_TO_FRIEND_ROWS_CONTAINER.attr("data-end-of-results", "false");
 
 get_send_to_friend_friends(SEND_TO_FRIEND_INPUT_ELEMENT.val(), SEND_TO_FRIEND_POST_ID_HOLDER.attr("data-actual-post-id"), 0, get_send_to_friend_friends_callback);
 });
 // user is infinite scrolling
 SEND_TO_FRIEND_ROWS_CONTAINER.scroll(function(){
-if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 100)) {
-get_send_to_friend_friends(SEND_TO_FRIEND_INPUT_ELEMENT.val(), SEND_TO_FRIEND_POST_ID_HOLDER.attr("data-actual-post-id"), SEND_TO_FRIEND_ROWS_CONTAINER.find(".sendToFriendSingleRow").length , get_send_to_friend_friends_callback);
+if($(this).attr("data-end-of-results") === "false") {	
+if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 100) && $(this).find(".sendToFriendSingleRow").length > 0) {
+add_secondary_loading(SEND_TO_FRIEND_ROWS_CONTAINER);	
+get_send_to_friend_friends(SEND_TO_FRIEND_INPUT_ELEMENT.val(), SEND_TO_FRIEND_POST_ID_HOLDER.attr("data-actual-post-id"), SEND_TO_FRIEND_ROWS_CONTAINER.find(".sendToFriendSingleRow").length , function(data){
+get_send_to_friend_friends_callback(data, function(){
+remove_secondary_loading(SEND_TO_FRIEND_ROWS_CONTAINER);	
+});
+});
+}
 }
 });
 

@@ -197,7 +197,28 @@ return false;
 }
 
 
-// shows the loading spinner
+
+/* we make a call to this function whenever the user wants to see different types of posts (favorites, my posts, posts by tag, etc...), you are supposed to make a call 
+to this function directly when the invoker element is clicked. and please don't confuse this with deleting posts, this one is merely a client side function that removes html elements */
+function emptyAllPostsContainer() {
+$("#allPostsContainer").html("");
+}
+
+
+
+
+// call this function to properly format all the tags in a string
+function handle_tags(target_string) {
+return target_string = target_string.replace(/(#\w+)/gi, function func(tag){
+return "<span class='hashtag getTagPosts opacityChangeOnActive modal-trigger' data-target='tagPostsModal' data-tag='" + tag + "'>" + tag + "</span>";
+});
+}
+
+
+
+
+
+// adds the loading spinner
 function showLoading(target_element, top_position) {
 target_element.prepend(`<div class='preloader-wrapper_container' style='position:fixed;top:` + top_position + `;left:50%;transform:translate(-50%,-50%);z-index:99999;'>
 <div class='preloader-wrapper active'>
@@ -219,21 +240,36 @@ target_element.find(".preloader-wrapper_container").remove();
 }
 
 
-/* we make a call to this function whenever the user wants to see different types of posts (favorites, my posts, posts by tag, etc...), you are supposed to make a call 
-to this function directly when the invoker element is clicked. and please don't confuse this with deleting posts, this one is merely a client side function that removes html elements */
-function emptyAllPostsContainer() {
-$("#allPostsContainer").html("");
+
+function add_secondary_loading(target_element) {
+if(target_element.find(".preloader-wrapper_container").length < 1) {	
+target_element.append(`<div class='preloader-wrapper_container' style='display:inline-block;position:relative;top:0%;left:50%;transform:translate(-50%,0%);margin:40px 0 40px 0;z-index:99999;'>
+<div class='preloader-wrapper active'>
+<div class='spinner-layer'>
+<div class='circle-clipper left'>
+<div class='circle'></div>
+</div><div class='gap-patch'>
+<div class='circle'></div>
+</div><div class='circle-clipper right'>
+<div class='circle'></div>
+</div>
+</div>
+</div>
+</div>`);	
+}
+else {
+target_element.find(".preloader-wrapper_container").css("opacity", "1");	
+}
+}
+
+function remove_secondary_loading(target_element) {	
+target_element.find(".preloader-wrapper_container").remove();
+add_secondary_loading(target_element);
+target_element.find(".preloader-wrapper_container").css("opacity", "0");	
 }
 
 
 
-
-// call this function to properly format all the tags in a string
-function handle_tags(target_string) {
-return target_string = target_string.replace(/(#\w+)/gi, function func(tag){
-return "<span class='hashtag getTagPosts opacityChangeOnActive modal-trigger' data-target='tagPostsModal' data-tag='" + tag + "'>" + tag + "</span>";
-});
+function get_end_of_results_mark_up(message) {
+return "<div class='end_of_results'><i class='material-icons'>info</i><br>" + (typeof message != "undefined" ? message : "End of results") + "</div>";
 }
-
-
-

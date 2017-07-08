@@ -132,6 +132,10 @@ if(data[0].length < 1 && REPLIES_CONTAINER_ELEMENT.find(".singleComment").length
 REPLIES_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>No replies yet :(</div>");
 return false;
 }
+else if(data[0].length < 1) {
+REPLIES_CONTAINER_ELEMENT.attr("data-end-of-results", "true");	
+REPLIES_CONTAINER_ELEMENT.append(get_end_of_results_mark_up("End of replies"));	
+}
 
 
 for(var i = 0; i < data[0].length; i++) {
@@ -193,6 +197,7 @@ abort_request_to_get_replies();
 
 $("#replyToCommentButton").attr("data-comment-id",$(this).attr("data-comment-id"));
 REPLIES_CONTAINER_ELEMENT.attr("data-comment-id",$(this).attr("data-comment-id"));
+REPLIES_CONTAINER_ELEMENT.attr("data-end-of-results", "false");
 
 if(typeof $(this).attr("data-pin-comment-to-top") == "undefined") {
 getReplies($(this).attr("data-comment-id"),0, 0, function(data){
@@ -212,11 +217,16 @@ removeLoading(REPLIES_CONTAINER_ELEMENT);
 });
 // infinite scrolling the replies
 REPLIES_CONTAINER_ELEMENT.scroll(function(){
-
+if($(this).attr("data-end-of-results") === "false") {
 if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) == 0) && repliesPreventMultipleCalls == false) {
-getReplies($(this).attr("data-comment-id"), REPLIES_CONTAINER_ELEMENT.find(".singleComment").length, 0, get_replies_callback);
+add_secondary_loading(REPLIES_CONTAINER_ELEMENT);	
+getReplies($(this).attr("data-comment-id"), REPLIES_CONTAINER_ELEMENT.find(".singleComment").length, 0, function(data){
+get_replies_callback(data, function(){
+remove_secondary_loading(REPLIES_CONTAINER_ELEMENT);	
+});
+});
 }
-
+}
 });
 
 

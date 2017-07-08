@@ -15,6 +15,9 @@ function search_section_tabs_changed() {
 
 var active_tab = SEARCH_TABS_STATE_HOLDER.attr("data-active-tab");
 
+SEARCH_USERS_RESULTS_CONTAINER.attr("data-end-of-results", "false");
+SEARCH_TAGS_RESULTS_CONTAINER.attr("data-end-of-results", "false");
+
 // user switched to the PEOPLE tab
 if(active_tab == "0") {
 SEARCH_TAGS_RESULTS_CONTAINER.hide();
@@ -77,6 +80,9 @@ search_section_tabs_changed();
 // the search box used by users to search for other users or tags
 SEARCH_BOX.keyup(function(e){
 
+SEARCH_USERS_RESULTS_CONTAINER.attr("data-end-of-results", "false");
+SEARCH_TAGS_RESULTS_CONTAINER.attr("data-end-of-results", "false");
+
 // if empty, toggle #searchResultsContainer
 if($(this).val().trim() == "") {
 SEARCH_USERS_RESULTS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>search</i><br>Please type in something in the search box :)</div>")	
@@ -99,14 +105,28 @@ search_for_tag($(this).val() , 0 , search_for_tag_callback);
 });
 // infinite scrolling
 SEARCH_USERS_RESULTS_CONTAINER.scroll(function(){
-if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".searchResultRow").length > 0) {	
-search_for_user( SEARCH_BOX.val() , $(this).find(".searchResultRow").length , search_for_user_callback);
+if($(this).attr("data-end-of-results") === "false") {	
+if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".list_row").length > 0) {	
+add_secondary_loading(SEARCH_USERS_RESULTS_CONTAINER);
+search_for_user( SEARCH_BOX.val() , $(this).find(".list_row").length , function(data){
+search_for_user_callback(data, function(){
+remove_secondary_loading(SEARCH_USERS_RESULTS_CONTAINER);	
+});	
+});
+}
 }
 });
 // infinite scrolling
 SEARCH_TAGS_RESULTS_CONTAINER.scroll(function(){
-if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".searchResultRow").length > 0) {	
-search_for_tag( SEARCH_BOX.val() , $(this).find(".searchResultRow").length , search_for_tag_callback);
+if($(this).attr("data-end-of-results") === "false") {	
+if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) == 0) && $(this).find(".list_row").length > 0) {	
+add_secondary_loading(SEARCH_TAGS_RESULTS_CONTAINER);
+search_for_tag( SEARCH_BOX.val() , $(this).find(".list_row").length , function(data){
+search_for_tag_callback(data, function(){
+remove_secondary_loading(SEARCH_TAGS_RESULTS_CONTAINER);	
+});	
+});
+}
 }
 });
 
@@ -155,9 +175,13 @@ prevent_multiple_calls_to_search_for_user = false;
 function search_for_user_callback(data, callback) {
 
 // if the user is not infinite scrolling and there have been no results, add a placeholder div to tell the user there have been no results.
-if( data.length < 1 && SEARCH_USERS_RESULTS_CONTAINER.find(".searchResultRow").length < 1) {
+if( data.length < 1 && SEARCH_USERS_RESULTS_CONTAINER.find(".list_row").length < 1) {
 SEARCH_USERS_RESULTS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>error</i><br>Sorry, there were no results for your search term :(</div>")	
 return false;	
+}
+else if(data.length < 1) {
+SEARCH_USERS_RESULTS_CONTAINER.append(get_end_of_results_mark_up("End of results"));	
+SEARCH_USERS_RESULTS_CONTAINER.attr("data-end-of-results", "true");
 } 
 
 
@@ -208,9 +232,13 @@ prevent_multiple_calls_to_search_for_tag = false;
 function search_for_tag_callback(data, callback) {
 
 // if the user is not infinite scrolling and there have been no results, add a placeholder div to tell the user there have been no results.
-if( data.length < 1 && SEARCH_TAGS_RESULTS_CONTAINER.find(".searchResultRow").length < 1) {
+if( data.length < 1 && SEARCH_TAGS_RESULTS_CONTAINER.find(".list_row").length < 1) {
 SEARCH_TAGS_RESULTS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>error</i><br>Sorry, there were no results for your search term :(</div>")	
 return false;	
+} 
+else if(data.length < 1) {
+SEARCH_TAGS_RESULTS_CONTAINER.append(get_end_of_results_mark_up("End of results"));	
+SEARCH_TAGS_RESULTS_CONTAINER.attr("data-end-of-results", "true");
 } 
 
 for(var i = 0;i < data.length; i++) {

@@ -372,6 +372,7 @@ return `
 }
 
 
+
 function notifications_section_tabs_changed() {
 
 var active_tab = NOTIFICATIONS_TABS_STATE_HOLDER.attr("data-active-tab");
@@ -413,26 +414,41 @@ notifications_section_tabs_changed();
 $(document).on("click",".openNotificationsModal",function(){
 // empty the notification container element	
 NOTIFICATIONS_CONTAINER_ELEMENT.html("");	
+NOTIFICATIONS_IMPORTANT_CONTAINER.attr("data-end-of-results", "false");
+NOTIFICATIONS_ALL_CONTAINER.attr("data-end-of-results", "false");
 showLoading(NOTIFICATIONS_CONTAINER_ELEMENT, "50%");
-getNotifications(0, get_notification_callback);
+getNotifications(0, function(data){
+get_notification_callback(data, function(){
+removeLoading(NOTIFICATIONS_CONTAINER_ELEMENT);
+});
+});
 $("#newNotificationsNumber").find(".notificationNumContainer").remove();
 });
 // user is infinite scrolling their notifications section 
 NOTIFICATIONS_CONTAINER_ELEMENT.scroll(function(){
+if($(this).attr("data-end-of-results") === "false") {	
 if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 100) && notificationsPreventMultipleCalls == false) {
-getNotifications(NOTIFICATIONS_CONTAINER_ELEMENT.find(".singleNotification").length, get_notification_callback);
+add_secondary_loading(NOTIFICATIONS_CONTAINER_ELEMENT);	
+getNotifications(NOTIFICATIONS_CONTAINER_ELEMENT.find(".singleNotification").length, function(data){
+get_notification_callback(data, function(){
+remove_secondary_loading(NOTIFICATIONS_CONTAINER_ELEMENT);	
+});
+});
+}
 }
 });
 
 
-function get_notification_callback(notifications_arr) {
-
-removeLoading(NOTIFICATIONS_CONTAINER_ELEMENT);
+function get_notification_callback(notifications_arr, callback) {
 
 /* if the user is not infinite scrolling and they have no notifications (only supposed to happen when the user has never had a notification, 
 not when they don't have any new notifications), add a placeholder div to tell the user there have been no results. */
 if(notifications_arr.length < 1 && NOTIFICATIONS_CONTAINER_ELEMENT.find(".singleNotification").length < 1) {
 NOTIFICATIONS_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>No Notifications Yet :(</div>");	
+}
+else if(notifications_arr.length < 1) {
+NOTIFICATIONS_CONTAINER_ELEMENT.append(get_end_of_results_mark_up("End of notifications"));	
+NOTIFICATIONS_CONTAINER_ELEMENT.attr("data-end-of-results", "true");	
 }
 		
 for(var i = 0; i < notifications_arr.length; i++) {	
@@ -443,6 +459,10 @@ NOTIFICATIONS_CONTAINER_ELEMENT.find(".avatarImages").on("load", function(){
 fitToParent($(this));
 adaptRotateWithMargin($(this), $(this).parent().attr("data-rotate-degree"), false);	
 });
+
+if(typeof callback == "function") {
+callback();	
+}
 
 }
 	

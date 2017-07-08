@@ -42,6 +42,10 @@ if( data.length < 1 && USER_TAGS_CONTAINER.find(".list_row").length < 1) {
 USER_TAGS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>error</i><br>This loser is not following a single tag :(</div>")	
 return false;	
 } 
+else if(data.length < 1) {
+USER_TAGS_CONTAINER.attr("data-end-of-results", "true");
+USER_TAGS_CONTAINER.append(get_end_of_results_mark_up());	
+}
 
 for(var i = 0;i < data.length; i++) {
 USER_TAGS_CONTAINER.append(
@@ -130,6 +134,7 @@ return false;
 	
 USER_TAGS_CONTAINER.html("");	
 USER_TAGS_CONTAINER.attr("data-user-id", $(this).attr("data-user-id"));	
+USER_TAGS_CONTAINER.attr("data-end-of-results", "false");
 
 showLoading(USER_TAGS_CONTAINER, "50%");
 	
@@ -141,8 +146,15 @@ removeLoading(USER_TAGS_CONTAINER);
 });
 // infinite scrolling the tags followed by a user
 USER_TAGS_CONTAINER.scroll(function(){
+if($(this).attr("data-end-of-results") === "false") {	
 if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) == 0) && $(this).find(".list_row").length > 0) {
-get_user_tags(USER_TAGS_CONTAINER.attr("data-user-id"), USER_TAGS_CONTAINER.find(".list_row").length, get_user_tags_callback);	
+add_secondary_loading(USER_TAGS_CONTAINER);	
+get_user_tags(USER_TAGS_CONTAINER.attr("data-user-id"), USER_TAGS_CONTAINER.find(".list_row").length, function(data){
+get_user_tags_callback(data, function(){
+remove_secondary_loading(USER_TAGS_CONTAINER);	
+});
+});	
+}
 }
 });
 	

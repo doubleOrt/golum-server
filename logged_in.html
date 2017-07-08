@@ -186,7 +186,7 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 
 
 
-<div id="allPostsContainer" class="pageContentComponents row">
+<div id="allPostsContainer" class="pageContentComponents row" data-end-of-results="false">
 </div> 
  
 <div id='main_posts_container_back_to_top' class='fixed-action-btn scale-transition scale-out' style="position:fixed;bottom:65px;right:15px;" data-back-to-top-target="#main_screen_main_posts_container">
@@ -209,9 +209,9 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 <li class="tab col s6" data-tab-index="1"><a href="#">All</a></li>
 </ul>
 
-<div id="notifications_important_container" class="notifications_container_child"></div>
+<div id="notifications_important_container" class="notifications_container_child" data-end-of-results="false"></div>
 
-<div id="notifications_all_container" class="notifications_container_child"></div>
+<div id="notifications_all_container" class="notifications_container_child" data-end-of-results="false"></div>
 
 </div>
 </div><!-- end #main_screen_notifications -->
@@ -237,14 +237,14 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 <li class="tab col s4" data-tab-index="1"><a href="#">Tags</a></li>
 </ul>
 
-<div id="search_users_results_column" class="col l12 m12 s12">
+<div id="search_users_results_column" class="col l12 m12 s12" data-end-of-results="false">
 
 <!-- since the resultsColumn is initially empty, we want to fill it with a placeholder (otherwise it looks bad) -->
 <div class='emptyNowPlaceholder'><i class='material-icons'>search</i><br>Please type in something in the search box :)</div>
 
 </div><!-- end #search_user_results_column -->
 
-<div id="search_tags_results_column" class="col l12 m12 s12">
+<div id="search_tags_results_column" class="col l12 m12 s12" data-end-of-results="false">
 
 <!-- since the resultsColumn is initially empty, we want to fill it with a placeholder (otherwise it looks bad) -->
 <div class='emptyNowPlaceholder'><i class='material-icons'>search</i><br>Please type in something in the search box :)</div>
@@ -1000,7 +1000,7 @@ Identification Info
 <div id="followingMeModal" class="modal hasHeader fullScreenModal"> 
 
 <div id='followingMeModalContent' class='modal-content contactsModalContents'>
-<div id='followers_modal_content_child' class="contactsModalContentsChild row">
+<div id='followers_modal_content_child' class="contactsModalContentsChild row" data-end-of-results="false">
 
 </div><!-- end #followers_modal_content_child -->
 </div><!-- end #followingMeModalContent -->
@@ -1025,7 +1025,7 @@ Identification Info
 <div id="contactsModal" class="modal hasHeader fullScreenModal"> 
 
 <div id='contactsModalContent' class='modal-content contactsModalContents'>
-<div id='followings_modal_content_child' class='contactsModalContentsChild row'>
+<div id='followings_modal_content_child' class='contactsModalContentsChild row' data-end-of-results="false">
 
 </div><!-- end #contactsModalContentChild -->
 </div><!-- end #contactsModalContent -->
@@ -1048,7 +1048,7 @@ Identification Info
 <div id="user_tags_modal" class="modal hasHeader fullScreenModal"> 
 
 <div id='user_tags_modal_content' class='modal-content'>
-<div id='user_tags_modal_content_child' class='row'>
+<div id='user_tags_modal_content_child' class='row' data-end-of-results="false">
 
 
 </div><!-- end #contactsModalContentChild -->
@@ -1140,7 +1140,7 @@ Identification Info
  
 <div id="commentsModal" class="modal fullScreenModal hasMobileOnlyHeader">
 <div class="modal-content">
-<div id="post_comments_container" class='commentElementsContainer'>
+<div id="post_comments_container" class='commentElementsContainer' data-end-of-results="false">
 </div>
 
 <div class="addComments">
@@ -1173,7 +1173,7 @@ Identification Info
 
 <div class="modal-content">
 
-<div id="commentRepliesContainer" class="commentElementsContainer">
+<div id="commentRepliesContainer" class="commentElementsContainer" data-end-of-results="false">
 </div>
 
 <div class="addComments">
@@ -1210,7 +1210,7 @@ Identification Info
 
 
 <div class="bottomSheetModalResultsContainer">
-<div class="col l12 m12 s12 sendToFriendContainerCol bottomSheetModalResultsContainerCol">
+<div class="col l12 m12 s12 sendToFriendContainerCol bottomSheetModalResultsContainerCol" data-end-of-results="false">
 <div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>Friends will appear here :)</div>
 </div>
 </div>
@@ -1223,7 +1223,7 @@ Identification Info
 <div id="userPostsModal" class="modal postModals fullScreenModal hasMobileOnlyHeader">
 
 <div class="modal-content">
-<div id="userPostsContainer" class="postModalsPostsContainer">
+<div id="userPostsContainer" class="postModalsPostsContainer" data-end-of-results="false">
 </div><!-- end #userPostsContainer -->
 
 <div id='user_posts_modal_back_to_top' class='fixed-action-btn scale-transition scale-out' style="position:fixed;bottom:15;right:15px;" data-back-to-top-target="#userPostsContainer">
@@ -1254,7 +1254,7 @@ Identification Info
 <div id="favorite_posts_modal" class="modal postModals fullScreenModal hasMobileOnlyHeader">
 
 <div class="modal-content">
-<div id="favorite_posts_container" class="postModalsPostsContainer">
+<div id="favorite_posts_container" class="postModalsPostsContainer" data-end-of-results="false">
 </div><!-- end #favorite_posts_container -->
 
 <div id='favorite_posts_modal_back_to_top' class='fixed-action-btn scale-transition scale-out' style="position:fixed;bottom:15;right:15px;" data-back-to-top-target="#favorite_posts_container">
@@ -1340,7 +1340,7 @@ Identification Info
 
 <div id="tagPostsModalContent" class="modal-content">
 	  
-<div id="tagPostsContainer" class="postModalsPostsContainer">
+<div id="tagPostsContainer" class="postModalsPostsContainer" data-end-of-results="false">
 </div><!-- end #tagPostsContainer -->
 
 <div id='tag_posts_modal_back_to_top' class='fixed-action-btn scale-transition scale-out' style="position:fixed;bottom:15;right:15px;" data-back-to-top-target="#tagPostsContainer">

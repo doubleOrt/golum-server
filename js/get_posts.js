@@ -50,6 +50,10 @@ this.appendMarkUpTo = appendMarkUpTo;
 if(dataArr.length < 1 && appendMarkUpTo.find(".singlePost").length < 1) {
 appendMarkUpTo.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>" + empty_message + "</div>")	
 }
+else if(dataArr.length < 1) {
+appendMarkUpTo.attr("data-end-of-results", "true");	
+appendMarkUpTo.append(get_end_of_results_mark_up());
+}
 
 
 
@@ -90,6 +94,7 @@ getVotedPostsVotesMarkup();
 if(typeof callback != "undefined") {
 callback();
 }
+
 
 $(".loadPostComponents").removeClass("loadPostComponents");
 }
@@ -328,6 +333,7 @@ $($(this).attr("data-back-to-top-target")).animate({"scrollTop": 0}, 400);
 /* ----- getting posts ----- */
 
 $(document).on("click",".getPosts",function(){
+MAIN_SCREEN_POSTS_CONTAINER.attr("data-end-of-results", "false");	
 emptyAllPostsContainer();
 showLoading(MAIN_SCREEN_POSTS_CONTAINER, "60%");
 getPosts("components/get_posts.php",{"row_offset":0},function(data_arr){
@@ -347,6 +353,7 @@ markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Nothing here :(", functio
 
 /* when a user wants to see the featured posts */
 $(document).on("click",".getFeaturedPosts",function(){
+MAIN_SCREEN_POSTS_CONTAINER.attr("data-end-of-results", "false");		
 emptyAllPostsContainer();
 showLoading(MAIN_SCREEN_POSTS_CONTAINER, "60%");
 getPosts("components/get_featured_posts.php",{"row_offset":0},function(data_arr){
@@ -360,6 +367,7 @@ removeLoading(MAIN_SCREEN_POSTS_CONTAINER);
 
 /* when a user wants to see their favorited posts */
 $(document).on("click",".getMyFavoritePosts",function(){	
+MAIN_SCREEN_POSTS_CONTAINER.attr("data-end-of-results", "false");	
 emptyAllPostsContainer();
 showLoading(MAIN_SCREEN_POSTS_CONTAINER, "60%");
 getPosts("components/get_my_favorite_posts.php",{"row_offset":0},function(data_arr){
@@ -376,25 +384,37 @@ removeLoading(MAIN_SCREEN_POSTS_CONTAINER);
 
 MAIN_SCREEN_POSTS_SCROLLER.scroll(function(){
 
-if(MAIN_SCREEN_POSTS_CONTAINER.css("display") != "none") {	
+if(MAIN_SCREEN_POSTS_CONTAINER.css("display") != "none" && MAIN_SCREEN_POSTS_CONTAINER.attr("data-end-of-results") === "false") {
 
-if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 650) && blockCallsToGetPosts == false) {
-	
+if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) == 0) && blockCallsToGetPosts == false) {
+
 var allPostsContainerContainsWhichPosts = MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts");
 
 if(allPostsContainerContainsWhichPosts == "posts") {
+add_secondary_loading(MAIN_SCREEN_POSTS_CONTAINER);	
 getPosts("components/get_posts.php",{"row_offset":$("#allPostsContainer .singlePost").length},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Your feed is so empty :(", function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts")});	
-});		
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Your feed is so empty :(", function(){
+remove_secondary_loading(MAIN_SCREEN_POSTS_CONTAINER);	
+MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","posts");
+});
+});	
 }	
 else if(allPostsContainerContainsWhichPosts == "featuredPosts") {
+add_secondary_loading(MAIN_SCREEN_POSTS_CONTAINER);		
 getPosts("components/get_featured_posts.php",{"row_offset":$("#allPostsContainer .singlePost").length},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "We don't know why there is nothing here either :(" ,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","featuredPosts")});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "We don't know why there is nothing here either :(" ,function(){
+remove_secondary_loading(MAIN_SCREEN_POSTS_CONTAINER);	
+MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","featuredPosts");
+});	
 });		
 }	
 else if(allPostsContainerContainsWhichPosts == "favoritePosts") {
+add_secondary_loading(MAIN_SCREEN_POSTS_CONTAINER);			
 getPosts("components/get_my_favorite_posts.php",{"row_offset":$("#allPostsContainer .singlePost").length},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "After you favorite some posts, you shall find them here :P" ,function(){MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","favoritePosts")});	
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "After you favorite some posts, you shall find them here :P" ,function(){
+remove_secondary_loading(MAIN_SCREEN_POSTS_CONTAINER);		
+MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","favoritePosts");
+});	
 });		
 }	
 
@@ -438,6 +458,8 @@ If it is not set, than just use the default. */
 var modal_label = (typeof $(this).attr("data-first-name") != "undefined" ? $(this).attr("data-first-name") : "Posts");
 $("#userPostsModal .modalHeaderFullName").html(modal_label);
 
+$("#userPostsContainer").attr("data-end-of-results", "false");
+
 //empty the #userPostsContainer of the last query's posts
 $("#userPostsContainer").html("");
 
@@ -464,10 +486,18 @@ $("#userPostsModal .navRightItemsMobile .follow_user").html((data_arr[1] == 0 ? 
 });
 // user is infinite scrolling the user posts modal
 $("#userPostsContainer").scroll(function(){
+if($(this).attr("data-end-of-results") === "false") {	
 if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".singlePost").length > 0) {
+	
+add_secondary_loading($("#userPostsContainer"));	
+	
 getPosts("components/get_user_posts.php",{"user_id": $(this).attr("data-user-id"), "row_offset": $(this).find(".singlePost").length},function(data_arr){
-markUpProcessor(data_arr[0], $("#userPostsContainer"), "This user does not have a single post, such a loser.");		
+markUpProcessor(data_arr[0], $("#userPostsContainer"), "This user does not have a single post, such a loser.", function(){
+remove_secondary_loading($("#userPostsContainer"));	
+});		
 });
+
+}
 }
 });
 
@@ -484,6 +514,7 @@ if(typeof $(this).attr("data-user-id") == "undefined") {
 return false;	
 }
 
+$("#favorite_posts_container").attr("data-end-of-results", "false");
 
 //empty the #favorite_posts_container of the last query's posts
 $("#favorite_posts_container").html("");
@@ -511,10 +542,17 @@ $("#favorite_posts_modal .navRightItemsMobile .follow_user").html((data_arr[1] =
 });
 // user is infinite scrolling the user posts modal
 $("#favorite_posts_container").scroll(function(){
+if($(this).attr("data-end-of-results") === "false") {	
 if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && $(this).find(".singlePost").length > 0) {
+	
+add_secondary_loading($("#favorite_posts_container"));	
 getPosts("components/get_favorite_posts.php",{"user_id": $(this).attr("data-user-id"), "row_offset": $(this).find(".singlePost").length},function(data_arr){
-markUpProcessor(data_arr[0], $("#favorite_posts_container"), "This user has not faved a single post, such a loser.");		
+markUpProcessor(data_arr[0], $("#favorite_posts_container"), "This user has not faved a single post, such a loser.", function(){
+remove_secondary_loading($("#favorite_posts_container"));	
+});		
 });
+
+}
 }
 });
 
@@ -556,6 +594,8 @@ $(document).on("click",".getTagPosts",function(e){
 if(typeof $(this).attr("data-tag") == "undefined" && typeof $("#tagPostsModal").attr("data-tag") == "undefined") {
 return false;	
 }
+
+$("#tagPostsContainer").attr("data-end-of-results", "false");
 
 var tag = (typeof $(this).attr("data-tag") != "undefined" ? $(this).attr("data-tag") : $("#tagPostsModal").attr("data-tag")).toLowerCase();
 
@@ -605,12 +645,17 @@ $("#tagPostsModal .navRightItemsMobile").find(".addTagFromTagPostsModal").html(d
 });
 // infinite scrolling tagPosts
 $("#tagPostsContainer").scroll(function(){
+if($(this).attr("data-end-of-results") === "false") {	
 if(($(this)[0].scrollHeight - ($(this).scrollTop() + $(this).outerHeight()) < 650) && $(this).find(".singlePost").length > 0) {
 
+add_secondary_loading($("#tagPostsContainer"));
 getPosts("components/get_tag_posts.php",{"row_offset":$("#tagPostsModal .singlePost").length,"tag":$("#tagPostsModal").attr("data-tag"),"sort_posts_by":$("#tagPostsModal").attr("data-hot-or-new")},function(data_arr){
-markUpProcessor(data_arr[0], $("#tagPostsContainer"), "Nothing here :(");	
+markUpProcessor(data_arr[0], $("#tagPostsContainer"), "Nothing here :(", function(){
+remove_secondary_loading($("#tagPostsContainer"));	
+});	
 });
 		
+}
 }
 });
 
