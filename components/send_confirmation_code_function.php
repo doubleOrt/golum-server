@@ -26,7 +26,7 @@ $mail->Subject = $user_name;
 $mail->Body = "<div style='width: 260px;height: 350px;margin:20px auto 20px auto;overflow:hidden;font-family:arial;border-radius: 0 0 5px 5px;box-sizing: border-box;border:1px solid lightgrey;border-top:none;'>
 <div style='display:block !important;width:100%;height:5px;background:-webkit-linear-gradient(0, yellow, green);margin:0;'></div>
 <div style='width:100%;height:100%;padding: 20px 25px 10px 25px;box-sizing:border-box;'>
-<img src='http://orig14.deviantart.net/e15b/f/2017/185/7/6/logo_by_torostorocrcs-dbf4t3n.png' alt='Logo' style='display:block;width:100px;height:100px;margin:0 auto;'>
+<img src='http://orig15.deviantart.net/18a0/f/2017/190/1/7/17203bbd420b1366e19ce20b93609b3b-dbfo8ck.png' alt='Logo' style='display:block;width:130px;height:130px;margin:0 auto;'>
 <p style='color:#494949;font-weight: 600;font-size: 12px;text-align: center;border-top:1px solid #ebeaea;padding-top:10px;'>Hello <span style='color:yellowgreen'>". $user_name ."</span>, You Recently Requested To Link This Email To Your Account.
 Here Is The Email Confirmation Code:
 </p>

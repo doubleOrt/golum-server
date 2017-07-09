@@ -26,79 +26,83 @@ return true;
 
 
 $(document).ready(function(){
+
+var new_password = new ValidateItem(document.getElementById("new_password_input"), /^(?=.*[A-Za-z])(?=.*\d)(?=.*([$@$!%*#?& ]*))[A-Za-z\d($@$!%*#?& )*]{8,50}$/i, "Password Must Contain At Least 1 Digit And Must Be Between 8-50 Characters, Special Characters And Spaces Are Optional");
+
+$(document).on("click","#forgot_password_button",function(){
+
+var current_step = parseFloat($(this).attr("data-current-step"));
 	
-var check_new_password;	
+var data_object = {};
+	
+if(current_step == 0) {
+data_object["user_name"] = $("#forgot_password_username").val();
+}
+else if(current_step == 1) {
+data_object["user_name"] = $("#forgot_password_username").val();
+data_object["reset_code"] = $("#password_reset_code").val();
+}
+else if(current_step == 2) {
+data_object["user_name"] = $("#forgot_password_username").val();
+data_object["reset_code"] = $("#password_reset_code").val();
+data_object["new_password"] = $("#new_password_input").val();
+if(new_password.validate() === false) {
+return false;	
+}
+}
+
+// don't move this to the top without looking at the logic of the conditionals
+$(this).addClass("disabledButton");
+	
+$.get({
+url:"components/forgot_password.php",
+data: data_object,
+success:function(data) {
 		
-var forgot_password_username;	
-var reset_code;
+console.log(data);		
+		
+var data_arr = JSON.parse(data);
 
+$("#forgot_password_button").removeClass("disabledButton");
 
-$(document).on("click","#forgot_password_username_button",function(){
+// the user passed the current step, take them to the next one.
+if(data_arr[0] == "1") {
+$(".forgot_password_input_containers").hide();
 
-forgot_password_username = $("#forgot_password_username").val();
+$("#forgot_password_button").attr("data-current-step",  current_step + 1);
 
-$(this).addClass("fixedButtonDisabled");
-var thisButtonObject = $(this);
+if(current_step == 0) {	
+$("#password_reset_code_container").fadeIn();
+}	
+else if(current_step == 1) {
+$("#new_password_input_container").fadeIn();	
+}
+else if(current_step == 2) {
+$("#forgot_password_username_container").fadeIn();
+reset_forgot_password_modal();
+closeModal("forgotPasswordModal");
+}
 	
-$.get({
-url:"components/forgot_password.php",
-data:{"user_name":$("#forgot_password_username").val()},
-success:function(data) {
-eval(data);	
-thisButtonObject.removeClass("fixedButtonDisabled");
+Materialize.toast(data_arr[1], 5000, "green");
+}
+// the user failed to pass this step
+else if(data_arr[0] == "0") {	
+Materialize.toast(data_arr[1], 5000, "red");	
+}
+
 }
 });
 	
 });
 
-$(document).on("click","#password_reset_code_button",function(){
-
-reset_code = $("#password_reset_code").val();
-
-$(this).addClass("fixedButtonDisabled");
-var thisButtonObject = $(this);
-
-$.get({
-url:"components/forgot_password.php",
-data:{
-"user_name":forgot_password_username,
-"reset_code":$("#password_reset_code").val()
-},
-success:function(data) {
-eval(data);	
-check_new_password = new ValidateItem(document.getElementById("new_password_input"),/^(?=.*[A-Za-z])(?=.*\d)(?=.*([$@$!%*#?& ]*))[A-Za-z\d($@$!%*#?& )*]{8,50}$/i,"Password Must Contain At Least 1 Digit And Must Be Between 8-50 Characters, Special Characters And Spaces Are Optional");
-thisButtonObject.removeClass("fixedButtonDisabled");
-}
-});
-
-});
-	
-	
-	
-$(document).on("click","#new_password_button",function(){
-
-if(check_new_password.validate() == false) {
-return;	
+function reset_forgot_password_modal() {
+$("#forgot_password_username").val("");
+$("#password_reset_code").val("");
+$("#new_password_input").val("");	
+$("#forgot_password_button").attr("data-current-step", "0");
 }
 
-$(this).addClass("fixedButtonDisabled");
-var thisButtonObject = $(this);
 
-$.get({
-url:"components/forgot_password.php",
-data:{
-"user_name":forgot_password_username,
-"reset_code":reset_code,
-"new_password":$("#new_password_input").val()
-},
-success:function(data) {
-eval(data);	
-thisButtonObject.removeClass("fixedButtonDisabled");
-}
-});
 
-});
-	
-	
 	
 });
