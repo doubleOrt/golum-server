@@ -5,7 +5,7 @@
 include_once "common_requires.php";
 
 
-if(isset($_GET["user_id"]) && is_numeric($_GET["user_id"])) {
+if(isset($_GET["user_id"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false) {
 $already_blocked = $con->query("select id from blocked_users where user_ids = '".$_SESSION["user_id"]."-".htmlspecialchars($_GET["user_id"],ENT_QUOTES)."'")->fetch();	
 if($already_blocked[0] == "") {
 if($con->exec("insert into blocked_users (user_ids,time) values('". $_SESSION["user_id"] . "-" . htmlspecialchars($_GET["user_id"],ENT_QUOTES)."',".time().")")) {

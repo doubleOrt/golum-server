@@ -3,7 +3,7 @@ require_once "common_requires.php";
 require_once "logged_in_importants.php";
   
 
-if(isset($_GET["user_id"]) && is_integer(intval($_GET["user_id"]))) {	 
+if(isset($_GET["user_id"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false) {	 
 
 $check_current_state = $con->query("select * from contacts where contact_of = ".$_SESSION["user_id"]." and contact = ".$_GET["user_id"])->fetch();
 

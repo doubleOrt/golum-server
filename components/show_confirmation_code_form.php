@@ -7,7 +7,7 @@ require_once "logged_in_importants.php";
 
 $echo_arr = [];
 
-if(is_numeric($user_info_arr["activated"])) {
+if(filter_var($user_info_arr["activated"], FILTER_VALIDATE_INT) !== false) {
 $echo_arr[0] = "1";
 $echo_arr[1] = $user_info_arr["email_address"];
 }

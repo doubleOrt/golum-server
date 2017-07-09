@@ -5,7 +5,7 @@ require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
 
-if(isset($_POST["post_id"]) && isset($_POST["option_index"]) && isset($_POST["already_voted"]) && isset($_POST["poster_id"]) && is_integer(intval($_POST["post_id"])) && is_integer(intval($_POST["option_index"])) && is_integer(intval($_POST["option_index"])) && is_integer(intval($_POST["poster_id"]))) {
+if(isset($_POST["post_id"]) && isset($_POST["option_index"]) && isset($_POST["already_voted"]) && isset($_POST["poster_id"]) && filter_var($_POST["post_id"], FILTER_VALIDATE_INT) !== false && filter_var($_POST["option_index"], FILTER_VALIDATE_INT) !== false && filter_var($_POST["poster_id"], FILTER_VALIDATE_INT) !== false) {
 
 // if the user is not voting on his own post, we want to send a notification
 if($_POST["poster_id"] != $_SESSION["user_id"]) {

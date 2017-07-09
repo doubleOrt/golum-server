@@ -3,7 +3,7 @@
 
 
 # select all rows from account_states where the row has been waiting to be deleted for more than 2 weeks (1209600 == 14 days).
-$check_for_should_deletes_query = $con->query("select * from account_states where ".time()." - time > 1209600 and type = 'delete'");
+$check_for_should_deletes_query = $con->query("select * from account_states where ". time() ." - time > 1209600 and type = 'delete'");
 
 while($check_for_should_deletes_row = $check_for_should_deletes_query->fetch()) {
 $con->exec("delete from users where id = ". $check_for_should_deletes_row["user_id"]);

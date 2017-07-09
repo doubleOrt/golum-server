@@ -9,7 +9,7 @@ $MAXIMUM_COMMENT_LENGTH = 800;
 
 $echo_arr = ["",""];
 
-if(isset($_POST["comment_id"]) && filter_var($_POST["comment_id"], FILTER_VALIDATE_INT) !== "" && isset($_POST["reply"])) {
+if(isset($_POST["comment_id"]) && isset($_POST["reply"]) && filter_var($_POST["comment_id"], FILTER_VALIDATE_INT) !== false) {
 
 if(strlen($_POST["reply"]) > $MAXIMUM_COMMENT_LENGTH) {
 $echo_arr[1] = "Comment cannot be longer than ". $MAXIMUM_COMMENT_LENGTH ." characters!";

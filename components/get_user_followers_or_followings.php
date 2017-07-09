@@ -5,7 +5,7 @@ require_once "logged_in_importants.php";
 
 $echo_arr = [[]];
 
-if(isset($_GET["user_id"]) && is_integer(intval($_GET["user_id"])) && isset($_GET["row_offset"]) && is_integer(intval($_GET["row_offset"])) && isset($_GET["type"]) && is_integer(intval($_GET["type"]))) {
+if(isset($_GET["user_id"]) && isset($_GET["row_offset"]) && isset($_GET["type"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["type"], FILTER_VALIDATE_INT) !== false) {
 	
 // user followers requested	
 if($_GET["type"] === "0") {	 

@@ -39,8 +39,7 @@ function get_user_tags_callback(data, callback) {
 
 // if the user is not infinite scrolling and there have been no results, add a placeholder div to tell the user there have been no results.
 if( data.length < 1 && USER_TAGS_CONTAINER.find(".list_row").length < 1) {
-USER_TAGS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>error</i><br>This loser is not following a single tag :(</div>")	
-return false;	
+USER_TAGS_CONTAINER.html("<div class='emptyNowPlaceholder'><i class='material-icons'>error</i><br>This loser is not following a single tag :(</div>");
 } 
 else if(data.length < 1) {
 USER_TAGS_CONTAINER.attr("data-end-of-results", "true");

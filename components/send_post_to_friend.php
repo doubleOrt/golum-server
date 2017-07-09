@@ -5,7 +5,7 @@ require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
 
-if(isset($_POST["post_id"]) && isset($_POST["friend_id"]) && is_numeric($_POST["post_id"]) && is_numeric($_POST["friend_id"])) {
+if(isset($_POST["post_id"]) && isset($_POST["friend_id"]) && filter_var($_POST["post_id"], FILTER_VALIDATE_INT) !== false && filter_var($_POST["friend_id"], FILTER_VALIDATE_INT) !== false) {
 
 $time = time();
 // type for notification is when users send their friends posts.

@@ -1,6 +1,6 @@
 <?php
 
-if(isset($_GET["user_id"]) && isset($_GET["activation_code"])) {
+if(isset($_GET["user_id"]) && isset($_GET["activation_code"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["activation_code"], FILTER_VALIDATE_INT) !== false) {
 $verify_id = $_GET["user_id"];
 $verify_activation_code = $_GET["activation_code"];
 

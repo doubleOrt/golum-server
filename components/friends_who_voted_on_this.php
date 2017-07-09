@@ -4,7 +4,7 @@
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
-if(isset($_GET["post_id"]) && is_integer(intval($_GET["post_id"]))) {
+if(isset($_GET["post_id"]) && filter_var($_GET["post_id"], FILTER_VALIDATE_INT) !== false) {
 	
 $post_arr = $con->query("select id,type from posts where id = ". $_GET["post_id"])->fetch();	
 

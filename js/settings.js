@@ -308,6 +308,7 @@ var data_arr = JSON.parse(data);
 if(data_arr[0] === 1) {
 Materialize.toast("Email address successfully linked with your account :)", 5000, "green");	
 closeModal("confirm_email_modal");
+$("#confirmation_code").val("");
 SETTINGS_CONFIRM_EMAIL_SECTION_CONTAINER.hide();
 }
 else {

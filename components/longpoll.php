@@ -53,7 +53,7 @@ $echo_arr = ["","","","","",""];
 
 $rawStr =  read_shm($_SESSION["user_id"] . "" . 4);
 
-if(isset($_GET["currently_chatting"])) {
+if(isset($_GET["currently_chatting"]) && filter_var($_GET["currently_chatting"], FILTER_VALIDATE_INT) !== false) {
 $chat_participants_arr = explode("-",$con->query("select chatter_ids from chats where id = ".$_GET["currently_chatting"])->fetch()["chatter_ids"]);	
 
 if($rawStr != $_GET["currently_chatting"]) {
@@ -83,7 +83,7 @@ break;
 
 write_shm($_SESSION["user_id"] . "" . 2,time());
 
-if(isset($_GET["currently_chatting"])) {
+if(isset($_GET["currently_chatting"])) && filter_var($_GET["currently_chatting"], FILTER_VALIDATE_INT) !== false{
 	
 for($i = 0;$i<count($chat_participants_arr);$i++) {
 
@@ -104,6 +104,7 @@ $rawStr3 =  read_shm($chat_participants_arr[$i] . "" . 4);
 
 
 
+if(isset($_GET["current_status"]) && filter_var($_GET["current_status"], FILTER_VALIDATE_INT) !== false) {
 if($rawStr2 == "1" && $_GET["current_status"] != 0)  {
 $echo_arr[0] = last_online($rawStr);
 }
@@ -116,6 +117,7 @@ $echo_arr[0] = "Online";
 }
 if(time() - $rawStr < 5 && $_GET["current_status"] != 2 && $rawStr2 != "1" && $_GET["currently_chatting"] == $rawStr3) {
 $echo_arr[0] = "Here";	
+}
 }
 
 
@@ -138,7 +140,7 @@ $echo_arr[2] = "true";
 
 
 // this is for the snapchat effect of text and emojis, so we only hide them from the sender after the receiver has seen them.
-if(isset($_GET["currently_chatting"]) && $_GET["sent_unread_messages"] == "true") {
+if(isset($_GET["currently_chatting"]) && $_GET["sent_unread_messages"] == "true" && filter_var($_GET["currently_chatting"], FILTER_VALIDATE_INT) !== false) {
 
 $chat_participant_has_opened_same_chat_modal = false;
 
@@ -166,7 +168,7 @@ $echo_arr[3] = "true";
 
 
 // this is useful for one case, if both users are active in a chat, one sends the other a pic, the receiver sees it, and so via this snippet we tell the sender's clientside that the receiver saw his message and set a 10 sec timeout to hide it from the sender.
-if(isset($_GET["currently_chatting"])) {
+if(isset($_GET["currently_chatting"]) && filter_var($_GET["currently_chatting"], FILTER_VALIDATE_INT) !== false) {
 
 for($i = 0;$i < count($chat_participants_arr);$i++) {
 if($chat_participants_arr[$i] == $_SESSION["user_id"]) {

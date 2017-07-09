@@ -8,7 +8,7 @@ require_once "post_markup_function.php";
 
 $echo_arr = [[],""];
 
-if(isset($_GET["tag"]) && isset($_GET["row_offset"]) && is_integer(intval($_GET["row_offset"])) && isset($_GET["sort_posts_by"])) {
+if(isset($_GET["tag"]) && isset($_GET["row_offset"]) && isset($_GET["sort_posts_by"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {
 
 if($_GET["row_offset"] == 0) {
 $current_tag_follow_state = $con->query("select id from following_tags where id_of_user = ". $_SESSION["user_id"] ." and tag = '". htmlspecialchars($_GET["tag"]) ."'")->fetch();

@@ -8,7 +8,7 @@ require_once "post_markup_function.php";
 
 $echo_arr = [];	
 
-if(isset($_GET["post_id"]) && is_integer(intval($_GET["post_id"]))) {
+if(isset($_GET["post_id"]) && filter_var($_GET["post_id"], FILTER_VALIDATE_INT) !== false) {
 $single_post_query = $con->query("select *, 1 as new_id from posts where id = ". $_GET["post_id"])->fetch();	
 array_push($echo_arr, get_post_markup($single_post_query));
 }

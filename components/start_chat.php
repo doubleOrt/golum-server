@@ -49,7 +49,7 @@ return "Last Online On " . date("j, M Y",$time);
 $echo_arr = [""];	
 	
 
-if(!isset($_GET["chat_id"])) {
+if(!isset($_GET["chat_id"]) && isset($_GET["user_id"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false) {
 		
 $chat_recipient_id = $_GET["user_id"];
 	
@@ -73,7 +73,7 @@ $chat_id = $con->lastInsertId();
 $chat_recipient_info_arr = $con->query("select * from users where id = ".$_GET["user_id"])->fetch();
 }
 // if the users are continuing a previous chat.
-else if(isset($_GET["chat_id"]) && is_numeric($_GET["chat_id"])){
+else if(isset($_GET["chat_id"]) && filter_var($_GET["chat_id"], FILTER_VALIDATE_INT) !== false){
 $chat_id = $_GET["chat_id"];	
 
 $chat_arr = $con->query("select * from chats where id = ". $chat_id)->fetch();	

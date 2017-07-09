@@ -62,7 +62,7 @@ echo "Materialize.toast('You Can Not Reset Your Password Because This Account Is
 
 
 
-if(isset($_GET["user_name"]) && isset($_GET["reset_code"]) && !isset($_GET["new_password"])) {
+if(isset($_GET["user_name"]) && isset($_GET["reset_code"]) && !isset($_GET["new_password"]) && filter_var($_GET["reset_code"], FILTER_VALIDATE_INT) !== false) {
 
 $check_if_valid_reset_code = $con->prepare("select id from users where user_name = :user_name and password_reset_code = :password_reset_code");	
 $check_if_valid_reset_code->bindParam(":user_name",$_GET["user_name"]);
@@ -81,7 +81,7 @@ echo "Materialize.toast('Invalid Code',5000,'red');";
 }
 
 
-if(isset($_GET["user_name"]) && isset($_GET["reset_code"]) && isset($_GET["new_password"])) {
+if(isset($_GET["user_name"]) && isset($_GET["reset_code"]) && isset($_GET["new_password"]) && filter_var($_GET["reset_code"], FILTER_VALIDATE_INT) !== false) {
 
 $check_if_valid_reset_code = $con->prepare("select id from users where user_name = :user_name and password_reset_code = :password_reset_code");	
 $check_if_valid_reset_code->bindParam(":user_name",$_GET["user_name"]);

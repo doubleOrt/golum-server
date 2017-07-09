@@ -7,7 +7,7 @@ require_once "logged_in_importants.php";
 $echo_arr = [];
 
 
-if(isset($_GET["search_term"]) && filter_var($_GET["post_id"], FILTER_VALIDATE_INT) !== "" && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== "") {
+if(isset($_GET["search_term"]) && isset($_GET["post_id"]) && isset($_GET["row_offset"]) && filter_var($_GET["post_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {
 
 $prepared = $con->prepare("select * from (select id, first_name, last_name, avatar_picture, (select case when count(id) > 0 then 1 when count(id) < 1 then 0 end as user_is_following_base_user from contacts where contact_of = users.id and contact = :user_id) as user_is_following_base_user, (select case when count(id) > 0 then 1 when count(id) < 1 then 0 end as current_state from notifications where notification_from = :user_id and notification_to = users.id and type = 4 and extra = :post_id) as current_state from users) t1 where user_is_following_base_user != '' and concat(first_name, ' ', last_name) like concat(:search_term,'%') limit 15 offset :row_offset");
 $prepared->bindParam(":user_id", $_SESSION["user_id"], PDO::PARAM_INT);

@@ -4,7 +4,7 @@
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
-if(isset($_POST["comment_id"]) && is_integer(intval($_POST["comment_id"]))) {
+if(isset($_POST["comment_id"]) && filter_var($_POST["comment_id"], FILTER_VALIDATE_INT) !== false) {
 
 $comment_arr = $con->query("select id,user_id, post_id from post_comments where id = ". $_POST["comment_id"])->fetch();
 if($comment_arr["user_id"] != $_SESSION["user_id"]) {

@@ -6,7 +6,7 @@ require_once "logged_in_importants.php";
 
 $echo_arr = [];
 
-if(isset($_GET["row_offset"]) && is_integer(intval($_GET["row_offset"]))) {
+if(isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {
 
 // when the user wants to see the first 10 notifs	
 if($_GET["row_offset"] == 0) {

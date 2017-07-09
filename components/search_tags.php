@@ -8,7 +8,7 @@ $echo_arr = [];
 
 if(isset($_GET["search_value"])) {
 	
-if( isset($_GET["row_offset"]) &&  filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== "" )	{	
+if( isset($_GET["row_offset"]) &&  filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false )	{	
 // our SQL query requires us to cast this to an integer.
 $row_offset = (int) $_GET["row_offset"];	
 }
@@ -47,9 +47,10 @@ array_push($echo_arr, [
 
 }
 
-
 echo json_encode($echo_arr);
 
 unset($con);
+
+
 
 ?>

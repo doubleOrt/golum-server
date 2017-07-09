@@ -7,7 +7,7 @@ require_once "get_comment_function.php";
 
 $echo_arr = [[]];
 
-if(isset($_GET["comment_id"]) && filter_var($_GET["comment_id"], FILTER_VALIDATE_INT) !== "" && isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== "" && isset($_GET["pin_comment_to_top"]) && filter_var($_GET["pin_comment_to_top"], FILTER_VALIDATE_INT) !== "") {
+if(isset($_GET["comment_id"]) && isset($_GET["pin_comment_to_top"]) && isset($_GET["row_offset"]) && filter_var($_GET["comment_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["pin_comment_to_top"], FILTER_VALIDATE_INT) !== false) {
 
 
 $not_pin_to_top_comment = "";

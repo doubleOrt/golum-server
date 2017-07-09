@@ -5,7 +5,7 @@ require_once "common_requires.php";
 
 
 # if the post variables are set.
-if(isset($_POST["message"]) && isset($_POST["chat_id"])) {
+if(isset($_POST["message"]) && isset($_POST["chat_id"]) && filter_var($_POST["chat_id"], FILTER_VALIDATE_INT) !== false) {
 
 $chat_id = intval($_POST["chat_id"]);
 // we are not using this directly because you can't pass valued to pdo prepare directly.

@@ -5,7 +5,7 @@ require_once "common_requires.php";
 require_once "login_to_logout.php";
 
 
-if(isset($_POST["chat_id"])) {
+if(isset($_POST["chat_id"]) && filter_var($_POST["chat_id"], FILTER_VALIDATE_INT) !== false) {
 
 $date_of = date("Y/m/d H:i");
 

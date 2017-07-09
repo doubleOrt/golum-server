@@ -4,7 +4,7 @@
 require_once "common_requires.php";
 
 
-if(isset($_GET["message_id"]) && is_numeric($_GET["message_id"])) {
+if(isset($_GET["message_id"]) && filter_var($_GET["message_id"], FILTER_VALIDATE_INT) !== false) {
 $message_id = intval($_GET["message_id"]);
 $con->exec("update messages set read_yet = true where id = ". $message_id);	
 write_shm($_SESSION["user_id"] . "" . 5,$message_id);

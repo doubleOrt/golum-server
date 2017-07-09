@@ -4,7 +4,7 @@
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
-if(isset($_POST["type"]) && isset($_POST["comment_id"]) && is_numeric($_POST["comment_id"])) {
+if(isset($_POST["type"]) && isset($_POST["comment_id"]) && filter_var($_POST["comment_id"], FILTER_VALIDATE_INT) !== false) {
 
 // upvote or downvote, 0 for up, 1 for down
 $action_type = ($_POST["type"] == "upvote" ? 0 : 1);

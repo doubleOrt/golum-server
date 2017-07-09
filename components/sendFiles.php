@@ -5,7 +5,7 @@ require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
 
-if(isset($_FILES["the_file"]) && isset($_POST["chat_id"]) && is_numeric($_POST["chat_id"])) {
+if(isset($_FILES["the_file"]) && isset($_POST["chat_id"]) && filter_var($_POST["chat_id"], FILTER_VALIDATE_INT) !== false) {
 
 //this is the path of the image after upload and before renaming the file
 $upload_to = "../users/" . $_SESSION["user_id"] . "/sentFiles/";

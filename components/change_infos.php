@@ -43,14 +43,12 @@ $echo_arr[0] = date_diff(date_create(date("Y-m-d")),date_create(str_replace(",",
 
 
 /* when a user repositions his/her avatar image, we inser the new positions into a table in our database */
-if(isset($_GET["avatar_positions"])) {
-if($_GET["avatar_positions"] != "") {		
+if(isset($_GET["avatar_positions"]) && is_array($_GET["avatar_positions"]) && filter_var($_GET["avatar_positions"][0], FILTER_VALIDATE_INT) !== false && filter_var($_GET["avatar_positions"][1], FILTER_VALIDATE_INT) !== false) {
 $con->exec("update avatars set positions = '". ($_GET["avatar_positions"][0] . "," . $_GET["avatar_positions"][1]) ."' where id_of_user = ". $_SESSION["user_id"] ." order by id desc limit 1");
 }
-}
 
 
-if(isset($_GET["avatar_rotation"]) && is_integer(intval($_GET["avatar_rotation"]))) {
+if(isset($_GET["avatar_rotation"]) && filter_var($_GET["avatar_rotation"], FILTER_VALIDATE_INT) !== false) {
 if($_GET["avatar_rotation"] != "") {
 $con->exec("update avatars set rotate_degree = '". $_GET["avatar_rotation"] ."' ". (!isset($_GET["avatar_positions"]) ? ",positions = '0,0'" : "") ." where id_of_user = ". $_SESSION["user_id"] ." order by id desc limit 1");		
 }	

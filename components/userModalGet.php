@@ -7,8 +7,8 @@ require_once "logged_in_importants.php";
 
 $echo_arr = [];
 
-//check if the request actually has the requested users id for us, if not, then do nothing.
-if(isset($_GET["user_id"]) && (is_integer(intval($_GET["user_id"])) || intval($_GET["user_id"]) === 0)) {
+//check if the request actually has the requested user's id for us, if not, then do nothing.
+if(isset($_GET["user_id"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false) {
 
 /* if we sent a "0" $_GET["user_id"], it means that this request is from a user who wants to view their own profile. so we set it to the $_SESSION["user_id"] 
 because "0" is not the id of any user,  it is just something we send that this page understands. */

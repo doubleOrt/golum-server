@@ -6,7 +6,7 @@ require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
 
-if(isset($_POST["post_id"]) && is_numeric($_POST["post_id"])) {
+if(isset($_POST["post_id"]) && filter_var($_POST["post_id"], FILTER_VALIDATE_INT) !== false) {
 
 $poster_id = $con->query("select posted_by from posts where id = ". $_POST["post_id"])->fetch()["posted_by"];
 

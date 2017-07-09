@@ -10,7 +10,7 @@ require_once "post_markup_function.php";
 $echo_arr = [];	
 
 
-if(isset($_GET["row_offset"]) && is_integer(intval($_GET["row_offset"]))) {	
+if(isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {	
 	
 $tags_followed_by_user = $con->query("select tag from following_tags where id_of_user = ". $_SESSION["user_id"])->fetchAll();		
 	

@@ -10,7 +10,7 @@ $echo_arr = [0];
 $email_info = $con->query("select user_name, email_address, activated from users where id = ". $_SESSION["user_id"])->fetch();
 
 if($email_info["email_address"] != "" && $email_info["activated"] !== "true" && $email_info["activated"] != "") {
-if(filter_var($email_info["email_address"], FILTER_VALIDATE_EMAIL) == true) { 
+if(filter_var($email_info["email_address"], FILTER_VALIDATE_EMAIL) !== false) { 
 if( send_confirmation_code($_SESSION["user_id"], $email_info["email_address"], $email_info["user_name"]) === true) {
 $echo_arr[0] = 1;
 }

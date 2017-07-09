@@ -4,7 +4,7 @@
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
-if(isset($_POST["reply_id"]) && is_numeric($_POST["reply_id"])) {
+if(isset($_POST["reply_id"]) && filter_var($_POST["reply_id"], FILTER_VALIDATE_INT) !== false) {
 
 if($con->query("select user_id from comment_replies where id = ". $_POST["reply_id"])->fetch()["user_id"] != $_SESSION["user_id"]) {
 die();

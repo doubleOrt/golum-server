@@ -7,7 +7,7 @@ include_once "letter_avatars.php";
 
 
 
-if(isset($_GET["chat_id"]) && is_numeric($_GET["chat_id"])) {
+if(isset($_GET["chat_id"]) && filter_var($_GET["chat_id"], FILTER_VALIDATE_INT) !== false) {
 
 $chat_id = $_GET["chat_id"];
 	

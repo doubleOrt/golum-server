@@ -6,7 +6,7 @@ require_once "logged_in_importants.php";
 require_once "post_markup_function.php";
 
 
-if(isset($_GET["search_value"]) && isset($_GET["last_post_id"]) && is_integer(intval($_GET["last_post_id"]))) {
+if(isset($_GET["search_value"]) && isset($_GET["last_post_id"]) && filter_var($_GET["last_post_id"], FILTER_VALIDATE_INT) !== false) {
 
 $search_value_raw = trim(addslashes($_GET["search_value"]));
 

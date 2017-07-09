@@ -21,8 +21,14 @@ else {
 die();	
 }
 
+$echo_arr = [];
+
 $comments_query_string = "";
 for($i = 0;$i < count($comment_ids_arr);$i++) {
+if(filter_var($comment_ids_arr[$i], FILTER_VALIDATE_INT) === false)	{
+echo json_encode($echo_arr);	
+die();	
+}
 if($i != 0) {
 $comments_query_string .= " or ";	
 }	
@@ -30,8 +36,6 @@ $comments_query_string .= "id = ". $comment_ids_arr[$i];
 }
 
 $all_comments_arr = $con->query("select id, user_id, time, upvotes, downvotes from ". $table_name ." where ". $comments_query_string)->fetchAll();
-
-$echo_arr = [];
 
 
 foreach($all_comments_arr as $comment_arr) {

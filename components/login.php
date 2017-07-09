@@ -14,8 +14,8 @@ $bad_login_limit = 6;// if user tries 6 times to login and fails, prevent him fr
 $lockout_time = 300; //the number of seconds the user will be locked out.
 
 //current info about user login fails and login counts.
-$first_failed_login = $con->query("select first_failed_login from users where user_name = '".$login_user_name_or_email."'")->fetch()[0];
-$failed_login_count = $con->query("select failed_login_count from users where user_name = '".$login_user_name_or_email."'")->fetch()[0];
+$first_failed_login = $con->query("select first_failed_login from users where user_name = '". $login_user_name_or_email ."'")->fetch()[0];
+$failed_login_count = $con->query("select failed_login_count from users where user_name = '". $login_user_name_or_email ."'")->fetch()[0];
 
 //if user is currently locked out.
 if(($failed_login_count >= $bad_login_limit) && (time() - $first_failed_login < $lockout_time)) {

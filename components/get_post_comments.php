@@ -8,7 +8,7 @@ require_once "get_comment_function.php";
 $echo_arr = [[]];
 
 
-if(isset($_GET["post_id"]) && filter_var($_GET["post_id"], FILTER_VALIDATE_INT) !== "" && isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== "" && isset($_GET["pin_comment_to_top"]) && filter_var($_GET["pin_comment_to_top"], FILTER_VALIDATE_INT) !== "") {
+if(isset($_GET["post_id"]) && isset($_GET["pin_comment_to_top"]) && isset($_GET["row_offset"]) && filter_var($_GET["post_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["pin_comment_to_top"], FILTER_VALIDATE_INT) !== false) {
 
 $not_pin_to_top_comment = "";
 // when we want to pin a comment to the top of the comments, for example we need to do this when a user taps a comment or reply notification to see the comment.

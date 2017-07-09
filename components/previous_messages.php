@@ -7,11 +7,9 @@ require_once "logged_in_importants.php";
 include_once "letter_avatars.php";
 
 
-
+if(isset($_GET["chat_id"]) && isset($_GET["currently_shown"]) && filter_var($_GET["chat_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["currently_shown"], FILTER_VALIDATE_INT) !== false) {
 # the number of messages we are currently showing to the user.
 $currently_shown = $_GET["currently_shown"];
-
-
 
 # the id of the chat
 $chat_id = $_GET["chat_id"];
@@ -154,6 +152,8 @@ $sent_message_last = $sent_message;
 #set all messages's read_yet to true
 $con->exec("update messages set read_yet = true where chat_id = ". $chat_id." and message_from != ".$_SESSION["user_id"]);
 
+
+}
 
 
 ?>

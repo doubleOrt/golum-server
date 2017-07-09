@@ -7,7 +7,7 @@ require_once "logged_in_importants.php";
 
 $echo_arr = [];
 
-if(isset($_POST["post_id"]) && is_numeric($_POST["post_id"]) && isset($_POST["post_type"]) && is_numeric($_POST["post_type"])) {
+if(isset($_POST["post_id"]) && isset($_POST["post_type"]) && filter_var($_POST["post_id"], FILTER_VALIDATE_INT) !== false && filter_var($_POST["post_type"], FILTER_VALIDATE_INT) !== false) {
 
 $post_votes_info_arr = get_post_votes($_POST["post_id"], $_POST["post_type"]);
 

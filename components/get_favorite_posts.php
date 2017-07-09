@@ -7,7 +7,7 @@ require_once "post_markup_function.php";
 
 $echo_arr = [[]];	
 
-if(isset($_GET["user_id"]) && is_integer(intval($_GET["row_offset"])) && isset($_GET["row_offset"]) && is_integer(intval($_GET["row_offset"]))) {
+if(isset($_GET["user_id"]) && isset($_GET["row_offset"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {
 	
 	
 if($_GET["row_offset"] < 1) {	
