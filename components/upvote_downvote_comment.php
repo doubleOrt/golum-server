@@ -40,8 +40,8 @@ $con->exec("insert into notifications (notification_from,notification_to,time,ty
 update_comment($_POST["comment_id"]);
 $new_upvotes_number = $con->query("select upvotes from post_comments where id = ". $_POST["comment_id"])->fetch()["upvotes"];
 $new_downvotes_number = $con->query("select downvotes from post_comments where id = ". $_POST["comment_id"])->fetch()["downvotes"];
-echo "thisUpvotesNumberObject.html('". ($new_upvotes_number > 0 ? ("(" . $new_upvotes_number . ")") : "") ."');";
-echo "thisDownvotesNumberObject.html('". ($new_downvotes_number > 0 ? ("(" . $new_downvotes_number . ")") : "") ."');";
+echo "thisUpvotesNumberObject.html('". ($new_upvotes_number > 0 ? ("(" . htmlspecialchars($new_upvotes_number) . ")") : "") ."');";
+echo "thisDownvotesNumberObject.html('". ($new_downvotes_number > 0 ? ("(" . htmlspecialchars($new_downvotes_number, ENT_QUOTES, "utf-8") . ")") : "") ."');";
 }
 else {
 	
@@ -61,8 +61,8 @@ shmop_write($shm, str_to_nts("true"), 0);
 shmop_close($shm);	
 }
 
-echo "thisUpvotesNumberObject.html('". ($new_upvotes_number > 0 ? ("(" . $new_upvotes_number . ")") : "") ."');";
-echo "thisDownvotesNumberObject.html('". ($new_downvotes_number > 0 ? ("(" . $new_downvotes_number . ")") : "") ."');";
+echo "thisUpvotesNumberObject.html('". ($new_upvotes_number > 0 ? ("(" . htmlspecialchars($new_upvotes_number, ENT_QUOTES, "utf-8") . ")") : "") ."');";
+echo "thisDownvotesNumberObject.html('". ($new_downvotes_number > 0 ? ("(" . htmlspecialchars($new_downvotes_number, ENT_QUOTES, "utf-8") . ")") : "") ."');";
 echo ($action_type == 0 ? "thisUpvotesObject.addClass('upvoteOrDownvoteActive');" : "thisDownvotesObject.addClass('upvoteOrDownvoteActive');");
 }	
 

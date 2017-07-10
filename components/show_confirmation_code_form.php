@@ -9,7 +9,7 @@ $echo_arr = [];
 
 if(filter_var($user_info_arr["activated"], FILTER_VALIDATE_INT) !== false) {
 $echo_arr[0] = "1";
-$echo_arr[1] = $user_info_arr["email_address"];
+$echo_arr[1] = htmlspecialchars($user_info_arr["email_address"], ENT_QUOTES, "utf-8");
 }
 else {
 $echo_arr[0] = "0";	

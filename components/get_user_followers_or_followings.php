@@ -39,14 +39,14 @@ $avatar_positions = [0,0];
 	
 	
 array_push($echo_arr[0], [
-"id" => $row["id"],
-"first_name" => $row["first_name"],
-"last_name" => $row["last_name"],
-"user_name" => $row["user_name"],
-"gender" => $row["gender"],
-"avatar_picture" => $row["avatar_picture"],
-"avatar_positions" => [$avatar_positions[0] , $avatar_positions[1]],
-"avatar_rotate_degree" => $avatar_arr["rotate_degree"]
+"id" => htmlspecialchars($row["id"], ENT_QUOTES, "utf-8"),
+"first_name" => htmlspecialchars($row["first_name"], ENT_QUOTES, "utf-8"),
+"last_name" => htmlspecialchars($row["last_name"], ENT_QUOTES, "utf-8"),
+"user_name" => htmlspecialchars($row["user_name"], ENT_QUOTES, "utf-8"),
+"gender" => htmlspecialchars($row["gender"], ENT_QUOTES, "utf-8"),
+"avatar_picture" => htmlspecialchars($row["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_positions" => [htmlspecialchars($avatar_positions[0], ENT_QUOTES, "utf-8") , htmlspecialchars($avatar_positions[1], ENT_QUOTES, "utf-8")],
+"avatar_rotate_degree" => htmlspecialchars($avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8")
 ]);
 
 }

@@ -20,10 +20,10 @@ foreach($all_search_results as $row) {
 so without this conditional, since their sample_post_id_and_file_type index would be empty, it would cause an error... */
 $sample_image_path = ($row["sample_post_id_and_file_type"] != "" ? ("posts/" . explode("-", $row["sample_post_id_and_file_type"])[0] . "-0." . explode(",", explode("-", $row["sample_post_id_and_file_type"])[1])[0]) : "");
 array_push($echo_arr, [
-"tag" => $row["tag"],
-"total_posts" => $row["total_posts"],
-"total_followers" => $row["total_followers"],
-"sample_image_path" => $sample_image_path,
+"tag" => htmlspecialchars($row["tag"], ENT_QUOTES, "utf-8"),
+"total_posts" => htmlspecialchars($row["total_posts"], ENT_QUOTES, "utf-8"),
+"total_followers" => htmlspecialchars($row["total_followers"], ENT_QUOTES, "utf-8"),
+"sample_image_path" => htmlspecialchars($sample_image_path, ENT_QUOTES, "utf-8"),
 ]);
 }
 

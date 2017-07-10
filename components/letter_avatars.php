@@ -21,7 +21,7 @@ $letter_avatar_font_size = "14px";
 return "
 <div class='letterAvatarsContainer'>
 <div class='avatarFirstLetter' style='font-size:". $letter_avatar_font_size ." !important'>
-".$avatar_first_letter."
+". $avatar_first_letter ."
 </div>
 </div>";
 	

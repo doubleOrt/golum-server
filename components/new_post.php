@@ -83,7 +83,7 @@ $prepared->bindParam(":time",$post_time);
 $prepared->bindParam(":posted_by",$_SESSION["user_id"]);
 
 if($prepared->execute()) {
-echo $con->lastInsertId();	
+echo htmlspecialchars($con->lastInsertId(), ENT_QUOTES, "utf-8");	
 }
 	
 }

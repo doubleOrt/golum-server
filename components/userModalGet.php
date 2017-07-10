@@ -75,28 +75,28 @@ $user_blocked_state = ($con->query("select id from blocked_users where user_ids 
 
 
 $echo_arr[0] = "var info = {
-'id': ". htmlspecialchars($user_id) .",	
+'id': ". htmlspecialchars($user_id, ENT_QUOTES, "utf-8") .",	
 'is_base_user': ". ($user_id == $_SESSION["user_id"] ? "1" : "0") .",
-'first_name': '". htmlspecialchars($user_modal_info_arr["first_name"]) ."',
-'last_name': '". htmlspecialchars($user_modal_info_arr["last_name"]) ."',
-'user_name': '". htmlspecialchars($user_modal_info_arr["user_name"]) ."',
-'background': '". htmlspecialchars($user_modal_info_arr["background_path"]) ."',
-'avatar': '". htmlspecialchars($user_modal_info_arr["avatar_picture"]) ."',
+'first_name': '". htmlspecialchars($user_modal_info_arr["first_name"], ENT_QUOTES, "utf-8") ."',
+'last_name': '". htmlspecialchars($user_modal_info_arr["last_name"], ENT_QUOTES, "utf-8") ."',
+'user_name': '". htmlspecialchars($user_modal_info_arr["user_name"], ENT_QUOTES, "utf-8") ."',
+'background': '". htmlspecialchars($user_modal_info_arr["background_path"], ENT_QUOTES, "utf-8") ."',
+'avatar': '". htmlspecialchars($user_modal_info_arr["avatar_picture"], ENT_QUOTES, "utf-8") ."',
 'avatar_editable': '". ($user_modal_info_arr["avatar_picture"] != "" ? "true" : "false") /* this seems redundant, but it is necessary for our client-side to function properly */ ."', 
-'avatar_positions': [". htmlspecialchars($avatar_positions[0]) .",". htmlspecialchars($avatar_positions[1]) ."],
-'avatar_rotate_degree': ". htmlspecialchars($avatar_rotate_degree) .",
-'personality': '". htmlspecialchars($user_is_trendy_or_grumpy) ."',
-'gender': '". htmlspecialchars($user_modal_info_arr["gender"]) ."',
-'country': '". htmlspecialchars($user_modal_info_arr["country"]) ."',
-'birthdate': '". htmlspecialchars($user_modal_info_arr["birthdate"]) ."',
-'age_in_years': '". htmlspecialchars($user_age_in_years) ."',
-'sign_up_date': '". htmlspecialchars($user_modal_info_arr["sign_up_date"]) ."',
-'followers_num': ". htmlspecialchars($user_followed_by_num) .",
-'followings_num': ". htmlspecialchars($user_following_num) .",
-'followed_by_base_user': '". htmlspecialchars($followed_by_base_user) ."',
-'following_tags_num': '". htmlspecialchars($user_modal_info_arr["following_tags_num"]) ."',
-'user_blocked_state': '". htmlspecialchars($user_blocked_state) ."',
-'total_posts_num': ". htmlspecialchars($number_of_posts_shared_by_this_user) ."
+'avatar_positions': [". htmlspecialchars($avatar_positions[0], ENT_QUOTES, "utf-8") .",". htmlspecialchars($avatar_positions[1], ENT_QUOTES, "utf-8") ."],
+'avatar_rotate_degree': ". htmlspecialchars($avatar_rotate_degree, ENT_QUOTES, "utf-8") .",
+'personality': '". htmlspecialchars($user_is_trendy_or_grumpy, ENT_QUOTES, "utf-8") ."',
+'gender': '". htmlspecialchars($user_modal_info_arr["gender"], ENT_QUOTES, "utf-8") ."',
+'country': '". htmlspecialchars($user_modal_info_arr["country"], ENT_QUOTES, "utf-8") ."',
+'birthdate': '". htmlspecialchars($user_modal_info_arr["birthdate"], ENT_QUOTES, "utf-8") ."',
+'age_in_years': '". htmlspecialchars($user_age_in_years, ENT_QUOTES, "utf-8") ."',
+'sign_up_date': '". htmlspecialchars($user_modal_info_arr["sign_up_date"], ENT_QUOTES, "utf-8") ."',
+'followers_num': ". htmlspecialchars($user_followed_by_num, ENT_QUOTES, "utf-8") .",
+'followings_num': ". htmlspecialchars($user_following_num, ENT_QUOTES, "utf-8") .",
+'followed_by_base_user': '". htmlspecialchars($followed_by_base_user, ENT_QUOTES, "utf-8") ."',
+'following_tags_num': '". htmlspecialchars($user_modal_info_arr["following_tags_num"], ENT_QUOTES, "utf-8") ."',
+'user_blocked_state': '". htmlspecialchars($user_blocked_state, ENT_QUOTES, "utf-8") ."',
+'total_posts_num': ". htmlspecialchars($number_of_posts_shared_by_this_user, ENT_QUOTES, "utf-8") ."
 }";
 
 echo json_encode($echo_arr);	

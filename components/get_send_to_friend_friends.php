@@ -28,18 +28,18 @@ continue;
 
 $friend_avatar_arr = $con->query("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = ". $friend_arr["id"] ." order by id desc limit 1")->fetch();
 
-$friend_avatar_positions = explode(",",$friend_avatar_arr["positions"]);
+$friend_avatar_positions = explode(",",htmlspecialchars($friend_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 //if avatar positions does not exist 
 if(count($friend_avatar_positions) < 2) {
 $friend_avatar_positions = [0,0];
 }
 
 array_push($echo_arr, [
-"id" => $friend_arr["id"],
-"first_name" => $friend_arr["first_name"],
-"last_name" => $friend_arr["last_name"],
-"avatar_picture" => $friend_arr["avatar_picture"],
-"avatar_rotate_degree" => $friend_avatar_arr["rotate_degree"],
+"id" => htmlspecialchars($friend_arr["id"], ENT_QUOTES, "utf-8"),
+"first_name" => htmlspecialchars($friend_arr["first_name"], ENT_QUOTES, "utf-8"),
+"last_name" => htmlspecialchars($friend_arr["last_name"], ENT_QUOTES, "utf-8"),
+"avatar_picture" => htmlspecialchars($friend_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_rotate_degree" => htmlspecialchars($friend_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8"),
 "avatar_positions" => $friend_avatar_positions,
 "current_state" => $friend_arr["current_state"]
 ]);

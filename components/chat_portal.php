@@ -56,27 +56,27 @@ echo "
 <script>
 
 	$('#".$uniq_id."').on('load',function(){
-		$(this).parent().css('transform','rotate(' + ". ($chat_portal_avatar_arr["rotate_degree"] != "" ? $chat_portal_avatar_arr["rotate_degree"] : 0) ." + 'deg)');
+		$(this).parent().css('transform','rotate(' + ". ($chat_portal_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($chat_portal_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) ." + 'deg)');
 		fitToParent($(this));
-		adaptRotateWithMargin($(this),". ($chat_portal_avatar_arr["rotate_degree"] != "" ? $chat_portal_avatar_arr["rotate_degree"] : 0) .",false);
+		adaptRotateWithMargin($(this),". ($chat_portal_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($chat_portal_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) .",false);
 	});
 	
-	Waves.attach('#chatPortalTo".$chat_portal_user_id."', ['waves-block']);
+	Waves.attach('#chatPortalTo". htmlspecialchars($chat_portal_user_id, ENT_QUOTES, "utf-8") ."', ['waves-block']);
 	Waves.init();
 	
 </script>
 
 <div class='wrapper' style='width:100%;'>
 
-<div class='singleChatPortal startChat modal-trigger' id='chatPortalTo".$chat_portal_user_id."' data-target='chatModal' data-from='chatPortals' data-chat-id='".$row["id"]."' data-user-id='".$chat_portal_user_id."'>
+<div class='singleChatPortal startChat modal-trigger' id='chatPortalTo". htmlspecialchars($chat_portal_user_id, ENT_QUOTES, "utf-8") ."' data-target='chatModal' data-from='chatPortals' data-chat-id='". htmlspecialchars($row["id"], ENT_QUOTES, "utf-8") ."' data-user-id='". htmlspecialchars($chat_portal_user_id, ENT_QUOTES, "utf-8") ."'>
 
 <div class='col l4 m3 s3 singleChatPortalAvatarCol'>
 <a href='#' class='removeChat'><i class='material-icons'>close</i></a>
-<div class='singleChatPortalAvatarContainer modal-trigger view-user showUserModal' data-target='modal1' data-user-id='".$chat_portal_user_id."'>
+<div class='singleChatPortalAvatarContainer modal-trigger view-user showUserModal' data-target='modal1' data-user-id='". htmlspecialchars($chat_portal_user_id, ENT_QUOTES, "utf-8") ."'>
 ". ($chat_portal_user_info_arr["avatar_picture"] == "" ? letter_avatarize($chat_portal_user_info_arr["first_name"],"medium") : "
-<div class='singleChatPortalRotateContainer rotateContainer' style='margin-top:".$chat_portal_avatar_positions[0]."%;margin-left:".$chat_portal_avatar_positions[1]."%;'>
+<div class='singleChatPortalRotateContainer rotateContainer' style='margin-top:". htmlspecialchars($chat_portal_avatar_positions[0], ENT_QUOTES, "utf-8") ."%;margin-left:". htmlspecialchars($chat_portal_avatar_positions[1], ENT_QUOTES, "utf-8") ."%;'>
 <div class='singleChatPortalRotateDiv'>
-<img class='avatarImages' id='".$uniq_id."' src='".$chat_portal_user_info_arr["avatar_picture"]."' alt='Avatar'/>
+<img class='avatarImages' id='". $uniq_id ."' src='". htmlspecialchars($chat_portal_user_info_arr["avatar_picture"], ENT_QUOTES, "utf-8") ."' alt='Avatar'/>
 </div>
 </div>") ."
 </div><!-- end .contactsAvatarContainer -->
@@ -85,7 +85,7 @@ echo "
 
 <div class='col l8 m9 s9 chatPortalInfosContainer'>
 <div class='chatPortalInfosContainerChild'>
-<div class='chatPortalFullName'>". htmlspecialchars($chat_portal_user_info_arr["first_name"] . " " . $chat_portal_user_info_arr["last_name"]) ."</div>
+<div class='chatPortalFullName'>". htmlspecialchars($chat_portal_user_info_arr["first_name"] . " " . $chat_portal_user_info_arr["last_name"], ENT_QUOTES, "utf-8") ."</div>
 <div class='chatPortalMessagePreview'></div>
 </div>
 </div><!-- end .chatPortalInfosContainer -->

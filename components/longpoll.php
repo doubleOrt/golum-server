@@ -178,7 +178,7 @@ continue;
 $rawStr =  read_shm($chat_participants_arr[$i] . "" . 5);
 
 if($rawStr != "none") {
-$echo_arr[4] = $rawStr;	
+$echo_arr[4] = htmlspecialchars($rawStr, ENT_QUOTES, "utf-8");	
 write_shm($chat_participants_arr[$i] . "" . 5,"none");
 }
 

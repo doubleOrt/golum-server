@@ -52,24 +52,24 @@ $message_uniq_id = rand(100000000,100000000000);
 if($messages_all[$x]["message_type"] == "text-message") {
 echo "<div class='messageContainer message". ($sent_message == true ? "0" : "1") ."'  id='message".$message_uniq_id."'>
 ". ($sent_message == false  && $sent_message_last !==  $sent_message ? "
-<div class='chatRecipientAvatar showUserModal modal-trigger' data-target='modal1' data-user-id='".$messager_arr["id"]."'>
+<div class='chatRecipientAvatar showUserModal modal-trigger' data-target='modal1' data-user-id='". htmlspecialchars($messager_arr["id"], ENT_QUOTES, "utf-8") ."'>
 ". ($messager_arr["avatar_picture"] == "" ? letter_avatarize($messager_arr["first_name"],"small") : "
-<div class='rotateContainer' style='transform:none;display:inline-block;width:100%;height:100%;margin-top:".$messager_avatar_arr_positions[0]."%;margin-left:".$messager_avatar_arr_positions[1]."%;'>
+<div class='rotateContainer' style='transform:none;display:inline-block;width:100%;height:100%;margin-top:". htmlspecialchars($messager_avatar_arr_positions[0], ENT_QUOTES, "utf-8") ."%;margin-left:". htmlspecialchars($messager_avatar_arr_positions[1], ENT_QUOTES, "utf-8") ."%;'>
 <div class='userAvatarRotateDiv'>
-<img id='".$uniq_id."' class='searchResultAvatar' src='".$messager_arr["avatar_picture"]."' alt='Avatar Picture' style='position:absolute;'/>
+<img id='".$uniq_id."' class='searchResultAvatar' src='". htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") ."' alt='Avatar Picture' style='position:absolute;'/>
 </div>
 </div>
 ") ."</div>" : "") ."
 <div class='message'>
-". htmlspecialchars($message_raw) ."
+". htmlspecialchars($message_raw, ENT_QUOTES, "utf-8") ."
 </div>
 </div><!-- end messageContainer -->
 <script>
 
 	$('#".$uniq_id."').on('load',function(){
-		$(this).parent().css('transform','rotate(' + ". ($messager_avatar_arr["rotate_degree"] != "" ? $messager_avatar_arr["rotate_degree"] : 0) ." + 'deg)');
+		$(this).parent().css('transform','rotate(' + ". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) ." + 'deg)');
 		fitToParent($(this));
-		adaptRotateWithMargin($(this),". ($messager_avatar_arr["rotate_degree"] != "" ? $messager_avatar_arr["rotate_degree"] : 0) .",false);
+		adaptRotateWithMargin($(this),". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) .",false);
 	});
 	/*
 	
@@ -86,24 +86,24 @@ echo "<div class='messageContainer message". ($sent_message == true ? "0" : "1")
 else if($messages_all[$x]["message_type"] == "emoji-message") {	
 echo "<div class='messageContainer emojiMessageContainer message". ($sent_message == true ? "0" : "1") ."' id='message".$message_uniq_id."'>
 ". ($sent_message == false  && $sent_message_last !==  $sent_message ? "
-<div class='chatRecipientAvatar showUserModal modal-trigger' data-target='modal1' data-user-id='".$messager_arr["id"]."'>
+<div class='chatRecipientAvatar showUserModal modal-trigger' data-target='modal1' data-user-id='". htmlspecialchars($messager_arr["id"], ENT_QUOTES, "utf-8") ."'>
 ". ($messager_arr["avatar_picture"] == "" ? letter_avatarize($messager_arr["first_name"],"small") : "
-<div class='rotateContainer' style='transform:none;display:inline-block;width:100%;height:100%;margin-top:".$messager_avatar_arr_positions[0]."%;margin-left:".$messager_avatar_arr_positions[1]."%;'>
+<div class='rotateContainer' style='transform:none;display:inline-block;width:100%;height:100%;margin-top:". htmlspecialchars($messager_avatar_arr_positions[0], ENT_QUOTES, "utf-8") ."%;margin-left:". htmlspecialchars($messager_avatar_arr_positions[1], ENT_QUOTES, "utf-8") ."%;'>
 <div class='userAvatarRotateDiv'>
-<img id='".$uniq_id."' src='".$messager_arr["avatar_picture"]."' alt='Avatar Picture' style='position:absolute;'/>
+<img id='".$uniq_id."' src='". htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") ."' alt='Avatar Picture' style='position:absolute;'/>
 </div>
 </div>
 ") ."</div>" : "") ."
 <div class='message emojiMessage unreadEmoji'>
-<img src='".$message_raw."' alt='Emoji'/>
+<img src='". htmlspecialchars($message_raw, ENT_QUOTES, "utf-8") ."' alt='Emoji'/>
 </div>
 </div><!-- end messageContainer -->
 <script>
 
 	$('#".$uniq_id."').on('load',function(){
-		$(this).parent().css('transform','rotate(' + ". ($messager_avatar_arr["rotate_degree"] != "" ? $messager_avatar_arr["rotate_degree"] : 0) ." + 'deg)');
+		$(this).parent().css('transform','rotate(' + ". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) ." + 'deg)');
 		fitToParent($(this));
-		adaptRotateWithMargin($(this),". ($messager_avatar_arr["rotate_degree"] != "" ? $messager_avatar_arr["rotate_degree"] : 0) .",false);
+		adaptRotateWithMargin($(this),". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) .",false);
 	});
 	
 	/*
@@ -122,23 +122,23 @@ $file_uniq_id = rand(10000000,100000000);
 
 $file_arr = $con->query("select * from sent_files where id = ". intval($messages_all[$x]["message"]))->fetch();
 
-echo "<div class='messageContainer imageMessageContainer message". ($sent_message == true ? "0" : "1") ."' id='message".$message_uniq_id."' data-message-id='".$messages_all[$x]["id"]."'>" . 
-"<div class='chatRecipientAvatar showUserModal modal-trigger' data-target='modal1' data-user-id='".$messager_arr["id"]."'>
+echo "<div class='messageContainer imageMessageContainer message". ($sent_message == true ? "0" : "1") ."' id='message".$message_uniq_id."' data-message-id='". htmlspecialchars($messages_all[$x]["id"], ENT_QUOTES, "utf-8") ."'>" . 
+"<div class='chatRecipientAvatar showUserModal modal-trigger' data-target='modal1' data-user-id='". htmlspecialchars($messager_arr["id"], ENT_QUOTES, "utf-8") ."'>
 ". ($messager_arr["avatar_picture"] == "" ? letter_avatarize($messager_arr["first_name"],"small") : "
-<div class='rotateContainer' style='transform:none;display:inline-block;width:100%;height:100%;margin-top:".$messager_avatar_arr_positions[0]."%;margin-left:".$messager_avatar_arr_positions[1]."%;'>
+<div class='rotateContainer' style='transform:none;display:inline-block;width:100%;height:100%;margin-top:". htmlspecialchars($messager_avatar_arr_positions[0], ENT_QUOTES, "utf-8") ."%;margin-left:". htmlspecialchars($messager_avatar_arr_positions[1], ENT_QUOTES, "utf-8") ."%;'>
 <div class='userAvatarRotateDiv'>
-<img  id='".$uniq_id."' src='".$messager_arr["avatar_picture"]."' alt='Avatar Picture' style='position:absolute;'/>
+<img  id='". $uniq_id ."' src='". htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") ."' alt='Avatar Picture' style='position:absolute;'/>
 </div>
 </div>
 ") ."</div>
-<div class='fileMessageContainer'><img id='file".$file_uniq_id."' src='".$file_arr["path"]."' alt='File'/></div>
+<div class='fileMessageContainer'><img id='file". $file_uniq_id ."' src='". htmlspecialchars($file_arr["path"], ENT_QUOTES, "utf-8") ."' alt='File'/></div>
 </div>
 <script>
 	
 	$('#".$uniq_id."').on('load',function(){
-		$(this).parent().css('transform','rotate(' + ". ($messager_avatar_arr["rotate_degree"] != "" ? $messager_avatar_arr["rotate_degree"] : 0) ." + 'deg)');
+		$(this).parent().css('transform','rotate(' + ". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) ." + 'deg)');
 		fitToParent($(this));
-		adaptRotateWithMargin($(this),". ($messager_avatar_arr["rotate_degree"] != "" ? $messager_avatar_arr["rotate_degree"] : 0) .",false);
+		adaptRotateWithMargin($(this),". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) .",false);
 	});
 	
 </script>";	

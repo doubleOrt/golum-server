@@ -59,7 +59,7 @@ $all_posts_arr = $con->query("select distinct posts.id, posts.time, favorites.id
 
 
 foreach($all_posts_arr as $post_arr) {
-array_push($echo_arr,[$post_arr["id"], time_to_string($post_arr["time"]), $post_arr["post_comments_num"], ($post_arr["added_to_favorites"] == "" ? 0 : 1)]);
+array_push($echo_arr,[$post_arr["id"], time_to_string($post_arr["time"]), htmlspecialchars($post_arr["post_comments_num"], ENT_QUOTES, "utf-8") , ($post_arr["added_to_favorites"] == "" ? 0 : 1)]);
 }
 
 }

@@ -19,7 +19,7 @@ $post_arr["post_views"] = ++$post_arr["post_views"];
 
 $poster_arr = $con->query("select first_name, last_name, avatar_picture from users where id = ". $post_arr["posted_by"])->fetch();
 $poster_avatar_arr = $con->query("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = ". $post_arr["posted_by"] ." order by id desc limit 1")->fetch();
-$poster_avatar_positions = explode(",",$poster_avatar_arr["positions"]);
+$poster_avatar_positions = explode(",", htmlspecialchars($poster_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 //if avatar positions does not exist 
 if(count($poster_avatar_positions) < 2) {
 $poster_avatar_positions = [0,0];
@@ -30,22 +30,22 @@ $posted_by_base_user = ($post_arr["posted_by"] == $_SESSION["user_id"] ? true : 
 $base_user_already_voted = $con->query("select id from post_votes where post_id =". $post_arr["id"] ." and user_id = ". $_SESSION["user_id"])->fetch();
 
 
-$post_file_types_arr = explode(",",$post_arr["file_types"]);	
+$post_file_types_arr = explode(",", htmlspecialchars($post_arr["file_types"], ENT_QUOTES, "utf-8"));	
 
 return [
-"post_id" => $post_arr["id"],
-"post_title" => $post_arr["title"],
-"post_views" => $post_arr["post_views"],
-"post_type" => $post_arr["type"],
+"post_id" => htmlspecialchars($post_arr["id"], ENT_QUOTES, "utf-8"),
+"post_title" => htmlspecialchars($post_arr["title"], ENT_QUOTES, "utf-8"),
+"post_views" => htmlspecialchars($post_arr["post_views"], ENT_QUOTES, "utf-8"),
+"post_type" => htmlspecialchars($post_arr["type"], ENT_QUOTES, "utf-8"),
 "post_file_types" => $post_file_types_arr,
 "base_user_already_voted" => ($base_user_already_voted != "" ? true : false),
 "posted_by_base_user" => $posted_by_base_user,
 "post_owner_info" => [
-		"id" => $post_arr["posted_by"],
-		"first_name" => $poster_arr["first_name"],
-		"last_name" => $poster_arr["last_name"],
-		"avatar_picture" => $poster_arr["avatar_picture"],
-		"avatar_rotate_degree" => ($poster_avatar_arr["rotate_degree"] != "" ? $poster_avatar_arr["rotate_degree"] : 0),
+		"id" => htmlspecialchars($post_arr["posted_by"], ENT_QUOTES, "utf-8"),
+		"first_name" => htmlspecialchars($poster_arr["first_name"], ENT_QUOTES, "utf-8"),
+		"last_name" => htmlspecialchars($poster_arr["last_name"], ENT_QUOTES, "utf-8"),
+		"avatar_picture" => htmlspecialchars($poster_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+		"avatar_rotate_degree" => ($poster_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($poster_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0),
 		"avatar_positions" => $poster_avatar_positions
 	]
 ];

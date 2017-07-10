@@ -19,7 +19,7 @@ $failed_login_count = $con->query("select failed_login_count from users where us
 
 //if user is currently locked out.
 if(($failed_login_count >= $bad_login_limit) && (time() - $first_failed_login < $lockout_time)) {
-echo "Materialize.toast('Please Try Again In ".date("i:s",(($first_failed_login + $lockout_time)-time()))." Minute(s).',5000,'red');";		
+echo "Materialize.toast('Please Try Again In ". date("i:s", (($first_failed_login + $lockout_time)-time())) ." Minute(s).',5000,'red');";		
 die();
 }	
 else {	

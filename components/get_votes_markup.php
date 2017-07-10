@@ -17,19 +17,19 @@ $majority_vote_index = $post_votes_info_arr[2];
 $total_votes_number = $post_votes_info_arr[3];
 
 array_push($echo_arr, [
-"post_type" => $_POST["post_type"],
-"user_vote_index" => $user_vote_index,
-"majority_vote_index" => $majority_vote_index,
-"total_votes_number" => $total_votes_number
+"post_type" => htmlspecialchars($_POST["post_type"], ENT_QUOTES, "utf-8"),
+"user_vote_index" => htmlspecialchars($user_vote_index, ENT_QUOTES, "utf-8"),
+"majority_vote_index" => htmlspecialchars($majority_vote_index, ENT_QUOTES, "utf-8"),
+"total_votes_number" => htmlspecialchars($total_votes_number, ENT_QUOTES, "utf-8")
 ], []);
 
 
 // add the requried info for each vote to the #1 index of the $echo_arr
 for($i = 0;$i<count($post_votes);$i++) {
 array_push($echo_arr[1], [
-"vote_index" => $post_votes[$i][0],
-"index_total_votes" => $post_votes[$i][1],
-"index_votes_percentage_in_total" => $post_votes[$i][2]
+"vote_index" => htmlspecialchars($post_votes[$i][0], ENT_QUOTES, "utf-8"),
+"index_total_votes" => htmlspecialchars($post_votes[$i][1], ENT_QUOTES, "utf-8"),
+"index_votes_percentage_in_total" => htmlspecialchars($post_votes[$i][2], ENT_QUOTES, "utf-8")
 ]);
 }
 

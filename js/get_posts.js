@@ -65,6 +65,12 @@ appendMarkUpTo.append(get_post_markup(dataArr[i]));
 appendMarkUpTo.show();	
 
 
+// we have to deal with the tags after the HTML has rendered, see bugs.txt #5
+$(".loadPostComponents .postTitle").each(function(){
+$(this).html(handle_tags($(this).html()));
+});
+
+
 // initialize the materialize dropdowns	
 $('.loadPostComponents .dropdown-button').dropdown({inDuration: 300,outDuration: 225,constrain_width: false,hover: false,gutter: 0,belowOrigin: true,alignment: 'left', stopPropagation: true});	
 
@@ -240,7 +246,7 @@ return `<div class='singlePost loadPostComponents col l12 m12 s12' data-actual-p
 <div class='post_text_container'>
 
 <div class='postTitle scaleItem'>
-` +   handle_tags(data["post_title"]) + `
+` +   data["post_title"] + `
 </div><!-- end .postTitle -->
 
 <div class='post_text_container_child'>

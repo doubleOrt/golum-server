@@ -53,7 +53,7 @@ $update_users = $con->query("UPDATE USERS SET background_path = '". $new_path ."
 //if query was successful
 if($update_users->rowCount() > 0) {
 // set the first index of $echo_arr to the path of the uploaded image.	
-$echo_arr[0] = $new_path;
+$echo_arr[0] = htmlspecialchars($new_path, ENT_QUOTES, "utf-8");
 }	
 else {
 $echo_arr[1] = "Something Went Wrong, Sorry!";

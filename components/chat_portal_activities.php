@@ -4,8 +4,6 @@
 require_once "common_requires.php";
 
 
-
-
 // this function is used to calculate message times.
 function last_message($time) {
 
@@ -103,13 +101,16 @@ $latest_message = "No New Messages";
 }
 
 
-array_push($echo_arr,[$chats_arr[$i]["id"], $new_messages_num, $latest_message, $latest_message_date]);	
+array_push($echo_arr,[htmlspecialchars($chats_arr[$i]["id"], ENT_QUOTES, "utf-8"), $new_messages_num, htmlspecialchars($latest_message, ENT_QUOTES, "utf-8"), $latest_message_date]);	
 }
 
 echo json_encode($echo_arr);
 
 write_shm($_SESSION["user_id"] . "" . 1,"false");
 }
+
+
+
 
 
 ?>

@@ -35,29 +35,29 @@ $notification = $notifications_arr[$i];
 
 $sender_arr = $con->query("select first_name, last_name, avatar_picture from users where id = ". $notification["notification_from"])->fetch();
 $sender_avatar_arr = $con->query("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = ". $notification["notification_from"] ." order by id desc limit 1")->fetch();
-$sender_avatar_positions = explode(",",$sender_avatar_arr["positions"]);
+$sender_avatar_positions = explode(",",htmlspecialchars($sender_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 //if avatar positions does not exist 
 if(count($sender_avatar_positions) < 2) {
 $sender_avatar_positions = [0,0];
 }
 
 array_push($echo_arr, [
-"notification_id" => $notification["id"],
-"notification_time" => $notification["time"], 
+"notification_id" => htmlspecialchars($notification["id"], ENT_QUOTES, "utf-8") ,
+"notification_time" => htmlspecialchars($notification["time"], ENT_QUOTES, "utf-8"), 
 "notification_time_string" => time_to_string($notification["time"]),
-"notification_type" => $notification["type"], 
-"notification_extra" => $notification["extra"], 
-"notification_extra2" => $notification["extra2"], 
-"notification_extra3" => $notification["extra3"], 
-"notification_read_yet" => $notification["read_yet"], 
-"notification_and_others" => $notification["and_others"], 
+"notification_type" => htmlspecialchars($notification["type"], ENT_QUOTES, "utf-8"), 
+"notification_extra" => htmlspecialchars($notification["extra"], ENT_QUOTES, "utf-8"), 
+"notification_extra2" => htmlspecialchars($notification["extra2"], ENT_QUOTES, "utf-8"), 
+"notification_extra3" => htmlspecialchars($notification["extra3"], ENT_QUOTES, "utf-8"), 
+"notification_read_yet" => htmlspecialchars($notification["read_yet"], ENT_QUOTES, "utf-8"), 
+"notification_and_others" => htmlspecialchars($notification["and_others"], ENT_QUOTES, "utf-8"), 
 "notification_sender_info" => [
-	"id" => $notification["notification_from"], 
-	"first_name" => $sender_arr["first_name"],
-	"last_name" => $sender_arr["last_name"],
-	"avatar" => $sender_arr["avatar_picture"],
+	"id" => htmlspecialchars($notification["notification_from"], ENT_QUOTES, "utf-8"), 
+	"first_name" => htmlspecialchars($sender_arr["first_name"], ENT_QUOTES, "utf-8"),
+	"last_name" => htmlspecialchars($sender_arr["last_name"], ENT_QUOTES, "utf-8"),
+	"avatar" => htmlspecialchars($sender_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
 	"avatar_positions" => $sender_avatar_positions,
-	"avatar_rotate_degree" => $sender_avatar_arr["rotate_degree"]
+	"avatar_rotate_degree" => htmlspecialchars($sender_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8")
 	] 
 ]);
 

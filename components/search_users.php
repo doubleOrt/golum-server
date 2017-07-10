@@ -49,7 +49,7 @@ continue;
 $search_result_avatar_arr = $con->query("SELECT * FROM avatars WHERE id_of_user = ". $row[0] ." order by id desc limit 1")->fetch();
 
 // get the user's current avatar positions (left , top)
-$search_result_avatar_arr_positions = explode(",",$search_result_avatar_arr["positions"]);
+$search_result_avatar_arr_positions = explode(",",htmlspecialchars($search_result_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 
 // if they don't exist, set $search_result_avatar_arr_positions to 0,0
 if(count($search_result_avatar_arr_positions) < 2) {
@@ -57,14 +57,14 @@ $search_result_avatar_arr_positions = [0,0];
 }
 
 array_push($echo_arr, [
-"id" =>  htmlspecialchars($row["id"]),	
-'first_name' => htmlspecialchars($row["first_name"]),
-'last_name' => htmlspecialchars($row["last_name"]),
-'user_name' => htmlspecialchars($row["user_name"]),
+"id" =>  htmlspecialchars($row["id"], ENT_QUOTES, "utf-8"),	
+'first_name' => htmlspecialchars($row["first_name"], ENT_QUOTES, "utf-8"),
+'last_name' => htmlspecialchars($row["last_name"], ENT_QUOTES, "utf-8"),
+'user_name' => htmlspecialchars($row["user_name"], ENT_QUOTES, "utf-8"),
 'current_state' => ($row["current_state"] == "" ? 0 : 1),
-'avatar' => htmlspecialchars($row["avatar_picture"]),
+'avatar' => htmlspecialchars($row["avatar_picture"], ENT_QUOTES, "utf-8"),
 'avatar_positions' => $search_result_avatar_arr_positions,
-'avatar_rotate_degree' => htmlspecialchars($search_result_avatar_arr["rotate_degree"])
+'avatar_rotate_degree' => htmlspecialchars($search_result_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8")
 ]);
 
 

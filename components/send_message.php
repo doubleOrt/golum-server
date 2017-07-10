@@ -58,7 +58,7 @@ shmop_close($shm);
 }
 
 if($_POST["type"] == "text-message") {
-$message = "<div class='message'>" .htmlspecialchars($_POST["message"]) . "</div>";	
+$message = "<div class='message'>" .htmlspecialchars($_POST["message"], ENT_QUOTES, "utf-8") . "</div>";	
 }
 else if($_POST["type"] == "emoji-message") {
 $message = "<div class='message emojiMessage'><img src='".$_POST["message"]."' alt='Emoji'/></div>";	
@@ -68,7 +68,7 @@ $message = "<div class='message emojiMessage'><img src='".$_POST["message"]."' a
 
 $message_uniq_id = rand(1000000,10000000);
 
-echo "<div class='messageContainer message0' id='message".$message_uniq_id."'>".$message."</div>
+echo "<div class='messageContainer message0' id='message". $message_uniq_id ."'>". htmlspecialchars($message, ENT_QUOTES, "utf-8") ."</div>
 ". ($recipient_is_in_this_chat_modal == true ? "<script>
 
 /*

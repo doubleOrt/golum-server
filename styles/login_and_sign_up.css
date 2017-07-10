@@ -1,7 +1,4 @@
 body {
-background:url(../golum15.png) fixed no-repeat;
-background-size:cover;
-background-position:center;
 border-image:-webkit-linear-gradient(left, yellow 20%, green) 10;
 border-style:solid;
 border-width:6px;

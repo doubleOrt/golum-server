@@ -80,7 +80,7 @@ $message_uniq_id = rand(1000000,10000000);
 
 
 
-echo "<div class='messageContainer imageMessageContainer message0' id='message".$message_uniq_id."' data-message-id='".$message_id."'><div class='fileMessageContainer'><img id='file".$file_uniq_id."' src='".$new_path."' alt='File'/></div></div>
+echo "<div class='messageContainer imageMessageContainer message0' id='message".$message_uniq_id."' data-message-id='". htmlspecialchars($message_id, ENT_QUOTES, "utf-8") ."'><div class='fileMessageContainer'><img id='file". $file_uniq_id."' src='". htmlspecialchars($new_path, ENT_QUOTES, "utf-8") ."' alt='File'/></div></div>
 <script>
 
 	$('#file".$file_uniq_id."').on('load',function(){

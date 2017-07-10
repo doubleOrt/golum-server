@@ -11,7 +11,7 @@ $echo_arr = [[],""];
 if(isset($_GET["tag"]) && isset($_GET["row_offset"]) && isset($_GET["sort_posts_by"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {
 
 if($_GET["row_offset"] == 0) {
-$current_tag_follow_state = $con->query("select id from following_tags where id_of_user = ". $_SESSION["user_id"] ." and tag = '". htmlspecialchars($_GET["tag"]) ."'")->fetch();
+$current_tag_follow_state = $con->query("select id from following_tags where id_of_user = ". $_SESSION["user_id"] ." and tag = '". htmlspecialchars($_GET["tag"], ENT_QUOTES, "utf-8") ."'")->fetch();
 // the follow tag button.
 $echo_arr[1] = $current_tag_follow_state[0] != "" ? 1 : 0;
 }

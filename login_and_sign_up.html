@@ -104,7 +104,7 @@ eval(data);
 
 <div class="col l6 m6 s6 offset-l3 offset-m3 offset-s3 smallDivider" style="margin-top:10px !important;margin-bottom:10px !important;"></div>
 
-<div id="my-signin2" class="col l8 m8 s8 offset-l2 offset-m2 offset-s2" style="margin-top:10px;"></div>
+<div id="my-signin2" class="col l10 m10 s10 offset-l1 offset-m1 offset-s1" style="margin-top:10px;"></div>
 
 </div><!-- end .row -->
 
@@ -234,13 +234,14 @@ render_google_sign_in_button();
 });
 
 function onSignIn(googleUser) {
-  var profile = googleUser.getBasicProfile();
 
+var profile = googleUser.getBasicProfile();
+console.log("Basic user profile: " + JSON.stringify(profile));
   
   $.get({
   url: "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + profile.getId(),
   success:function(data) {
-  console.log(data);
+  console.log(JSON.stringify(data));
   }
   });
   

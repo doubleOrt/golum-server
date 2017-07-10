@@ -59,18 +59,18 @@ return $echo;
 	
 function getAvatarContainer($user_arr) {
 $random_num = rand(1000000,10000000);	
-$user_avatar_positions = explode(",",$user_arr["positions"]);
+$user_avatar_positions = explode(",",htmlspecialchars($user_arr["positions"], ENT_QUOTES, "utf-8"));
 //if avatar positions does not exist 
 if(count($user_avatar_positions) < 2) {
 $user_avatar_positions = [0,0];
 }
 
 return "<div class='avatarContainer'>
-<div class='avatarContainerChild modal-trigger view-user showUserModal' data-target='modal1' data-user-id='".$user_arr["id"]."'>
+<div class='avatarContainerChild modal-trigger view-user showUserModal' data-target='modal1' data-user-id='". htmlspecialchars($user_arr["id"], ENT_QUOTES, "utf-8") ."'>
 ". ($user_arr["avatar_path"] == "" ? letter_avatarize($user_arr["first_name"],"small") : "
-<div class='rotateContainer' style='margin-top:".$user_avatar_positions[0]."%;margin-left:".$user_avatar_positions[1]."%;'>
-<div class='avatarRotateDiv' data-rotate-degree='".$user_arr["rotate_degree"]."'>
-<img id='friendsWhoVotedThisAvatar".$random_num."' class='avatarImages' src='".$user_arr["avatar_path"]."' alt='Image'/>
+<div class='rotateContainer' style='margin-top:". htmlspecialchars($user_avatar_positions[0], ENT_QUOTES, "utf-8") ."%;margin-left:". htmlspecialchars($user_avatar_positions[1], ENT_QUOTES, "utf-8") ."%;'>
+<div class='avatarRotateDiv' data-rotate-degree='". htmlspecialchars($user_arr["rotate_degree"], ENT_QUOTES, "utf-8") ."'>
+<img id='friendsWhoVotedThisAvatar".$random_num."' class='avatarImages' src='". htmlspecialchars($user_arr["avatar_path"], ENT_QUOTES, "utf-8") ."' alt='Image'/>
 </div>
 </div>") ."
 </div><!-- end .avatarContainerChild -->
