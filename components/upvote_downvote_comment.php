@@ -11,7 +11,7 @@ $action_type = ($_POST["type"] == "upvote" ? 0 : 1);
 
 $notification_type = 7 + $action_type;
 
-$comment_arr = $con->query("select user_id, post_id from post_comments where id = ". $_POST["comment_id"])->fetch();
+$comment_arr = dataQuery("select user_id, post_id from post_comments where id = :comment_id", [":comment_id" => $_POST["comment_id"]])[0];
 
 echo "thisUpvotesObject.removeClass('upvoteOrDownvoteActive');thisDownvotesObject.removeClass('upvoteOrDownvoteActive');";
 

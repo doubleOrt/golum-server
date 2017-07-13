@@ -21,7 +21,10 @@ $user_modal_info_arr = $prepared->fetch();
 
 $user_age_in_years = date_diff(date_create(date("Y-m-d")),date_create(str_replace(",","",$user_modal_info_arr["birthdate"])))->y;
 
-$avatar_arr = $con->query("SELECT * FROM avatars WHERE id_of_user = ".$user_id." order by id desc limit 1")->fetch();
+$avatar_arr_prepared = $con->prepare("SELECT * FROM avatars WHERE id_of_user = :user_id order by id desc limit 1");
+$avatar_arr_prepared->bindParam(":user_id", $user_id);
+$avatar_arr_prepared->execute();
+$avatar_arr = $avatar_arr_prepared->fetch();
 
 if($avatar_arr[0] != "") {
 $avatar_rotate_degree = $avatar_arr["rotate_degree"];
@@ -32,15 +35,29 @@ $avatar_rotate_degree = 0;
 $avatar_positions = [0,0];	
 }
 
-$user_followed_by_num = $con->query("select count(id) from contacts where contact = ". $user_id)->fetch()[0];
-$user_following_num = $con->query("select count(id) from contacts where contact_of = ". $user_id)->fetch()[0];
+$user_followed_by_num_prepared = $con->prepare("select count(id) from contacts where contact = :user_id");
+$user_followed_by_num_prepared->bindParam(":user_id", $user_id);
+$user_followed_by_num_prepared->execute();
+$user_followed_by_num = $user_followed_by_num_prepared->fetch()[0];
 
-$number_of_posts_shared_by_this_user = $con->query("select count(id) from posts where posted_by = ". $user_id)->fetch()[0];
+$user_following_num_prepared = $con->prepare("select count(id) from contacts where contact_of = :user_id");
+$user_following_num_prepared->bindParam(":user_id", $user_id);
+$user_following_num_prepared->execute();
+$user_following_num = $user_following_num_prepared->fetch()[0];
+
+
+$number_of_posts_shared_by_this_user_prepared = $con->prepare("select count(id) from posts where posted_by = :user_id");
+$number_of_posts_shared_by_this_user_prepared->bindParam(":user_id", $user_id);
+$number_of_posts_shared_by_this_user_prepared->execute();
+$number_of_posts_shared_by_this_user = $number_of_posts_shared_by_this_user_prepared->fetch()[0];
 
 
 
 
-$user_is_trendy_or_grumpy_arr = $con->query("select count(post_id0) as agreed_with_others_votes, (select count(id) from post_votes where user_id = ". $user_id .") as total_votes from (select t1.post_id0, t1.option_index0, t2.user_option_index from (select distinct post_id as post_id0, option_index as option_index0, (select count(id) from post_votes where post_id = post_id0 and option_index = option_index0) as option_votes from post_votes where post_id in (select post_id from post_votes where user_id = ". $user_id .") order by option_votes desc) t1 left join (select post_id as post_id0, option_index as user_option_index from post_votes where user_id = ". $user_id ." ) t2 on t1.post_id0 = t2.post_id0 group by t1.post_id0) t3 where option_index0 = user_option_index")->fetch();
+$user_is_trendy_or_grumpy_arr_prepared = $con->prepare("select count(post_id0) as agreed_with_others_votes, (select count(id) from post_votes where user_id = :user_id) as total_votes from (select t1.post_id0, t1.option_index0, t2.user_option_index from (select distinct post_id as post_id0, option_index as option_index0, (select count(id) from post_votes where post_id = post_id0 and option_index = option_index0) as option_votes from post_votes where post_id in (select post_id from post_votes where user_id = :user_id) order by option_votes desc) t1 left join (select post_id as post_id0, option_index as user_option_index from post_votes where user_id = :user_id ) t2 on t1.post_id0 = t2.post_id0 group by t1.post_id0) t3 where option_index0 = user_option_index");
+$user_is_trendy_or_grumpy_arr_prepared->bindParam(":user_id", $user_id);
+$user_is_trendy_or_grumpy_arr_prepared->execute();
+$user_is_trendy_or_grumpy_arr = $user_is_trendy_or_grumpy_arr_prepared->fetch();
 
 if($user_is_trendy_or_grumpy_arr["total_votes"] > 0) {
 // if the user has agreed with the majority on more than 49 of the posts, set $user_is_trendy_or_grumpy to 0 (trendy), else set it 
@@ -69,8 +86,14 @@ $user_blocked_state = "";
 // if the user is not the base user viewing his own profile
 if($user_id != $_SESSION["user_id"]) {
 // check if base user has already added this person	
-$followed_by_base_user = ($con->query("select * from contacts where contact_of = ".$_SESSION["user_id"]." and contact = ". $user_id)->fetch()[0] != "" ? 1 : 0);
-$user_blocked_state = ($con->query("select id from blocked_users where user_ids = '".$_SESSION["user_id"]."-".htmlspecialchars($user_id,ENT_QUOTES)."' or user_ids = '".htmlspecialchars($user_id,ENT_QUOTES) . "-" . $_SESSION["user_id"]."'")->fetch()[0] != "" ? 1 : 0);		
+$followed_by_base_user_prepared = $con->prepare("select * from contacts where contact_of = ". $_SESSION["user_id"] ." and contact = :user_id");
+$followed_by_base_user_prepared->bindParam(":user_id", $user_id);
+$followed_by_base_user_prepared->execute();
+$followed_by_base_user = $followed_by_base_user_prepared->fetch()[0] != "" ? 1 : 0;
+$user_blocked_state_prepared = $con->prepare("select id from blocked_users where user_ids = concat(". $_SESSION["user_id"] .", '-', :user_id) or user_ids = concat(:user_id, '-', ". $_SESSION["user_id"] .")");
+$user_blocked_state_prepared->bindParam(":user_id", $user_id);
+$user_blocked_state_prepared->execute();
+$user_blocked_state = $user_blocked_state_prepared->fetch()[0] != "" ? 1 : 0;		
 }	
 
 

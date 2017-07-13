@@ -254,6 +254,7 @@ data:{
 "type":$(this).attr("data-upvote-or-downvote")
 },
 success:function(data) {
+console.log(data);	
 thisUpvotesObject.removeClass('upvoteOrDownvoteActive');
 thisDownvotesObject.removeClass('upvoteOrDownvoteActive');	
 eval(data);	
