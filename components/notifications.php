@@ -6,17 +6,15 @@ require_once "logged_in_importants.php";
 
 $echo_arr = [];
 
-if(isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {
+if(isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false && isset($_GET["type"]) && filter_var($_GET["type"], FILTER_VALIDATE_INT) !== false) {
 
-// when the user wants to see the first 10 notifs	
-if($_GET["row_offset"] == 0) {
-$notifications_arr = $con->query("select * from (select *, (count(*) - 1) and_others, @rn:=@rn+1 AS new_id from (select * from notifications) t1, (SELECT @rn:=0) t2 where notification_to = ". $_SESSION["user_id"] ." group by type, extra, read_yet) t3 order by id desc limit 15")->fetchAll();	
-}
-// when the user is scrolling
-else {
-$notifications_arr = $con->query("select * from (select *, (count(*) - 1) and_others, @rn:=@rn+1 AS new_id from (select * from notifications) t1, (SELECT @rn:=0) t2 where notification_to = ". $_SESSION["user_id"] ." group by type, extra, read_yet) t3 order by id desc limit 15 OFFSET ". $_GET["row_offset"])->fetchAll();	
-}
 
+if($_GET["type"] === "0") {
+$notifications_arr = $con->query("select * from (select *, (count(*) - 1) as and_others, (select count(id) from blocked_users where user_ids = concat(notification_to, '-', notification_from)) as user_blocked_by_base_user from (select * from notifications) t1 where notification_to = ". $_SESSION["user_id"] ." and read_yet = '0' group by type, extra, read_yet) t3 where user_blocked_by_base_user = '0' order by id desc limit 15 OFFSET ". $_GET["row_offset"])->fetchAll();	
+}
+else if($_GET["type"] === "1") {
+$notifications_arr = $con->query("select * from (select *, (count(*) - 1) as and_others, (select count(id) from blocked_users where user_ids = concat(notification_to, '-', notification_from)) as user_blocked_by_base_user from (select * from notifications) t1 where notification_to = ". $_SESSION["user_id"] ." group by type, extra, read_yet) t3 where user_blocked_by_base_user = '0' order by id desc limit 15 OFFSET ". $_GET["row_offset"])->fetchAll();		
+}
 
 if(count($notifications_arr) > 0) {
 	

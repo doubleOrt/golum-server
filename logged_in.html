@@ -205,13 +205,13 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 <div id="notifications_container" class="main_screen_child" data-active-tab="0">
 
 <ul id="notifications_tabs" class="tabs">
-<li class="tab col s6" data-tab-index="0"><a class="active" href="#">Important</a></li>
+<li class="tab col s6" data-tab-index="0"><a class="active" href="#">Unread</a></li>
 <li class="tab col s6" data-tab-index="1"><a href="#">All</a></li>
 </ul>
 
-<div id="notifications_important_container" class="notifications_container_child" data-end-of-results="false"></div>
+<div id="first_tab_notifications_container" class="notifications_container_child" data-end-of-results="false"></div>
 
-<div id="notifications_all_container" class="notifications_container_child" data-end-of-results="false"></div>
+<div id="second_tab_notifications_container" class="notifications_container_child" data-end-of-results="false"></div>
 
 </div>
 </div><!-- end #main_screen_notifications -->
@@ -758,11 +758,11 @@ Birthdate: <span class="userModalKnownInfoText">Unknown</span>
 <div id="bottomNav">
 
 <ul id="bottomTabs">
-<li class="bottomTabsItem active" data-open-main-screen="#main_screen_main"><i class="material-icons">home</i></li>
-<li class="bottomTabsItem openNotificationsModal" data-open-main-screen="#main_screen_notifications"><i class="material-icons">notifications</i></li>
-<li class="bottomTabsItem modal-trigger bottom_nav_static_item" data-target="shareNewModal"><i class="material-icons">add_box</i></li>
-<li class="bottomTabsItem searchPortal" data-open-main-screen="#main_screen_search" data-target="#searchForUserRow,#searchForUserContainer,#searchResultsContainer"><i class="material-icons">search</i></li>
-<li id="bottom_nav_user_profile" class="bottomTabsItem" data-user-id="0" data-open-main-screen="#main_screen_user_profile"><i class="material-icons">person</i></li>
+<li class="bottomTabsItem active" data-open-main-screen="#main_screen_main"><div class="bottomTabsItemChild"><i class="material-icons">home</i></div></li>
+<li class="bottomTabsItem openNotificationsModal" data-open-main-screen="#main_screen_notifications"><div class="bottomTabsItemChild"><i class="material-icons">notifications</i><div id="new_notifications_num" class="custom_badge"></div></div></li>
+<li class="bottomTabsItem modal-trigger bottom_nav_static_item" data-target="shareNewModal"><div class="bottomTabsItemChild"><i class="material-icons">add_box</i></div></li>
+<li class="bottomTabsItem searchPortal" data-open-main-screen="#main_screen_search" data-target="#searchForUserRow,#searchForUserContainer,#searchResultsContainer"><div class="bottomTabsItemChild"><i class="material-icons">search</i></div></li>
+<li id="bottom_nav_user_profile" class="bottomTabsItem" data-user-id="0" data-open-main-screen="#main_screen_user_profile"><div class="bottomTabsItemChild"><i class="material-icons">person</i></div></li>
 </ul>
 
 </div>

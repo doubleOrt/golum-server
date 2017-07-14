@@ -97,9 +97,9 @@ var loginPassword = new ValidateItem(document.getElementById("login_password"),/
 
 // add a click listener to the login button so whenever it is clicked we call the validate function on it.
 document.getElementsByName("login")[0].parentElement.addEventListener("click",function(event){loginValidate(event);},false);
+
 function loginValidate(event) {
 event.preventDefault();
-
 
 var checkLoginUserName = loginUsername.validate();
 var checkLoginEmail = loginEmail.validate();
@@ -119,22 +119,22 @@ else {
 $("#login").parent().addClass("disabledButton");
 $("#login").val("Logging in...");
 
-$.ajax({
+$.post({
 url:"components/login.php",
 data:{
 login_user_name_or_email:$("#login_user_name_or_email").val(),
 login_password:$("#login_password").val(),
 keep_me_logged_in:$("#keep_me_logged_in:checked").val()
 },
-type:"post",
 success:function(data){
-	console.log(data);
-	
-if(data == "success") {
+
+var data_arr = JSON.parse(data);
+
+if(data_arr[0] == "1") {
 window.location.href = "logged_in.html";	
 }
 else {
-eval(data);
+eval(data_arr[1]);
 $("#login").parent().css({"opacity":"1","pointer-events":"all"});	
 $("#login").removeClass("disabledButton");	
 $("#login").val("Login");

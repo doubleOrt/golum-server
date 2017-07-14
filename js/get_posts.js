@@ -29,6 +29,9 @@ callback(data_arr);
 }
 
 } 
+else {
+callback(data);	
+}
 
 blockCallsToGetPosts = false;
 }
@@ -45,7 +48,6 @@ function markUpProcessor(data, appendMarkUpTo, empty_message, callback) {
 // these variables will have to be bound to this object so that we can use them in our callback function, also any variable that you use in the callback function has to be bound to this object first.
 this.dataArr = data;	
 this.appendMarkUpTo = appendMarkUpTo;
-
 
 if(dataArr.length < 1 && appendMarkUpTo.find(".singlePost").length < 1) {
 appendMarkUpTo.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>" + empty_message + "</div>")	
@@ -114,7 +116,6 @@ var poster_full_name = data["post_owner_info"]["first_name"] + " " +  data["post
 
 var random_num = Math.floor(Math.random() * 1000000);	
 var avatar_id = "avatar" + random_num;
-
 
 var required_height = (data["post_type"] == 3 || data["post_type"] == 4 ? "height: 50%;" : "height: 100%;"); 
 
@@ -198,7 +199,6 @@ fitToParent('#` + image_id + `');
 /* this .loadPostComponents class is just so we can distinguish between already loaded classes and the newly loaded so we don't load post components for posts that we already have those
 components, we remove this class from a post immediately after we have loaded its components */
 return `<div class='singlePost loadPostComponents col l12 m12 s12' data-actual-post-id='` + data["post_id"] + `' data-post-type='` + data["post_type"] + `' data-poster-id='` + data["post_owner_info"]["id"] + `' data-positive-icon='favorite' data-negative-icon='close' data-already-voted='` + (data["base_user_already_voted"] == true ? "true" : "false") + `'>
-
 
 
 <div class='postImagesContainer row'>
@@ -442,7 +442,7 @@ return false;
 $("#singlePostsContainer").html("");
 showLoading($("#singlePostsContainer"), "50%");
 getPosts("components/get_single_post.php",{"post_id":$(this).attr("data-actual-post-id")},function(data_arr){
-markUpProcessor(data_arr,$("#singlePostsContainer"), "We don't know why the post didn't appear either :(", function(){
+markUpProcessor(data_arr,$("#singlePostsContainer"), "This post was deleted by its original author", function(){
 removeLoading($("#singlePostsContainer"));	
 });	
 });		
@@ -562,37 +562,6 @@ remove_secondary_loading($("#favorite_posts_container"));
 }
 }
 });
-
-
-
-
-/*
-// when users want to view posts that match their search terms
-$(document).on("click",".openGetPostsByTitleModal",function(){
-
-if(typeof $(this).attr("data-search-value") == "undefined") {
-return false;	
-}
-
-//empty the #tagPostsContainer of the last query's posts
-$("#postsByTitleContainer").html("");
-
-$("#postsByTitleContainer").attr("data-search-value",$(this).attr("data-search-value"));
-
-// set the #getPostsByTitleModal's title to the name of the tag.
-$("#getPostsByTitleModal .modal-header .modalHeaderFullName").html("'" + $(this).attr("data-search-value") + "'");
-
-getPosts("components/get_posts_by_title_search.php",{"row_offset":0,"search_value":$(this).attr("data-search-value")},markUpProcessor,$("#postsByTitleContainer"));		
-
-});
-// infinite scrolling postByTitle
-$("#postsByTitleContainer").scroll(function(){
-if($(this).scrollTop() > ($(this)[0].scrollHeight - 650) && blockCallsToGetPosts == false && $(this).find(".singlePost").length > 0) {
-getPosts("components/get_posts_by_title_search.php",{"row_offset":$(this).find(".singlePost:last-child").attr("data-post-id"),"search_value":$(this).attr("data-search-value")},markUpProcessor,$("#postsByTitleContainer"));		
-}
-});
-
-*/
 
 
 

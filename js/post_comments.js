@@ -28,7 +28,6 @@ if(commentsPreventMultipleCalls == false) {
 	
 commentsPreventMultipleCalls = true;
 
-
 var dataObj = {};
 dataObj["post_id"] = postId;
 dataObj["row_offset"] = row_offset;
@@ -38,7 +37,9 @@ ajax_call_to_get_comments = $.get({
 url:"components/get_post_comments.php",
 data:dataObj,
 success:function(data) {
-	
+		
+console.log(data);		
+		
 var data_arr = JSON.parse(data);
 
 callback(data_arr);	

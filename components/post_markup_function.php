@@ -7,7 +7,7 @@ function get_post_markup($post_arr) {
 global $con;
 
 // if target has delete or deactivated their account, or the current user has been blocked by the target.
-if($con->query("select id from account_states where user_id = ". $post_arr["posted_by"])->fetch()[0] != "" || $con->query("select id from blocked_users where user_ids = '".$post_arr["posted_by"]. "-" . $_SESSION["user_id"]."'")->fetch() != "") {	
+if($con->query("select id from account_states where user_id = ". $post_arr["posted_by"])->fetch()[0] != "" || $con->query("select id from blocked_users where user_ids = '". $post_arr["posted_by"] . "-" . $_SESSION["user_id"] ."'")->fetch() != "") {	
 return null;
 }
 

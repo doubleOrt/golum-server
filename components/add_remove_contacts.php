@@ -1,7 +1,5 @@
 <?php
-require_once "common_requires.php";
-require_once "logged_in_importants.php";
-  
+require_once "initialization.php";  
 
 if(isset($_GET["user_id"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false) {	 
 
@@ -27,13 +25,8 @@ $con->exec("delete from notifications where notification_from = ". $_SESSION["us
 echo "1";	
 }
 
-$shmid = $_GET["user_id"] . "" . 6; 
-$shm = shmop_open($shmid, 'c', 0777, 1024);
-shmop_write($shm, str_to_nts("true"), 0);
-shmop_close($shm);	
-
 }
  
- 
+ unset($con);
  
  ?>

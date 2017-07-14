@@ -1,3 +1,10 @@
+
+/* everything that is supposed to contain the number of new notifications will be hidden by default, they will be shown and filled as soon 
+as the number of new notifications is loaded.*/
+#new_notifications_num {
+display:none;	
+}
+
 #notifications_container {
 overflow:hidden;	
 }
@@ -55,7 +62,7 @@ height:45px;
 display:table-cell;
 vertical-align:middle;	
 width:calc(100% - 45px);
-padding-left:20px;
+padding:0 20px;
 margin-bottom:5px;
 }
 

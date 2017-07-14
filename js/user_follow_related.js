@@ -50,7 +50,7 @@ url:"components/add_remove_contacts.php",
 data:{user_id:userId},
 type:"get",
 success: function(data) {
-
+	
 if(data != "") {
 // if the callback has a parameter that we can pass the data to	
 if(callback.length > 0) {	
@@ -335,20 +335,19 @@ if(newState == "0") {
 Materialize.toast('User Blocked, Tap Button To Unblock',3000,'red');	
 $("#user_profile_block_button").html("Unblock");	
 $("#user_profile_block_button").attr("data-current-state","1");	
-$("#user_profile_follow_button").html("Follow");
+$("#user_profile_follow_button").html("Follow +");
 // since you unfollow a user when you block them, we have to decrease that user's followings by 1
 var user_followers_num = get_user_profile_followers_num(); 
 if(user_followers_num > 0) {
 set_user_profile_followers_num(user_followers_num - 1);	
 }
-
-$("#user_profile_follow_button").css({"pointer-events":"none","opacity":".5"});
+$("#user_profile_follow_button").addClass("disabledButton");
 }	
 else if(newState == "1") {
 Materialize.toast('User Unblocked, Tap Button To Block',3000,'red');	
 $("#user_profile_block_button").html("Block");	
 $("#user_profile_block_button").attr("data-current-state","0");		
-$("#user_profile_follow_button").css({"pointer-events":"auto","opacity":"1"});
+$("#user_profile_follow_button").removeClass("disabledButton");
 }
 }
 

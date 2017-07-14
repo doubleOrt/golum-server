@@ -14,24 +14,24 @@ $_SESSION["toasts"] = [];
 
 
 function dataQuery($query, $params) {
-	global $con;
-    $queryType = explode(' ', $query);
- 
-    // run query
-    try {
-        $queryResults = $con->prepare($query);
-        $queryResults->execute($params);
-        if($queryResults != null && 'SELECT' == strtoupper($queryType[0])) {
-            $results = $queryResults->fetchAll(PDO::FETCH_ASSOC);
-            return $results;
-        }
-        $queryResults = null; // first of the two steps to properly close
-        $dbh = null; // second step to close the connection
-    }
-    catch(PDOException $e) {
-        $errorMsg = $e->getMessage();
-        echo $errorMsg;
-    }
+global $con;
+$queryType = explode(' ', $query);
+
+// run query
+try {
+$queryResults = $con->prepare($query);
+$queryResults->execute($params);
+if($queryResults != null && 'SELECT' == strtoupper($queryType[0])) {
+$results = $queryResults->fetchAll();
+return $results;
+}
+$queryResults = null; // first of the two steps to properly close
+$dbh = null; // second step to close the connection
+}
+catch(PDOException $e) {
+$errorMsg = $e->getMessage();
+echo $errorMsg;
+}
 }
 
 

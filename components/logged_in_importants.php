@@ -17,7 +17,6 @@ $base_user_avatar_positions = [0,0];
 }
 
 $user_favorite_posts_arr = $con->query("select post_id from favorites where user_id = ". $_SESSION["user_id"])->fetchAll();
-
 }
 
 $background_type_num_to_str = [1=>"jpg",2=>"png",3=>"gif"];
