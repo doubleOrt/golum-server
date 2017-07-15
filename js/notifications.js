@@ -47,7 +47,8 @@ success:function(data) {
 var data_arr = JSON.parse(data);
 callback(data_arr[0]);
 }	
-})	
+});
+
 }
 
 

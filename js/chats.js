@@ -342,3 +342,101 @@ Materialize.toast("Image Type Must Be Either \"JPG\", \"PNG\" Or \"GIF\" !",6000
 }
 
 }
+
+
+
+
+
+
+
+
+
+
+$(document).ready(function(){
+
+
+
+// when a user clicks on the start chat button or the chat icon in the usermodals
+$(document).on("click",".startChat",function(e){
+startChatModal.call($(this),e.target.tagName);
+startStatusChecks();		
+});
+
+$(document).on("click",".chatModalCloseButton",function() {
+
+$(".chatWindowChild").html("");
+$(".chatModalFullName").html("");
+$(".sendMessageButton").html("");
+
+scrollEventAlreadyAttached = false;
+$(".chatWindow").html("<div class='chatWindowChild'></div>");
+chatModalClosed();
+longpollingVar.abort();
+});
+
+// on double tapping, toggle .emojisContainer's display.
+$(document).on("doubletap",".chatWindowChild",function(e){
+setTimeout(function(){
+$(".emojisContainer").toggle();	
+},50);
+});
+
+// when a user is writing a message we call this, if the message is currently empty, we change the send message button to a send photo button, otherwise we change it to a send mesage button.
+$(document).on("keyup",".messageTextarea",function(){
+
+// if the new value of this element is empty, then we want to change our button to a send image button
+if($(this).val().trim() == "") {
+switchChatModalSendButton(0);	
+}
+// this means the user is typing in a message, so we need to change our button to a send message button.
+else {	
+switchChatModalSendButton(1);
+}
+
+});
+
+
+// hide the .emojisContainer when its sides are clicked.	
+$(".emojisContainer").click(function(event){
+if(event.target.tagName != "IMG") {	
+$(this).hide();	
+}
+});
+
+// when the user presses the #chatModal's send message button.
+$(document).on("click","#sendMessage",function(){
+
+// if the user wants to send an image
+if($(this).attr("data-file-or-send") == "0") {
+$("#sendImage").click();
+return;	
+}
+// user wants to send a text message
+else {
+switchChatModalSendButton(0);
+sendTextMessage($("#sendMessage").attr("data-chat-id"), $(".messageTextarea").val());
+$(".messageTextarea").val("");	
+}
+
+});
+
+// user wants to send an emoji
+$(document).on("click",".emoji",function(e){	
+$(".emojisContainer").fadeOut();
+sendMessage($("#sendMessage").attr("data-chat-id"), $(this).attr("src"), "emoji-message");
+});
+
+// when users want to send files (images).
+$(document).on("change","#sendImage",function(){
+sendImage();
+});
+
+// user wants to open an image-message in fullscreen
+$(document).on("click",".fileMessageContainer",function(){
+openFullScreenFileView($(this).find("img").attr("src"));
+});
+
+
+
+	
+});

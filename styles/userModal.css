@@ -22,8 +22,26 @@ background: rgba(0,0,0,.8);
 float:right;	
 }
 
+#profile_background_buttons_container a {
+display:inline-block;
+position:relative;	
+top:3px;
+}
+
+#profile_background_buttons_container a:not(:first-child) {
+margin-left:10px;	
+}
+
 #profile_background_buttons_container a i.material-icons {
 color: white;	
+}
+
+#profile_background_buttons_container .custom_badge {
+display:none;	
+position:absolute;
+top:0;
+right:0;
+transform:translate(50%,-50%);
 }
 
 .baseUserOnly {

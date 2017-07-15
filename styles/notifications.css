@@ -3,6 +3,10 @@
 as the number of new notifications is loaded.*/
 #new_notifications_num {
 display:none;	
+position:absolute;
+right:0;
+top:0;
+transform:translate(20%,-40%);
 }
 
 #notifications_container {

@@ -4,6 +4,7 @@
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
+$echo_arr = [[]];
 
 $user_chats = $con->query("select id from chats where chatter_ids like '%-". $_SESSION["user_id"] ."' or chatter_ids like '". $_SESSION["user_id"] ."-%'")->fetchAll();
 
@@ -15,8 +16,9 @@ $chat_ids_string .= " or ";
 $chat_ids_string .= " chat_id = ". $user_chats[$i]["id"];	
 }
 
+array_push($echo_arr[0], $con->query("select count(id) from messages where (". $chat_ids_string .") and message_from != ". $_SESSION["user_id"] ." and read_yet = false")->fetch()[0]);
 
-echo $con->query("select count(id) from messages where (". $chat_ids_string .") and message_from != ". $_SESSION["user_id"] ." and read_yet = false")->fetch()[0];
+echo json_encode($echo_arr);
 
 
 

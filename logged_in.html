@@ -294,7 +294,9 @@ BASE_USER_ID_HOLDER.attr("data-user-id", data);
 	
 <div id="profile_background_bottom_overlay" class="stopPropagationOnClick"><!-- adding .stopPropagationOnClick to prevent the #changeBackgroundButton from being shown everytime the user interacts with this -->
 <div id="profile_background_buttons_container">
-<a href="#" class="dropdown-button opacityChangeOnActive" data-activates="profile_settings"><i class="material-icons">settings</i></a>
+<a href="#" class="get_chat_portals baseUserOnly opacityChangeOnActive modal-trigger" data-target="chat_portals_modal"><i class="material-icons">chat</i>
+<span id="user_profile_new_messages_num" class="custom_badge"></span></a>
+<a href="#" class="dropdown-button opacityChangeOnActive" data-activates="profile_settings"><i class="material-icons">more_vert</i></a>
 <ul id='profile_settings' class='dropdown-content'>
 <li class="baseUserOnly"><a href='#!' class='waves-effect waves-lightgrey modal-trigger' data-target="settingsModal">Settings</a></li>
 <li class="notBaseUserOnly"><a id='user_profile_block_button' data-user-id='' data-current-state='' href='#!' class='waves-effect waves-lightgrey'>Block</a></li>
@@ -1433,6 +1435,35 @@ Type the code that you received with <b id="confirm_email_modal_email_address_in
 </div>
 
 </div>
+ 
+ 
+ 
+
+<div id="chat_portals_modal" class="modal fullScreenModal hasMobileOnlyHeader">
+
+<div class="modal-content">
+</div>
+
+
+<div class="modalHeaderContainer">
+<div class='modal-header'>
+<a class='modalCloseButton waves-effect wavesCustom' data-modal='chat_portals_modal'>
+<i class='material-icons'>arrow_back</i>
+</a>
+<span class='modalHeaderFullName'>Chats</span>
+<div class='modalLinks navRightItemsMobile'>
+</div>
+</div><!-- end .modal-header -->
+</div>
+
+</div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  
  

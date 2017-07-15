@@ -148,7 +148,7 @@ $echo_arr[0] .= "<div class='messageContainer message". ($sent_message == true ?
 <img id='".$uniq_id."' class='searchResultAvatar' src='". htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") ."' alt='Avatar Picture' style='position:absolute;'/>
 </div>
 </div>
-") ."</div>" : "") ."
+</div>" : "") ."
 <div class='message'>
 ". htmlspecialchars($message_raw, ENT_QUOTES, "utf-8") ."
 <div class='messageDate'>

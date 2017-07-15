@@ -7,6 +7,7 @@ var MAXIMUM_USER_PROFILE_AVATAR_IMAGE_SIZE = 5000000;
 var USER_LETTER_AVATAR_SIZE = 120;
 // will be set on document load
 var PROFILE_CONTAINER_ELEMENT;
+var USER_PROFILE_NEW_MESSAGES_NUM;
 var USER_PROFILE_FOLLOWER_COUNTER;
 var USER_PROFILE_FOLLOWING_COUNTER;
 var USER_PROFILE_TAGS_COUNTER;
@@ -83,6 +84,11 @@ USER_PROFILE_POSTS_COUNTER.attr({"data-user-id": data["id"], "data-first-name": 
 if(PROFILE_CONTAINER_ELEMENT.attr("data-is-base-user") == "1") {
 PROFILE_CONTAINER_ELEMENT.find(".notBaseUserOnly").hide(); 		
 PROFILE_CONTAINER_ELEMENT.find(".baseUserOnly").show(); 	
+get_new_messages_num(function(num) {	
+if(parseFloat(num) > 0) {
+USER_PROFILE_NEW_MESSAGES_NUM.html(num).css("display", "inline-block");	
+}
+});
 }
 else {
 PROFILE_CONTAINER_ELEMENT.find(".baseUserOnly").hide(); 	
@@ -281,6 +287,7 @@ USER_PROFILE_POSTS_COUNTER = $("#user_profile_posts_count");
 USER_PROFILE_TABS_STATE_HOLDER = PROFILE_CONTAINER_ELEMENT;	
 USER_PROFILE_KNOWN_INFO_CONTAINER = $("#userModalKnownInfoContainer");
 USER_PROFILE_POSTS_CONTAINER = $("#user_profile_posts_container");	
+USER_PROFILE_NEW_MESSAGES_NUM = $("#user_profile_new_messages_num");	
 set_user_profile_selects_container_constant();
 }	
 function set_user_profile_selects_container_constant() {

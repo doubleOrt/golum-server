@@ -646,16 +646,13 @@ font-size:220%;
 
 .custom_badge {
 display:inline-block;	
-position:absolute;
-right:0;
-top:0;
-transform:translate(20%,-40%);
 width:18px;
 height:18px;
 line-height:18px;
 color:white;
 font-size:10px;
 font-weight:bold;
+text-align:center;
 background-color:yellowgreen;
 border:1px solid white;
 border-radius:50%;
