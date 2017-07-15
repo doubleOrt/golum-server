@@ -4,6 +4,7 @@
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
+$echo_arr = [[], 0];
 
 if(isset($_FILES["the_file"]) && isset($_POST["chat_id"]) && filter_var($_POST["chat_id"], FILTER_VALIDATE_INT) !== false) {
 
@@ -66,54 +67,70 @@ $recipient_is_in_this_chat_modal = true;
 else {
 $recipient_is_in_this_chat_modal = false;	
 }
-shmop_close($shmop);
 
-$shmid = $chatter_ids_arr[$i] . "" . 1; 
-$shm = shmop_open($shmid, 'c', 0777, 1024);
-shmop_write($shm, str_to_nts("true"), 0);
-shmop_close($shm);
 }
 
-$file_uniq_id = rand(10000000,100000000);
+$messager_arr = $con->query("select id,first_name,last_name,avatar_picture from  users where id = ". $_SESSION["user_id"])->fetch();
+$messager_avatar_arr = $con->query("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = ". $messager_arr["id"] ." order by id desc limit 1")->fetch();
 
-$message_uniq_id = rand(1000000,10000000);
-
-
-
-echo "<div class='messageContainer imageMessageContainer message0' id='message".$message_uniq_id."' data-message-id='". htmlspecialchars($message_id, ENT_QUOTES, "utf-8") ."'><div class='fileMessageContainer'><img id='file". $file_uniq_id."' src='". htmlspecialchars($new_path, ENT_QUOTES, "utf-8") ."' alt='File'/></div></div>
-<script>
-
-	$('#file".$file_uniq_id."').on('load',function(){
-		fitToParent($(this));
-	});
-	
-</script>";
+if($messager_avatar_arr[0] != "") {
+$messager_avatar_rotate_degree = $messager_avatar_arr["rotate_degree"];
+$messager_avatar_positions = explode(",",htmlspecialchars($messager_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 }
 else {
-echo "Materialize.toast('Something Went Wrong, Sorry!',6000,'red')";
+$messager_avatar_rotate_degree = 0;
+$messager_avatar_positions = [0,0];	
+}
+
+array_push($echo_arr[0],[
+"message" => $new_path,
+"message_type" => 2,
+"read_yet" => 0,
+"time_string" => date("H:i"),
+"message_sent_by_base_user" => 1,
+"message_is_first_in_sequence" => 0,
+"sender_info" => [
+"id" => htmlspecialchars($messager_arr["id"], ENT_QUOTES, "utf-8"),
+"first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
+"last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
+"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
+"avatar_positions" => $messager_avatar_positions
+]
+]);	
+}
+else {
+$echo_arr[1] = "Something Went Wrong, Sorry!";
 die();		
 }
 }
 else {
-echo "Materialize.toast('Something Went Wrong, Sorry!',6000,'red')";
+$echo_arr[1] = "Something Went Wrong, Sorry!";
 die();			
 }
 }
 else {
-echo "Materialize.toast('Something Went Wrong, Sorry!',6000,'red')";
+$echo_arr[1] = "Something Went Wrong, Sorry!";
 die();	
 }
 }
 else {
-echo "Materialize.toast('Image Type Must Be Either \"JPEG\", \"JPG\" \"PNG\" Or \"GIF\" !',6000,'red')";
+$echo_arr[1] = "Image Type Must Be Either \"JPEG\", \"JPG\" \"PNG\" Or \"GIF\" !";
 die();
 }
 }
 else {
-echo "Materialize.toast('Image Size Must Be Smaller Than 5MB',6000,'red')";
+$echo_arr[1] = "Image Size Must Be Smaller Than 5MB";
 die();	
 }
 }
+
+
+echo json_encode($echo_arr);
+
+unset($con);
+
+
 
 
 ?>

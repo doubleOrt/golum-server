@@ -71,7 +71,7 @@ return `
 
 <div class='col l1 m1 s3 singleChatPortalAvatarCol'>
 <a href='#' class='removeChat'><i class='material-icons'>close</i></a>
-<div class='singleChatPortalAvatarContainer modal-trigger view-user showUserModal opacityChangeOnActive stopPropagationOnClick' data-target='modal1' data-user-id='`+ data["recipient_info"]["id"] +`'>
+<div class='singleChatPortalAvatarContainer modal-trigger showUserModal opacityChangeOnActive stopPropagationOnClick' data-target='user_modal' data-user-id='`+ data["recipient_info"]["id"] +`'>
 <div class='singleChatPortalRotateContainer rotateContainer' style='margin-top:`+ data["recipient_info"]["avatar_positions"][0] +`%;margin-left:`+ data["recipient_info"]["avatar_positions"][1] +`%;'>
 <div class='singleChatPortalRotateDiv'>
 <img class='avatarImages' id='chat_portal_avatar` + random_num + `' src='` + (data["recipient_info"]["avatar"] != "" ? data["recipient_info"]["avatar"] : LetterAvatar(data["recipient_info"]["first_name"] , 60) ) + `' alt='Avatar'/>
@@ -107,7 +107,7 @@ return `
 function updateChatPortalActivities(chatPortalActivities) {
 	
 for(var i = 0;i<chatPortalActivities.length;i++) {
-		
+
 var elem = $(".singleChatPortal[data-chat-id='" + chatPortalActivities[i]["chatId"] + "']");
 
 // if current row has any new messages.
@@ -117,7 +117,7 @@ elem.find(".custom_badge").html(chatPortalActivities[i]["newMessagesNum"]).css("
 }
 // if current row has no new messages 
 else {	
-elem.find(".chatPortalFullName").find("custom_badge").hide();
+elem.find(".custom_badge").html(chatPortalActivities[i]["newMessagesNum"]).hide();
 }
 
 elem.find(".chatPortalMessagePreview").html(chatPortalActivities[i]["latestMessage"]);
@@ -183,6 +183,7 @@ return false;
 $.get({
 url: "components/get_new_messages_num.php",
 success:function(data) {
+console.log(data);	
 var data_arr = JSON.parse(data);
 callback(data_arr[0]);
 }	
@@ -205,7 +206,6 @@ CHAT_PORTALS_CONTAINER_ELEMENT.html("");
 CHAT_PORTALS_CONTAINER_ELEMENT.attr("data-end-of-results", "false");
 showLoading(CHAT_PORTALS_CONTAINER_ELEMENT, "50%");
 getChatPortals(0, function(data){
-console.log(data);	
 get_chat_portals_callback(data, CHAT_PORTALS_EMPTY_NOW_MESSAGE, function(){
 removeLoading(CHAT_PORTALS_CONTAINER_ELEMENT);		
 });

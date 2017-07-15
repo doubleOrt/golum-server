@@ -88,8 +88,13 @@ overflow-x:hidden;
 overflow-y:visible;
 }
 
+.modalHeaderFullName span {
+display:block;	
+}
+
 .modalHeaderFullNameSecondary {
 font-size:60%;
+line-height:15px;
 }
 
 

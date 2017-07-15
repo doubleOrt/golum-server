@@ -950,57 +950,6 @@ Identification Info
 
 
 
-
-<div id="chatModal" class="modal fullScreenModal">
-
-<div class='modal-content chatModalContent'> 
-<div class='chatModalContentChild'>
-<div class='chatWindow'>
-<div class='chatWindowChild'>
-
-</div>
-</div>
-</div>
-
-<div class='inputContainer'>
-<textarea class='messageTextarea' placeholder='Type Message...'></textarea>
-<div class='sendMessageButton'>
-</div>
-<div style='display:none'>
-<input id='sendImage' type='file' accept='image/*'/>
-</div>
-</div>
-
-</div><!-- end chatModalContent -->
-
-<div class="modalHeaderContainer">
-<div class='modal-header'>
-<a class='modalCloseButton waves-effect wavesCustom chatModalCloseButton' data-modal='chatModal'>
-<i class='material-icons'>arrow_back</i>
-</a>
-<span class='modalHeaderFullName chatModalFullName'></span>
-<div class='modalLinks navRightItemsMobile'>
-</div>
-</div><!-- end .modal-header -->
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- followers modal -->
 <div id="followingMeModal" class="modal hasHeader fullScreenModal"> 
 
@@ -1460,6 +1409,49 @@ Type the code that you received with <b id="confirm_email_modal_email_address_in
  
  
  
+<div id="chatModal" class="modal fullScreenModal hasMobileOnlyHeader">
+
+<div class='modal-content chatModalContent'> 
+<div class='chatModalContentChild'>
+<div class='chatWindow'>
+<div class='chatWindowChild'>
+
+</div>
+</div>
+</div>
+
+<div class='inputContainer'>
+<textarea class='messageTextarea' placeholder='Type Message...'></textarea>
+<div class='sendMessageButton'>
+<a id='sendMessage' class='btn-floating waves-effect wavesCustom myBackground' data-file-or-send='0' data-chat-id=''><i class='material-icons'>camera_alt</i></a>
+</div>
+<div style='display:none'>
+<input id='sendImage' type='file' accept='image/*'/>
+</div>
+</div>
+
+</div><!-- end chatModalContent -->
+
+<div class="modalHeaderContainer">
+<div class='modal-header'>
+<a class='modalCloseButton waves-effect wavesCustom chatModalCloseButton' data-modal='chatModal'>
+<i class='material-icons'>arrow_back</i>
+</a>
+<span class='modalHeaderFullName chatModalFullName'>
+<span id="recipient_name"></span>
+<span id='recipient_current_status' class='modalHeaderFullNameSecondary' data-current-status=''></span>
+</span>
+<div class='modalLinks navRightItemsMobile'>
+</div>
+</div><!-- end .modal-header -->
+</div>
+
+
+</div>
+
+
+
+
  
  
  

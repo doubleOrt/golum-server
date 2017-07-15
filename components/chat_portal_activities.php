@@ -50,12 +50,12 @@ $echo_arr = [];
 
 // in this page we give our js file key value pairs of chat ids and new messages from each one.
 
-$chats_arr = $con->query("select id from chats where chatter_ids like '%".$_SESSION["user_id"]."%'")->fetchAll(); 		
+$chats_arr = $con->query("select id, (select count(id) from messages where chat_id = chats.id and message_from != ". $_SESSION["user_id"] ." and read_yet = false) as chat_unread_messages from chats where chatter_ids like '%".$_SESSION["user_id"]."%'")->fetchAll(); 		
 
 
 for($i = 0;$i < count($chats_arr);$i++) {
 
-$new_messages_arr = $con->query("select message,message_type,message_from,date_of from messages where chat_id = ". $chats_arr[$i]["id"]." and read_yet = false")->fetchAll();
+$new_messages_arr = $con->query("select message,message_type,message_from,date_of from messages where chat_id = ". $chats_arr[$i]["id"])->fetchAll();
 
 $new_messages_num = 0;
 
@@ -64,6 +64,7 @@ $latest_message = "";
 $latest_message_date = "";
 
 for($x = 0;$x < count($new_messages_arr);$x++) {
+	
 if($new_messages_arr[$x]["message_from"] != $_SESSION["user_id"]) {	
 $new_messages_num++;
 }
@@ -75,10 +76,10 @@ if($new_messages_arr[$x]["message_type"] == "text-message") {
 $latest_message = openssl_decrypt($new_messages_arr[$x]["message"],"aes-128-cbc","georgedies",OPENSSL_RAW_DATA,"dancewithdragons");
 }
 else if($new_messages_arr[$x]["message_type"] == "emoji-message") {
-$latest_message = "<i>Emoji</i>";	
+$latest_message = "Emoji";	
 }
 else if($new_messages_arr[$x]["message_type"] == "file-message") {
-$latest_message = "<i>File</i>";	
+$latest_message = "File";	
 }
 }	
 }
@@ -101,7 +102,7 @@ $latest_message = "No New Messages";
 }
 
 
-array_push($echo_arr,[htmlspecialchars($chats_arr[$i]["id"], ENT_QUOTES, "utf-8"), $new_messages_num, htmlspecialchars($latest_message, ENT_QUOTES, "utf-8"), $latest_message_date]);	
+array_push($echo_arr,[htmlspecialchars($chats_arr[$i]["id"], ENT_QUOTES, "utf-8"), $chats_arr[$i]["chat_unread_messages"], htmlspecialchars($latest_message, ENT_QUOTES, "utf-8"), $latest_message_date]);	
 }
 
 echo json_encode($echo_arr);

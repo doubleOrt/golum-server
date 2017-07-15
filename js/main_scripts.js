@@ -12,7 +12,7 @@ $("#showOnBodyLoad").show();
 
 // we got 284 emojis in our emojis file, we need to append them all to our emojisContainerChild element.
 for(var i = 0;i<285;i++) {
-$(".emojisContainerChild").append("<img class='emoji' src='icons/emojis/" + i + ".svg' alt='Emoji' style='width:55px;height:55px;'/>");
+$("#emojisContainerChild").append("<img class='emoji' src='icons/emojis/" + i + ".svg' alt='Emoji' style='width:55px;height:55px;'/>");
 }
  
  

@@ -1,107 +1,88 @@
 
-var scrollEventAlreadyAttached = false;
-
 // we use this variable to prevent multiple calls to "previous_messages.php", otherwise there would be duplicate messages, be sure to set this variable to true whenever you call "showPreviousMessages()", and set it to false after a successful return in the function.
-var chatPreventMultipleCalls = false;
+var chat_prevent_multiple_calls = false;
 
 var startChatId;
 var startChatRecipientId;
 
 // this function is called whenever a chat modal is opened, and whenever the user wants to see previous messages.
-function startChatModal(targetTagname) {	
+function startChatModal(chat_id, user_id, unhide_chat_if_hidden, row_offset, callback) {	
 
-// if the user is actually clicking on the avatar images (meaning he wants to go to the user modal, not to the chat modal) of the chatPortals, return.
-if(targetTagname == "IMG") {
-return;	
+if(typeof callback != "function" || typeof row_offset == "undefined") {
+return false;
 }
 
-if(typeof $(this).attr("data-chat-id") != "undefined" || typeof $(this).attr("data-user-id") != "undefined" && typeof $(this).attr("data-from") != "undefined") {
-
+if(chat_prevent_multiple_calls == false) {
+				
+chat_prevent_multiple_calls = true;	
+	
 var dataObj = {};
 
-if($(this).attr("data-from") == "userModal") {
-dataObj["unhide_chat_if_hidden"] = "true";	
-}
-else {
-dataObj["unhide_chat_if_hidden"] = "false";		
-}
+dataObj["row_offset"] = row_offset;
+dataObj["unhide_chat_if_hidden"] = unhide_chat_if_hidden;
 
-if(typeof $(this).attr("data-chat-id") != "undefined") {
-startChatId = $(this).attr("data-chat-id");	
-dataObj["chat_id"] = startChatId;
+if(typeof chat_id != "undefined") {
+dataObj["chat_id"] = chat_id;	
 }
-if(typeof $(this).attr("data-user-id") != "undefined") {
-startChatRecipientId = $(this).attr("data-user-id");
-dataObj["user_id"] = startChatRecipientId;
+if(typeof user_id != "undefined") {
+dataObj["user_id"] = user_id;	
 }
-
-dataObj["currently_shown"] = $(".messageContainer").length;
-
-$("#chatModal").modal('open');	
 
 $.get({
 url:"components/start_chat.php",
 data:dataObj,
 type:"get",
-success: function(data) {
-
-if(scrollEventAlreadyAttached == false) {
-	
-$(".chatWindowChild").scroll(function(event){
-if(chatPreventMultipleCalls == false && $(this).scrollTop() == 0) {
-showPreviousMessages($("#sendMessage").attr("data-chat-id"),$(".messageContainer").length);
-chatPreventMultipleCalls = true;
+success: function(data) {	
+var data_arr = JSON.parse(data);
+callback(data_arr);
+chat_prevent_multiple_calls = false;
 }
 });
-
-scrollEventAlreadyAttached = true;
 }
 
-var dataArr = JSON.parse(data);
+}
 
-$(".chatWindowChild").prepend(dataArr[0]);	
-$(".sendMessageButton").html(dataArr[1]);
-$(".chatModalFullName").html(dataArr[2]);
-$(".emojisContainer").appendTo(".chatModalContentChild");
+function start_chat_callback(is_infinite_scroll, data) {
+	
+if(data.length > 1) {	
+$("#emojisContainer").appendTo(".chatModalContentChild");	
+$("#recipient_name").html(data[1]["recipient_first_name"]);	
+$("#recipient_current_status").attr("data-current-status", data[1]["recipient_current_status"]);	
+$("#recipient_current_status").html(data[1]["recipient_current_status_string"]);	
+$("#sendMessage").attr("data-chat-id", data[1]["chat_id"]);
+}	
+
+// this chat has no messages
+if(data[0].length < 1 && $(".chatWindowChild .messageContainer").length < 1) {
+$(".chatWindowChild").html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>This chat has no messages</div>");	
+}
+
+/* all this (new/old)_scroll_height stuff is to take care of scrolling back to the element that was the 
+oldest message before this query (because jquery scrolls to the top on prepending). */
+if(is_infinite_scroll === true) {
+var old_scroll_height = $(".chatWindowChild")[0].scrollHeight;
+}
+
+/* needs to be "prepend" instead of "append", because of the scrolling nature of the chat modal, 
+which is different than the rest of the modals, in that you scroll to the top to see the older messages, 
+while in the other modals, you scroll to the bottom to see the older whatevers. */
+for(var i = 0; i < data[0].length; i++) {	
+$(".chatWindowChild").prepend(get_message_markup(data[0][i]));	
+}
 
 
-
+if(is_infinite_scroll === false) {
 // scroll to the bottom
 $('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);	
-
-
-getChatPortals();
-
-longpollingVar.abort();
-startStatusChecks();
 }
-});
-
-
-}		
+else if(is_infinite_scroll === true) {
+var new_scroll_height = $(".chatWindowChild")[0].scrollHeight;
+$(".chatWindowChild").scrollTop(new_scroll_height - old_scroll_height);
 }
 
-
-
-function showPreviousMessages(chatId,currentlyShownMessagesNumber) {
-
-$.get({
-url:"components/previous_messages.php",
-data:{
-"chat_id":chatId,
-"currently_shown":currentlyShownMessagesNumber	
-},
-success:function(data){
-// take care of scrolling back to the element that was the oldest message before this query (because jquery scrolls to the top on prepending). order is important here.
-var firstHeight = $(".chatWindowChild")[0].scrollHeight;
-$(".chatWindowChild").prepend(data);
-var newHeight = $(".chatWindowChild")[0].scrollHeight;
-$(".chatWindowChild").scrollTop(newHeight - firstHeight);
-
-chatPreventMultipleCalls = false;		
+getChatPortalActivities(updateChatPortalActivities);
 }
-});	
-}
+
 
 
 function getNewMessages(chatId, lastMessage) {
@@ -128,135 +109,16 @@ $('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);
 
 
 
-
-
-
-function startStatusChecks() {
-
-var data = {};
-
-if($("#currentStatus").length > 0) {
-data["current_status"] = $("#currentStatus").attr("data-current-status");	
-}
-
-if($("#sendMessage").length > 0) {
-data["currently_chatting"] = $("#sendMessage").attr("data-chat-id");	
-}
-
-var sentUnreadMessages = false;
-
-$(".messageContainer").each(function(index){
-if(!$(this).hasClass("imageMessageContainer")) {	
-var currentId = $(this).attr("id");
-var markedForDeletionAttr = $("#" + currentId).attr("data-marked-for-deletion");
-if(typeof markedForDeletionAttr == "undefined") {
-sentUnreadMessages = true;	
-}
-}
-});
-
-if(sentUnreadMessages == true) {
-data["sent_unread_messages"] = "true";	
-}
-else {
-data["sent_unread_messages"] = "false";	
-}
-
-
-longpollingVar = $.get({
-url:"components/longpoll.php",
-data:data,
-type:"get",
-success:function(data) {	
-
-if(data != "") {
-	
-var dataArr = JSON.parse(data);
-
-// takes care of adding the recipient's status (online, last seen, etc...) for the #chatModal
-if(dataArr[0] != "") {
-$("#currentStatus").html(dataArr[0]);	
-if(dataArr[0] == "Online") {
-$("#currentStatus").attr("data-current-status",1);		
-}
-else if(dataArr[0] == "Here") {
-$("#currentStatus").attr("data-current-status",2);			
-}
-else {
-$("#currentStatus").attr("data-current-status",0);			
-}
-}
-
-// if there are any new messages
-if(dataArr[1] == "true") {
-getNewMessages($("#sendMessage").attr("data-chat-id"), ($(".messageContainer:last").hasClass("message0") || $(".messageContainer").length < 1 ? true : false));	
-}
-
-if(dataArr[2] == "true") {
-getChatPortalActivities(updateChatPortalActivities);	
-}
-
-// if we should set a 10s timeout to hide all messages.
-if(dataArr[3] == "true") {
-}
-
-if(dataArr[4] != "") {
-var imageMessageId = dataArr[4];	
-setTimeout(function(){
-fadeItOut(".messageContainer[data-message-id=" + imageMessageId + "]");	
-},10000);	
-
-}
-
-
-// notification related
-if(dataArr[5] !== "") {
-// if user has new notifications	
-if(dataArr[5] > 0) {
-// if the element exists, then just change its innerHTML, otherwise create a new element.	
-if($("#newNotificationsNumber").find(".notificationNumContainer").length > 0) {	
-$("#newNotificationsNumber .notificationNum").html(dataArr[5]);
-}
-else {
-$("#newNotificationsNumber").prepend("<span class='notificationNumContainer notificationNumContainerSmall' style='top:10px;right:2px;'><span class='notificationNum'>" + dataArr[5] + "</span></span>");	
-}
-}
-else {
-$("#newNotificationsNumber").find(".notificationNumContainer").remove();	
-}
-
-}
-
-}
-
-
-startStatusChecks();
-}
-});
-
-}
-
-
-
-
-
-function chatModalClosed() {
-$.get({
-url:"components/chat_modal_closed.php"	
-});
-}
-
-
 function switchChatModalSendButton(switchButtonTo) {
 
 // the button can now be used to send images.
 if(switchButtonTo == 0) {
-$("#sendMessage").html("<i class='material-icons' style='font-size:160%'>camera_alt</i>");	
+$("#sendMessage i").html("camera_alt");	
 $("#sendMessage").attr("data-file-or-send","0");		
 }
 // the button can now be used to send text.
 else if(switchButtonTo == 1) {
-$("#sendMessage").html("<i class='material-icons' style='font-size:120%'>send</i>");	
+$("#sendMessage i").html("send");	
 $("#sendMessage").attr("data-file-or-send","1");		
 }
 	
@@ -265,7 +127,7 @@ $("#sendMessage").attr("data-file-or-send","1");
 
 
 
-function sendMessage(chatId, message, messageType) {
+function sendMessage(chatId, message, messageType, callback) {
 
 $.post({
 url: 'components/send_message.php',
@@ -275,18 +137,17 @@ data: {
 "type": messageType
 },
 success: function(data){	
-$('.chatWindowChild').append(data);
-// scroll to the bottom
-$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);	
+var data_arr = JSON.parse(data);
+if(typeof callback == "function") {
+callback(data_arr);	
+}
 }
 }); 
 	
 }
 
 
-
-
-function sendTextMessage(chatId, message) {
+function sendTextMessage(chatId, message, callback) {
 
 if(typeof chatId == "undefined" || typeof message == "undefined" || message.trim() == "" || typeof $("#sendMessage").attr("data-chat-id") == "undefined") {
 return false;	
@@ -297,11 +158,11 @@ Materialize.toast("Message Must Be Smaller Than 400 Characters",4000,"red");
 return false;
 }
 
-sendMessage(chatId, message, "text-message");	
+sendMessage(chatId, message, "text-message", callback);	
 }
 
 
-function sendImage() {
+function sendImage(callback) {
 var imageSizeLimit = 5000000;
 
 var sendImageType = $("#sendImage")[0].files[0]["type"];
@@ -322,9 +183,10 @@ cache: false,
 contentType: false,
 processData: false,
 success: function(data){
-$('.chatWindowChild').append(data);
-// scroll to the bottom
-$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);	
+var data_arr = JSON.parse(data);	
+if(typeof callback == "function") {
+callback(data_arr);	
+}	
 }
 }); 
 
@@ -345,6 +207,108 @@ Materialize.toast("Image Type Must Be Either \"JPG\", \"PNG\" Or \"GIF\" !",6000
 
 
 
+function get_message_markup(data) {
+
+var random_num = Math.floor(Math.random()*1000000);
+
+// text-message
+if(data["message_type"] == "0") {
+/* a bit weird, but that "message + 1/0" classnaming logic is months old, if i were to recreate this now, the role 
+of 1 and 0 would be reverted, with 1 referring to the base user, and 0 to the recipient */
+return `
+<div class='messageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `'>
+
+`+ ((data["message_sent_by_base_user"] == "0" && data["message_is_first_in_sequence"] == "1") ? `
+
+<div class='avatarContainer chatRecipientAvatar'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["sender_info"]["id"] + `'>
+<div class='rotateContainer' style='margin-top:` + data["sender_info"]["avatar_positions"][0] + `%;margin-left:` + data["sender_info"]["avatar_positions"][1] +`%;'>
+<div class='avatarRotateDiv' data-rotate-degree='` + data["sender_info"]["avatar_rotate_degree"] + `' style='transform: rotate(` + data["sender_info"]["avatar_rotate_degree"] + `deg)'>
+<img id='chat_avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (data["sender_info"]["avatar"] != "" ? data["sender_info"]["avatar"] : LetterAvatar(data["sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
+</div>
+</div>
+</div>
+</div>` : "") + `
+
+<div class='message'>
+` + data["message"] + `
+<div class='messageDate'>
+- ` + data["time_string"] + `
+</div>
+</div>
+
+<script>
+	$('#chat_avatar` + random_num + `').on('load',function(){
+		fitToParent($(this));
+		adaptRotateWithMargin($(this),` + (data["sender_info"]["avatar_rotate_degree"] != "" ? data["sender_info"]["avatar_rotate_degree"] : 0) + `,false);
+	});
+</script>
+
+</div><!-- end .messageContainer -->`;
+}
+else if(data["message_type"] == "1") {
+return `<div class='messageContainer emojiMessageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `'>
+
+`+ ((data["message_sent_by_base_user"] == "0" && data["message_is_first_in_sequence"] == "1") ? `
+
+<div class='avatarContainer chatRecipientAvatar'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["sender_info"]["id"] + `'>
+<div class='rotateContainer' style='margin-top:` + data["sender_info"]["avatar_positions"][0] + `%;margin-left:` + data["sender_info"]["avatar_positions"][1] +`%;'>
+<div class='avatarRotateDiv' data-rotate-degree='` + data["sender_info"]["avatar_rotate_degree"] + `' style='transform: rotate(` + data["sender_info"]["avatar_rotate_degree"] + `deg)'>
+<img id='chat_avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (data["sender_info"]["avatar"] != "" ? data["sender_info"]["avatar"] : LetterAvatar(data["sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
+</div>
+</div>
+</div>
+</div>` : "") + `
+
+
+<div class='message emojiMessage ` + (data["message_sent_by_base_user"] == "0" && data["read_yet"] == "0" ? "unreadEmoji" : "") + `'>
+<img src='` + data["message"] + `' alt='Emoji'/>
+</div>
+</div><!-- end messageContainer -->
+
+<script>
+	$('#chat_avatar` + random_num + `').on('load',function(){
+		fitToParent($(this));
+		adaptRotateWithMargin($(this),` + (data["sender_info"]["avatar_rotate_degree"] != "" ? data["sender_info"]["avatar_rotate_degree"] : 0) + `,false);
+	});
+</script>
+
+</div><!-- end .messageContainer -->
+`;	
+}
+else if(data["message_type"] == "2") {
+return `<div class='messageContainer imageMessageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `'>
+
+`+ ((data["message_sent_by_base_user"] == "0" && data["message_is_first_in_sequence"] == "1") ? `
+
+<div class='avatarContainer chatRecipientAvatar'>
+<div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["sender_info"]["id"] + `'>
+<div class='rotateContainer' style='margin-top:` + data["sender_info"]["avatar_positions"][0] + `%;margin-left:` + data["sender_info"]["avatar_positions"][1] +`%;'>
+<div class='avatarRotateDiv' data-rotate-degree='` + data["sender_info"]["avatar_rotate_degree"] + `' style='transform: rotate(` + data["sender_info"]["avatar_rotate_degree"] + `deg)'>
+<img id='chat_avatar` + random_num + `' class='avatarImages notificationAvatarImages' src='` + (data["sender_info"]["avatar"] != "" ? data["sender_info"]["avatar"] : LetterAvatar(data["sender_info"]["first_name"] , 60) ) + `' alt='Image'/>
+</div>
+</div>
+</div>
+</div>` : "") + `
+
+<div class='fileMessageContainer'>
+<img id='file` + random_num + `' src='` + data["message"] + `' alt='File' />
+</div><!-- end .fileMessageContainer -->
+
+<script>
+	$('#chat_avatar` + random_num + `').on('load',function(){
+		fitToParent($(this));
+		adaptRotateWithMargin($(this),` + (data["sender_info"]["avatar_rotate_degree"] != "" ? data["sender_info"]["avatar_rotate_degree"] : 0) + `,false);
+	});
+</script>
+
+</div><!-- end .messageContainer -->
+`;	
+}
+}
+
+
 
 
 
@@ -358,28 +322,77 @@ $(document).ready(function(){
 
 // when a user clicks on the start chat button or the chat icon in the usermodals
 $(document).on("click",".startChat",function(e){
-startChatModal.call($(this),e.target.tagName);
-startStatusChecks();		
-});
 
-$(document).on("click",".chatModalCloseButton",function() {
+if((typeof $(this).attr("data-chat-id") == "undefined" || typeof $(this).attr("data-user-id") == "undefined") && typeof $(this).attr("data-from") == "undefined") {
+return false;	
+}
+
+var unhide_chat_if_hidden;
+if($(this).attr("data-from") == "userModal") {
+unhide_chat_if_hidden = true;
+}
+else {
+unhide_chat_if_hidden = false;
+}
+
+var chat_id;
+if(typeof $(this).attr("data-chat-id") != "undefined") {
+chat_id = $(this).attr("data-chat-id");	
+}
+
+var recipient_id;
+if(typeof $(this).attr("data-user-id") != "undefined") {
+recipient_id = $(this).attr("data-user-id");
+}
 
 $(".chatWindowChild").html("");
-$(".chatModalFullName").html("");
-$(".sendMessageButton").html("");
 
-scrollEventAlreadyAttached = false;
-$(".chatWindow").html("<div class='chatWindowChild'></div>");
-chatModalClosed();
-longpollingVar.abort();
+startChatModal(chat_id, recipient_id, unhide_chat_if_hidden, 0, function(data){
+start_chat_callback(false, data);
+// we want to update the badge on the user's profile that displays the number of their unread messages each time they view some of those unread messages.
+get_new_messages_num(function(num) {
+if(parseFloat(num) > 0) {
+USER_PROFILE_NEW_MESSAGES_NUM.html(num).css("display", "inline-block");	
+}
+else {
+USER_PROFILE_NEW_MESSAGES_NUM.html(num).hide();	
+}
 });
+});
+});
+$(".chatWindowChild").scroll(function(event){
+if($(this).scrollTop() == 0) {
+startChatModal($("#sendMessage").attr("data-chat-id"), undefined, true, $(".chatWindowChild .messageContainer").length, function(data){
+start_chat_callback(true, data);
+// we want to update the badge on the user's profile that displays the number of their unread messages each time they view some of those unread messages.
+get_new_messages_num(function(num) {
+if(parseFloat(num) > 0) {
+USER_PROFILE_NEW_MESSAGES_NUM.html(num).css("display", "inline-block");	
+}
+else {
+USER_PROFILE_NEW_MESSAGES_NUM.html(num).hide();	
+}
+});
+	
+});
+}
+});
+
+
+$(document).on("click",".chatModalCloseButton",function() {
+$(".chatWindowChild").html("");
+$("#recipient_name").html("");
+$("#recipient_current_status").html("");
+});
+
 
 // on double tapping, toggle .emojisContainer's display.
 $(document).on("doubletap",".chatWindowChild",function(e){
 setTimeout(function(){
-$(".emojisContainer").toggle();	
+$("#emojisContainer").toggle();	
 },50);
 });
+
 
 // when a user is writing a message we call this, if the message is currently empty, we change the send message button to a send photo button, otherwise we change it to a send mesage button.
 $(document).on("keyup",".messageTextarea",function(){
@@ -397,7 +410,7 @@ switchChatModalSendButton(1);
 
 
 // hide the .emojisContainer when its sides are clicked.	
-$(".emojisContainer").click(function(event){
+$("#emojisContainer").click(function(event){
 if(event.target.tagName != "IMG") {	
 $(this).hide();	
 }
@@ -414,7 +427,11 @@ return;
 // user wants to send a text message
 else {
 switchChatModalSendButton(0);
-sendTextMessage($("#sendMessage").attr("data-chat-id"), $(".messageTextarea").val());
+sendTextMessage($("#sendMessage").attr("data-chat-id"), $(".messageTextarea").val(), function(data){
+$(".chatWindowChild").find(".emptyNowPlaceholder").remove();	
+$(".chatWindowChild").append(get_message_markup(data[0][0]));	
+$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);	
+});
 $(".messageTextarea").val("");	
 }
 
@@ -422,13 +439,28 @@ $(".messageTextarea").val("");
 
 // user wants to send an emoji
 $(document).on("click",".emoji",function(e){	
-$(".emojisContainer").fadeOut();
-sendMessage($("#sendMessage").attr("data-chat-id"), $(this).attr("src"), "emoji-message");
+$("#emojisContainer").fadeOut();
+sendMessage($("#sendMessage").attr("data-chat-id"), $(this).attr("src"), "emoji-message", function(data){
+$(".chatWindowChild").find(".emptyNowPlaceholder").remove();	
+$(".chatWindowChild").append(get_message_markup(data[0][0]));	
+$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);	
+});
 });
 
 // when users want to send files (images).
 $(document).on("change","#sendImage",function(){
-sendImage();
+sendImage(function(data){
+// there were no errors	
+if(data[1] == "0") {	
+$(".chatWindowChild").find(".emptyNowPlaceholder").remove();
+$('.chatWindowChild').append(get_message_markup(data[0][0]));
+// scroll to the bottom
+$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);		
+}
+else {
+Materialize.toast(data[1], 6000, "red");	
+}
+});
 });
 
 // user wants to open an image-message in fullscreen

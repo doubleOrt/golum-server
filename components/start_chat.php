@@ -9,47 +9,11 @@ include_once "letter_avatars.php";
 
 
 
-function last_online($time) {
-	
-if($time == 0) {
-return $time;	
-}
-	
-$time = intval($time);	
-	
-$today = new DateTime(); // This object represents current date/time
-$today->setTime( 0, 0, 0 ); // reset time part, to prevent partial comparison
 
-$match_date = DateTime::createFromFormat( "Y-m-d H:i", date("Y-m-d H:i",$time));
-$match_date->setTime( 0, 0, 0 ); // reset time part, to prevent partial comparison
-
-$diff = $today->diff( $match_date );
-$diffDays = (integer)$diff->format( "%R%a" ); // Extract days count in interval
-
-if(time() - $time < 120) {# we say he was online that number of minutes ago.
-return "Just Went Offline";
-}	
-else if($diffDays == 0) {
-return "Last Online At " . date("H:i",$time);	
-}
-else if($diffDays == -1) {
-return "Last Online Yesterday At " . date("H:i",$time);	
-} 
-else if(time() - $time < 604800){
-return "Last Online On " . date("l",$time);	
-}
-else {
-return "Last Online On " . date("j, M Y",$time);		
-}
-}
+$echo_arr = [[]];
 
 
-
-# the first index in this arr being an empty string ("") has its significance, since otherwise we couldn't append to the first index ($echo_arr[0] .=). 
-$echo_arr = [""];	
-	
-
-if(!isset($_GET["chat_id"]) && isset($_GET["user_id"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false) {
+if(!isset($_GET["chat_id"]) && isset($_GET["user_id"]) && isset($_GET["row_offset"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {
 		
 $chat_recipient_id = $_GET["user_id"];
 	
@@ -91,193 +55,155 @@ $con->exec("delete from hidden_chats where chat_id = ". $chat_id ." and user_id 
 
 if(count($chat_recipient_info_arr) > 0) {
 	
-$current_status	= "Online";
+$current_status_string	= "Online";
 
-$rawStr =  read_shm($chat_recipient_info_arr["id"] . "" . 2);
-
-// $rawStr2 == 1 means the user is currently logged out, we know this because he logged out by pressing the log out button, and $rawStr2 == 0 means he is logged in because he pressed the login button.
-$rawStr2 =  read_shm($chat_recipient_info_arr["id"] . "" . 3);
-
-
-$rawStr3 =  read_shm($chat_recipient_info_arr["id"] . "" . 4);
-
-
-if($rawStr2 == "1")  {
-$current_status = last_online($rawStr);
-}
-if(time() - $rawStr > 4 && $rawStr2 != "1")  {
-$current_status = last_online($rawStr);
-write_shm($chat_recipient_info_arr["id"] . "" . 4,"none");
-}
-if(time() - $rawStr < 5 && $rawStr2 != "1" && $chat_id != $rawStr3) {
-$current_status = "Online";
-}
-if(time() - $rawStr < 5 && $rawStr2 != "1" && $chat_id == $rawStr3) {
-$current_status = "Here";
-}
-
-
-$messages_query =  $con->query("select id,message_from,message,read_yet,date_of,message_type from messages where chat_id = ". $chat_id ." order by id desc limit 15");
+$messages_arr =  $con->query("select id,message_from,message,read_yet,date_of,message_type from messages where chat_id = ". $chat_id ." order by id desc limit 15 OFFSET ". $_GET["row_offset"])->fetchAll();
 
 $messager_arr = $con->query("select id,first_name,last_name,avatar_picture from  users where id = ". $chat_recipient_id)->fetch();
 $messager_avatar_arr = $con->query("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = ". $messager_arr["id"] ." order by id desc limit 1")->fetch();
-$messager_avatar_arr_positions = explode(",",$messager_avatar_arr["positions"]);
 
-$sent_message_last = "";
+if($messager_avatar_arr[0] != "") {
+$messager_avatar_rotate_degree = $messager_avatar_arr["rotate_degree"];
+$messager_avatar_positions = explode(",",htmlspecialchars($messager_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
+}
+else {
+$messager_avatar_rotate_degree = 0;
+$messager_avatar_positions = [0,0];	
+}
 
-$messages_all = array_reverse($messages_query->fetchAll());
 
-for($x = 0;$x < count($messages_all);$x++) {	
+$sent_message_last = 0;
 
-$message_raw = openssl_decrypt($messages_all[$x]["message"],"aes-128-cbc","georgedies",OPENSSL_RAW_DATA,"dancewithdragons");
+for($x = 0;$x < count($messages_arr);$x++) {	
+
+$message_raw = openssl_decrypt($messages_arr[$x]["message"],"aes-128-cbc","georgedies",OPENSSL_RAW_DATA,"dancewithdragons");
 
 //if this message is a sent by this user to someone else, then set this variable to true, else set it to false.
-$sent_message = ($messages_all[$x]["message_from"] == $_SESSION["user_id"] ? true : false);		
-		
-$uniq_id = rand(10000000,100000000);
-	
-$message_uniq_id = rand(100000000,100000000000);			
-	
-if($messages_all[$x]["message_type"] == "text-message") {
-$echo_arr[0] .= "<div class='messageContainer message". ($sent_message == true ? "0" : "1") ."' id='message".$message_uniq_id."'>
-". ($sent_message == false && $sent_message_last !== $sent_message ? "
-<div class='chatRecipientAvatar showUserModal modal-trigger' data-target='modal1' data-user-id='". htmlspecialchars($messager_arr["id"], ENT_QUOTES, "utf-8") ."'>
-". $messager_arr["avatar_picture"] == "" ? letter_avatarize($messager_arr["first_name"],"small") : "
-<div class='rotateContainer' style='transform:none;display:inline-block;width:100%;height:100%;margin-top:". htmlspecialchars($messager_avatar_arr_positions[0], ENT_QUOTES, "utf-8") ."%;margin-left:". htmlspecialchars($messager_avatar_arr_positions[1], ENT_QUOTES, "utf-8") ."%;'>
-<div class='userAvatarRotateDiv'>
-<img id='".$uniq_id."' class='searchResultAvatar' src='". htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") ."' alt='Avatar Picture' style='position:absolute;'/>
-</div>
-</div>
-</div>" : "") ."
-<div class='message'>
-". htmlspecialchars($message_raw, ENT_QUOTES, "utf-8") ."
-<div class='messageDate'>
-- ". date("H:i",strtotime($messages_all[$x]["date_of"])) ."
-</div>
-</div>
-</div><!-- end messageContainer -->
-<script>
-
-	$('#".$uniq_id."').on('load',function(){
-		$(this).parent().css('transform','rotate(' + ". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) ." + 'deg)');
-		fitToParent($(this));
-		adaptRotateWithMargin($(this),". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) .",false);
-	});
-	
-	/*
-	if(parseFloat($('#chatModal').css('z-index')) == currentZindexStack) {
-	setTimeout(function(){
-		if(!$('#message".$message_uniq_id."').hasClass('message0')) {
-		fadeItOut('#message".$message_uniq_id."');
-		}
-		},10000);
-	}
-	else { 
-	setTimeout(function(){
-		if(!$('#message".$message_uniq_id."').hasClass('message0')) {
-		hideMessage('message".$message_uniq_id."');
-		}
-	},10000);
-	}
-	*/
-</script>";
+$sent_message = ($messages_arr[$x]["message_from"] == $_SESSION["user_id"] ? 1 : 0);		
+$message_is_first_in_sequence =  ($sent_message_last !=  $sent_message ? 1 : 0);		
+			
+if($messages_arr[$x]["message_type"] == "text-message") {
+array_push($echo_arr[0], [
+"message" => htmlspecialchars($message_raw, ENT_QUOTES, "utf-8"),
+"message_type" => 0,
+"read_yet" => htmlspecialchars($messages_arr[$x]["read_yet"], ENT_QUOTES, "utf-8"), 
+"time_string" => date("H:i",strtotime($messages_arr[$x]["date_of"])),
+"message_sent_by_base_user" => $sent_message,
+"message_is_first_in_sequence" => $message_is_first_in_sequence,
+"sender_info" => [
+"id" => $messager_arr["id"],
+"first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
+"last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
+"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
+"avatar_positions" => $messager_avatar_positions
+]
+]);
 }
-else if($messages_all[$x]["message_type"] == "emoji-message") {	
-$echo_arr[0] .= "<div class='messageContainer emojiMessageContainer message". ($sent_message == true ? "0" : "1") ."'  id='message".$message_uniq_id."'>
-". ($sent_message == false  && $sent_message_last !==  $sent_message ? "
-<div class='chatRecipientAvatar showUserModal modal-trigger' data-target='modal1' data-user-id='".$messager_arr["id"]."'>
-". ($messager_arr["avatar_picture"] == "" ? letter_avatarize($messager_arr["first_name"],"small") : "
-<div class='rotateContainer' style='transform:none;display:inline-block;width:100%;height:100%;margin-top:". htmlspecialchars($messager_avatar_arr_positions[0], ENT_QUOTES, "utf-8") ."%;margin-left:". htmlspecialchars($messager_avatar_arr_positions[1], ENT_QUOTES, "utf-8") ."%;'>
-<div class='userAvatarRotateDiv'>
-<img  id='".$uniq_id."' src='". htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") ."' alt='Avatar Picture' style='position:absolute;'/>
-</div>
-</div>
-") ."</div>" : "") ."
-<div class='message emojiMessage ". ($sent_message == false && $messages_all[$x]["read_yet"] == false ? "unreadEmoji" : "") ."'>
-<img src='". htmlspecialchars($message_raw, ENT_QUOTES, "utf-8") ."' alt='Emoji'/>
-</div>
-</div><!-- end messageContainer -->
-<script>
-
-	$('#".$uniq_id."').on('load',function(){
-		$(this).parent().css('transform','rotate(' + ". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) ." + 'deg)');
-		fitToParent($(this));
-		adaptRotateWithMargin($(this),". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) .",false);
-	});
-	
-	/*
-	
-	if(parseFloat($('#chatModal').css('z-index')) == currentZindexStack) {
-	setTimeout(function(){
-		if(!$('#message".$message_uniq_id."').hasClass('message0')) {
-		fadeItOut('#message".$message_uniq_id."');
-		}
-		},10000);
-	}
-	else { 
-	setTimeout(function(){
-		if(!$('#message".$message_uniq_id."').hasClass('message0')) {
-		hideMessage('message".$message_uniq_id."');
-		}
-	},10000);
-	}*/
-	
-</script>";
+else if($messages_arr[$x]["message_type"] == "emoji-message") {	
+array_push($echo_arr[0], [
+"message" => htmlspecialchars($message_raw, ENT_QUOTES, "utf-8"),
+"message_type" => 1,
+"read_yet" => htmlspecialchars($messages_arr[$x]["read_yet"], ENT_QUOTES, "utf-8"), 
+"time_string" => date("H:i",strtotime($messages_arr[$x]["date_of"])),
+"message_sent_by_base_user" => $sent_message,
+"message_is_first_in_sequence" => $message_is_first_in_sequence,
+"sender_info" => [
+"id" => $messager_arr["id"],
+"first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
+"last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
+"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
+"avatar_positions" => $messager_avatar_positions
+]
+]);
 }
-else if($messages_all[$x]["message_type"] == "file-message") {
-
-$file_uniq_id = rand(10000000,100000000);
-
-$file_arr = $con->query("select * from sent_files where id = ". intval($messages_all[$x]["message"]))->fetch();
-
-$echo_arr[0] .= "<div class='messageContainer imageMessageContainer message". ($sent_message == true ? "0" : "1") ."' id='message".$message_uniq_id."' data-message-id='". htmlspecialchars($messages_all[$x]["id"], ENT_QUOTES, "utf-8") ."'>" . 
-"<div class='chatRecipientAvatar showUserModal modal-trigger' data-target='modal1' data-user-id='". htmlspecialchars($messager_arr["id"], ENT_QUOTES, "utf-8") ."'>
-". ($messager_arr["avatar_picture"] == "" ? letter_avatarize($messager_arr["first_name"],"small") : "
-<div class='rotateContainer' style='transform:none;display:inline-block;width:100%;height:100%;margin-top:". htmlspecialchars($messager_avatar_arr_positions[0], ENT_QUOTES, "utf-8") ."%;margin-left:". htmlspecialchars($messager_avatar_arr_positions[1], ENT_QUOTES, "utf-8") ."%;'>
-<div class='userAvatarRotateDiv'>
-<img  id='".$uniq_id."' src='". htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") ."' alt='Avatar Picture' style='position:absolute;'/>
-</div>
-</div>
-") ."</div>
-<div class='fileMessageContainer'><img id='file".$file_uniq_id."' src='". htmlspecialchars($file_arr["path"], ENT_QUOTES, "utf-8") ."' alt='File' /></div>
-</div>
-<script>
-	
-	$('#".$uniq_id."').on('load',function(){
-		$(this).parent().css('transform','rotate(' + ". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) ." + 'deg)');
-		fitToParent($(this));
-		adaptRotateWithMargin($(this),". ($messager_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($messager_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0) .",false);
-	});
-	
-</script>";	
+else if($messages_arr[$x]["message_type"] == "file-message") {
+$file_arr = $con->query("select * from sent_files where id = ". intval($messages_arr[$x]["message"]))->fetch();
+array_push($echo_arr[0], [
+"message" => $file_arr["path"],
+"message_type" => 2,
+"read_yet" => htmlspecialchars($messages_arr[$x]["read_yet"], ENT_QUOTES, "utf-8"), 
+"time_string" => date("H:i",strtotime($messages_arr[$x]["date_of"])),
+"message_sent_by_base_user" => $sent_message,
+"message_is_first_in_sequence" => $message_is_first_in_sequence,
+"sender_info" => [
+"id" => $messager_arr["id"],
+"first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
+"last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
+"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
+"avatar_positions" => $messager_avatar_positions
+]
+]);
 }
 
 $sent_message_last = $sent_message;
-}
-
-
-if($current_status == "Online") {
-$data_current_status = 1;
-}
-else if($current_status == "Here") {
-$data_current_status = 2;
-}
-else {
-$data_current_status = 0;	
 }
 
 #set all messages's read_yet to true
 $con->exec("update messages set read_yet = true where chat_id = ". $chat_id." and message_from != ". $_SESSION["user_id"]);
 
 
-array_push($echo_arr,"<a id='sendMessage' class='btn-floating waves-effect wavesCustom myBackground' data-file-or-send='0' data-chat-id='". htmlspecialchars($chat_id, ENT_QUOTES, "utf-8") ."'><i class='material-icons' style='font-size:160%'>camera_alt</i></a>");
+if($current_status_string == "Online") {
+$current_status = 1;
+}
+else if($current_status_string == "Here") {
+$current_status = 2;
+}
+else {
+$current_status = 0;	
+}
 
-array_push($echo_arr, htmlspecialchars($chat_recipient_info_arr["first_name"], ENT_QUOTES, "utf-8") . "<br><span id='currentStatus' data-current-status='".$data_current_status."' class='modalHeaderFullNameSecondary'>". $current_status ."</span>");
+array_push($echo_arr, [
+"chat_id" => $chat_id,
+"recipient_first_name" => htmlspecialchars($chat_recipient_info_arr["first_name"], ENT_QUOTES, "utf-8"),
+"recipient_current_status" => $current_status,
+"recipient_current_status_string" => $current_status_string
+]);
+}
 
 
-write_shm($_SESSION["user_id"] . "" . 4,$chat_id);
 
 echo json_encode($echo_arr);
+unset($con);
+
+
+
+
+
+function last_online($time) {
+	
+if($time == 0) {
+return $time;	
+}
+	
+$time = intval($time);	
+	
+$today = new DateTime(); // This object represents current date/time
+$today->setTime( 0, 0, 0 ); // reset time part, to prevent partial comparison
+
+$match_date = DateTime::createFromFormat( "Y-m-d H:i", date("Y-m-d H:i",$time));
+$match_date->setTime( 0, 0, 0 ); // reset time part, to prevent partial comparison
+
+$diff = $today->diff( $match_date );
+$diffDays = (integer)$diff->format( "%R%a" ); // Extract days count in interval
+
+if(time() - $time < 120) {# we say he was online that number of minutes ago.
+return "Just Went Offline";
+}	
+else if($diffDays == 0) {
+return "Last Online At " . date("H:i",$time);	
+}
+else if($diffDays == -1) {
+return "Last Online Yesterday At " . date("H:i",$time);	
+} 
+else if(time() - $time < 604800){
+return "Last Online On " . date("l",$time);	
+}
+else {
+return "Last Online On " . date("j, M Y",$time);		
+}
 }
 
 

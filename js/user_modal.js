@@ -98,6 +98,14 @@ PROFILE_CONTAINER_ELEMENT.find(".notBaseUserOnly").show();
 $("#startChatButton").attr("data-user-id", data["id"]); 	
 $("#user_profile_follow_button").attr("data-user-id", data["id"]);
 $("#user_profile_block_button").attr("data-user-id", data["id"]);
+if(data["user_blocked_state"] == "1") {
+$("#user_profile_follow_button").addClass("disabledButton");	
+$("#user_profile_block_button").html("Unblock");	
+}
+else {
+$("#user_profile_follow_button").removeClass("disabledButton");	
+$("#user_profile_block_button").html("Block");		
+}
 
 // if the base user is not following the profile they are currently viewing, then change the html of the #user_profile_follow_button to "follow"
 if(data["followed_by_base_user"] == "0") {

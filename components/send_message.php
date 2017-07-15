@@ -3,6 +3,7 @@
 
 require_once "common_requires.php";
 
+$echo_arr = [[]];
 
 # if the post variables are set.
 if(isset($_POST["message"]) && isset($_POST["chat_id"]) && filter_var($_POST["chat_id"], FILTER_VALIDATE_INT) !== false) {
@@ -58,32 +59,49 @@ shmop_close($shm);
 }
 
 if($_POST["type"] == "text-message") {
-$message = "<div class='message'>" .htmlspecialchars($_POST["message"], ENT_QUOTES, "utf-8") . "</div>";	
+$message_type = 0;	
 }
 else if($_POST["type"] == "emoji-message") {
-$message = "<div class='message emojiMessage'><img src='".$_POST["message"]."' alt='Emoji'/></div>";	
+$message_type = 1;
 }
 
 
+$messager_arr = $con->query("select id,first_name,last_name,avatar_picture from  users where id = ". $_SESSION["user_id"])->fetch();
+$messager_avatar_arr = $con->query("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = ". $messager_arr["id"] ." order by id desc limit 1")->fetch();
 
-$message_uniq_id = rand(1000000,10000000);
-
-echo "<div class='messageContainer message0' id='message". $message_uniq_id ."'>". htmlspecialchars($message, ENT_QUOTES, "utf-8") ."</div>
-". ($recipient_is_in_this_chat_modal == true ? "<script>
-
-/*
-if(parseFloat($('#chatModal').css('z-index')) == currentZindexStack) {
-setTimeout(function(){fadeItOut('#message".$message_uniq_id."');},10000);
+if($messager_avatar_arr[0] != "") {
+$messager_avatar_rotate_degree = $messager_avatar_arr["rotate_degree"];
+$messager_avatar_positions = explode(",",htmlspecialchars($messager_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 }
-else { 
-setTimeout(function(){hideMessage('message".$message_uniq_id."');},10000);
-}
-*/
-
-</script>" : "");	
-}
+else {
+$messager_avatar_rotate_degree = 0;
+$messager_avatar_positions = [0,0];	
 }
 
+
+array_push($echo_arr[0],[
+"message" => htmlspecialchars($_POST["message"], ENT_QUOTES, "utf-8"),
+"message_type" => $message_type,
+"read_yet" => 0,
+"time_string" => date("H:i"),
+"message_sent_by_base_user" => 1,
+"message_is_first_in_sequence" => 0,
+"sender_info" => [
+"id" => htmlspecialchars($messager_arr["id"], ENT_QUOTES, "utf-8"),
+"first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
+"last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
+"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
+"avatar_positions" => $messager_avatar_positions
+]
+]);	
+}
+}
+
+
+echo json_encode($echo_arr);
+
+unset($con);
 
 
 ?>

@@ -25,7 +25,7 @@ continue 2;
 # we use this to parse the chat recipient's id.
 $chat_portal_user_id = explode("-",$row["chatter_ids"])[0] == $_SESSION["user_id"] ? explode("-",$row["chatter_ids"])[1] : explode("-",$row["chatter_ids"])[0];
 
-$current_state = $con->query("select id from blocked_users where user_ids = '".$chat_portal_user_id. "-" . $_SESSION["user_id"]."'")->fetch();	
+$current_state = $con->query("select id from blocked_users where user_ids = '". $chat_portal_user_id ."-" . $_SESSION["user_id"]."'")->fetch();	
 if($current_state[0] != "") {
 continue;	
 }
@@ -41,7 +41,7 @@ $chat_portal_avatar_positions = explode(",",$chat_portal_avatar_arr["positions"]
 
 if($chat_portal_avatar_arr[0] != "") {
 $avatar_rotate_degree = $chat_portal_avatar_arr["rotate_degree"];
-$avatar_positions = explode(",",$chat_portal_avatar_arr["positions"]);
+$avatar_positions = explode(",",htmlspecialchars($chat_portal_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 }
 else {
 $avatar_rotate_degree = 0;
@@ -53,11 +53,11 @@ $avatar_positions = [0,0];
 array_push($echo_arr[0], [
 "id" => htmlspecialchars($row["id"], ENT_QUOTES, "utf-8"),
 "recipient_info" => [
-"id" => $chat_portal_user_id,
-"first_name" => $chat_portal_user_info_arr["first_name"],
-"last_name" => $chat_portal_user_info_arr["last_name"],
-"avatar" => $chat_portal_user_info_arr["avatar_picture"],
-"avatar_rotate_degree" => $avatar_rotate_degree,
+"id" => htmlspecialchars($chat_portal_user_id, ENT_QUOTES, "utf-8"),
+"first_name" => htmlspecialchars($chat_portal_user_info_arr["first_name"], ENT_QUOTES, "utf-8"),
+"last_name" => htmlspecialchars($chat_portal_user_info_arr["last_name"], ENT_QUOTES, "utf-8"),
+"avatar" => htmlspecialchars($chat_portal_user_info_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_rotate_degree" => htmlspecialchars($avatar_rotate_degree, ENT_QUOTES, "utf-8"),
 "avatar_positions" => $avatar_positions
 ]
 ]);

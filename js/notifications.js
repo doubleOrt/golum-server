@@ -52,6 +52,31 @@ callback(data_arr[0]);
 }
 
 
+/*
+
+1 = voted on your post
+
+2 = commented on your post
+
+3 = replied to your comment
+
+4 = sent you a post
+
+5 = faved your post
+
+6 = started following you
+
+7 = upvoted your comment 
+
+8 = downvoted your comment
+
+9 = upvoted your reply 
+
+10 = downvoted your reply 
+
+11 = reacted to the post you sent him
+	
+*/
 function get_notification_markup(notification_arr) {
 
 var notification_sender_full_name = notification_arr["notification_sender_info"]["first_name"] + " " + notification_arr["notification_sender_info"]["last_name"];
