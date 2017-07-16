@@ -232,9 +232,9 @@ return `
 
 <div class='message'>
 ` + data["message"] + `
-<div class='messageDate'>
-- ` + data["time_string"] + `
 </div>
+<div class='messageDate'>
+` + data["time_string"] + `
 </div>
 
 <script>
@@ -265,6 +265,10 @@ return `<div class='messageContainer emojiMessageContainer message`+ (data["mess
 <div class='message emojiMessage ` + (data["message_sent_by_base_user"] == "0" && data["read_yet"] == "0" ? "unreadEmoji" : "") + `'>
 <img src='` + data["message"] + `' alt='Emoji'/>
 </div>
+<div class='messageDate'>
+` + data["time_string"] + `
+</div>
+
 </div><!-- end messageContainer -->
 
 <script>
@@ -295,6 +299,9 @@ return `<div class='messageContainer imageMessageContainer message`+ (data["mess
 <div class='fileMessageContainer'>
 <img id='file` + random_num + `' src='` + data["message"] + `' alt='File' />
 </div><!-- end .fileMessageContainer -->
+<div class='messageDate'>
+` + data["time_string"] + `
+</div>
 
 <script>
 	$('#chat_avatar` + random_num + `').on('load',function(){
@@ -467,6 +474,39 @@ Materialize.toast(data[1], 6000, "red");
 $(document).on("click",".fileMessageContainer",function(){
 openFullScreenFileView($(this).find("img").attr("src"));
 });
+
+
+var message_touchdown_timeout; 
+var this_message;
+$(document).on("touchstart", ".message", function(){
+this_message = $(this);	
+message_touchdown_timeout = setTimeout(function(){
+this_message.css("opacity", ".6");
+this_message.parents(".messageContainer").find(".messageDate").css("display", "inline-block");		
+}, 150);	
+}).on("touchend", ".message", function(){
+clearTimeout(message_touchdown_timeout);	
+this_message.css("opacity", "1");
+this_message.parents(".messageContainer").find(".messageDate").css("display", "none");		
+});
+
+
+
+
+var file_message_touchdown_timeout;
+var this_message;
+$(document).on("touchstart", ".fileMessageContainer", function(){
+this_message = $(this);	
+file_message_touchdown_timeout = setTimeout(function(){
+this_message.css("filter", "brightness(50%)");
+this_message.parents(".messageContainer").find(".messageDate").css("display", "inline-block");		
+}, 150);	
+}).on("touchend", ".fileMessageContainer", function(){
+clearTimeout(file_message_touchdown_timeout);	
+this_message.css("filter", "brightness(100%)");
+this_message.parents(".messageContainer").find(".messageDate").css("display", "none");		
+});
+
 
 
 
