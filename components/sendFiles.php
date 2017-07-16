@@ -83,7 +83,9 @@ $messager_avatar_positions = [0,0];
 }
 
 array_push($echo_arr[0],[
+"chat_id" => htmlspecialchars($_POST["chat_id"], ENT_QUOTES, "utf-8"),
 "message" => $new_path,
+"message_id" => $message_id,
 "message_type" => 2,
 "read_yet" => 0,
 "time_string" => date("H:i"),
@@ -98,6 +100,16 @@ array_push($echo_arr[0],[
 "avatar_positions" => $messager_avatar_positions
 ]
 ]);	
+
+
+$socket_message = $echo_arr[0][0];
+$socket_message["message_sent_by_base_user"] = 0;
+
+// This is our new stuff
+$context = new ZMQContext();
+$socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
+$socket->connect("tcp://localhost:5555");
+$socket->send(json_encode($socket_message));
 }
 else {
 $echo_arr[1] = "Something Went Wrong, Sorry!";

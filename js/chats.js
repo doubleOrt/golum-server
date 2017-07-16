@@ -6,16 +6,15 @@ var startChatId;
 var startChatRecipientId;
 
 // this function is called whenever a chat modal is opened, and whenever the user wants to see previous messages.
-function startChatModal(chat_id, user_id, unhide_chat_if_hidden, row_offset, callback) {	
+function start_chat(chat_id, user_id, unhide_chat_if_hidden, row_offset, callback) {	
 
 if(typeof callback != "function" || typeof row_offset == "undefined") {
 return false;
 }
 
+
 if(chat_prevent_multiple_calls == false) {
-				
-chat_prevent_multiple_calls = true;	
-	
+									
 var dataObj = {};
 
 dataObj["row_offset"] = row_offset;
@@ -27,6 +26,8 @@ dataObj["chat_id"] = chat_id;
 if(typeof user_id != "undefined") {
 dataObj["user_id"] = user_id;	
 }
+
+chat_prevent_multiple_calls = true;	
 
 $.get({
 url:"components/start_chat.php",
@@ -43,13 +44,14 @@ chat_prevent_multiple_calls = false;
 }
 
 function start_chat_callback(is_infinite_scroll, data) {
-	
+		
 if(data.length > 1) {	
 $("#emojisContainer").appendTo(".chatModalContentChild");	
 $("#recipient_name").html(data[1]["recipient_first_name"]);	
 $("#recipient_current_status").attr("data-current-status", data[1]["recipient_current_status"]);	
 $("#recipient_current_status").html(data[1]["recipient_current_status_string"]);	
 $("#sendMessage").attr("data-chat-id", data[1]["chat_id"]);
+last_opened_chat_id = data[1]["chat_id"];
 }	
 
 // this chat has no messages
@@ -67,6 +69,7 @@ var old_scroll_height = $(".chatWindowChild")[0].scrollHeight;
 which is different than the rest of the modals, in that you scroll to the top to see the older messages, 
 while in the other modals, you scroll to the bottom to see the older whatevers. */
 for(var i = 0; i < data[0].length; i++) {	
+
 $(".chatWindowChild").prepend(get_message_markup(data[0][i]));	
 }
 
@@ -216,7 +219,7 @@ if(data["message_type"] == "0") {
 /* a bit weird, but that "message + 1/0" classnaming logic is months old, if i were to recreate this now, the role 
 of 1 and 0 would be reverted, with 1 referring to the base user, and 0 to the recipient */
 return `
-<div class='messageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `'>
+<div class='messageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `' data-message-id='` + data["message_id"] + `'>
 
 `+ ((data["message_sent_by_base_user"] == "0" && data["message_is_first_in_sequence"] == "1") ? `
 
@@ -247,7 +250,7 @@ return `
 </div><!-- end .messageContainer -->`;
 }
 else if(data["message_type"] == "1") {
-return `<div class='messageContainer emojiMessageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `'>
+return `<div class='messageContainer emojiMessageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `' data-message-id='` + data["message_id"] + `'>
 
 `+ ((data["message_sent_by_base_user"] == "0" && data["message_is_first_in_sequence"] == "1") ? `
 
@@ -282,7 +285,7 @@ return `<div class='messageContainer emojiMessageContainer message`+ (data["mess
 `;	
 }
 else if(data["message_type"] == "2") {
-return `<div class='messageContainer imageMessageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `'>
+return `<div class='messageContainer imageMessageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `' data-message-id='` + data["message_id"] + `'>
 
 `+ ((data["message_sent_by_base_user"] == "0" && data["message_is_first_in_sequence"] == "1") ? `
 
@@ -318,6 +321,15 @@ return `<div class='messageContainer imageMessageContainer message`+ (data["mess
 
 
 
+var last_opened_chat_id = 0;
+function unsubscribe_from_last_chat() {
+if(last_opened_chat_id != 0) {	
+websockets_con.unsubscribe("chat_" + last_opened_chat_id);		
+// so that we don't get an error in case we unsubscribe twice (happens when you close a chat using the close button and then open a new chat).
+last_opened_chat_id = 0;
+}
+}
+
 
 
 
@@ -329,7 +341,7 @@ $(document).ready(function(){
 
 // when a user clicks on the start chat button or the chat icon in the usermodals
 $(document).on("click",".startChat",function(e){
-
+	
 if((typeof $(this).attr("data-chat-id") == "undefined" || typeof $(this).attr("data-user-id") == "undefined") && typeof $(this).attr("data-from") == "undefined") {
 return false;	
 }
@@ -354,7 +366,14 @@ recipient_id = $(this).attr("data-user-id");
 
 $(".chatWindowChild").html("");
 
-startChatModal(chat_id, recipient_id, unhide_chat_if_hidden, 0, function(data){
+start_chat(chat_id, recipient_id, unhide_chat_if_hidden, 0, function(data){
+
+/* we don't need to receive any updates from the last chat since the user just opened a new one and 
+overwrote the last one with it (this line of code is necessary for cases where the user opens a new chat 
+not by closing their current one and selecting a new one from the chat portals, but by sneaking their way 
+to a chat portal without closing their current chat). */
+unsubscribe_from_last_chat();
+	
 start_chat_callback(false, data);
 // we want to update the badge on the user's profile that displays the number of their unread messages each time they view some of those unread messages.
 get_new_messages_num(function(num) {
@@ -365,11 +384,23 @@ else {
 USER_PROFILE_NEW_MESSAGES_NUM.html(num).hide();	
 }
 });
+
+
+websockets_con.subscribe('chat_' + data[1]["chat_id"], function(topic, data) {
+console.log(data);	
+/* this conditional prevents the message from being duplicate-added to the original sender's chat modal, since the sender has already appended the message onto their chatModal directly after they pressed the "send" button, there is no need to append another one that is broadcasted by our websocket architecture. Another way would be to not send the websocket message to the sender in the back-end, but we went with this solution. */
+if($(".messageContainer[data-message-id='" + data["message_id"] + "']").length < 1) {	
+$(".chatWindowChild").find(".emptyNowPlaceholder").remove();	
+$(".chatWindowChild").append(get_message_markup(data));	
+$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);		
+}
+});
+
 });
 });
 $(".chatWindowChild").scroll(function(event){
 if($(this).scrollTop() == 0) {
-startChatModal($("#sendMessage").attr("data-chat-id"), undefined, true, $(".chatWindowChild .messageContainer").length, function(data){
+start_chat($("#sendMessage").attr("data-chat-id"), undefined, true, $(".chatWindowChild .messageContainer").length, function(data){
 start_chat_callback(true, data);
 // we want to update the badge on the user's profile that displays the number of their unread messages each time they view some of those unread messages.
 get_new_messages_num(function(num) {
@@ -386,10 +417,17 @@ USER_PROFILE_NEW_MESSAGES_NUM.html(num).hide();
 });
 
 
-$(document).on("click",".chatModalCloseButton",function() {
+$(document).on("click",".chatModalCloseButton",function() {	
+/* bugs.txt #5 */
+chat_prevent_multiple_calls = true;
+setTimeout(function(){
+chat_prevent_multiple_calls = false;	
+}, 100);
 $(".chatWindowChild").html("");
 $("#recipient_name").html("");
 $("#recipient_current_status").html("");
+// we don't need to receive any updates from the last chat since the user just closed it.
+unsubscribe_from_last_chat();
 });
 
 

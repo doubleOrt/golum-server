@@ -1,4 +1,7 @@
 
+var websockets_con;
+
+
 // will be set on document load. This element will contain a "data-user-id" attribute that points to the id of the logged_in user.
 var BASE_USER_ID_HOLDER;
 
@@ -229,6 +232,17 @@ var thisItem = $(this);
 setTimeout(function(){thisItem.removeClass("bottomTabsItemActiveColor");},30);
 });
 
+
+
+websockets_con = new ab.Session('ws://192.168.1.103:8080',
+function() {
+	alert();
+},
+function() {
+console.warn('WebSocket connection closed');
+},
+{'skipSubprotocolCheck': true}
+);
 
 
 });

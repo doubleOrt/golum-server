@@ -85,6 +85,7 @@ $message_is_first_in_sequence =  ($sent_message_last !=  $sent_message ? 1 : 0);
 if($messages_arr[$x]["message_type"] == "text-message") {
 array_push($echo_arr[0], [
 "message" => htmlspecialchars($message_raw, ENT_QUOTES, "utf-8"),
+"message_id" => $messages_arr[$x]["id"],
 "message_type" => 0,
 "read_yet" => htmlspecialchars($messages_arr[$x]["read_yet"], ENT_QUOTES, "utf-8"), 
 "time_string" => date("H:i",strtotime($messages_arr[$x]["date_of"])),
@@ -103,6 +104,7 @@ array_push($echo_arr[0], [
 else if($messages_arr[$x]["message_type"] == "emoji-message") {	
 array_push($echo_arr[0], [
 "message" => htmlspecialchars($message_raw, ENT_QUOTES, "utf-8"),
+"message_id" => $messages_arr[$x]["id"],
 "message_type" => 1,
 "read_yet" => htmlspecialchars($messages_arr[$x]["read_yet"], ENT_QUOTES, "utf-8"), 
 "time_string" => date("H:i",strtotime($messages_arr[$x]["date_of"])),
@@ -122,6 +124,7 @@ else if($messages_arr[$x]["message_type"] == "file-message") {
 $file_arr = $con->query("select * from sent_files where id = ". intval($messages_arr[$x]["message"]))->fetch();
 array_push($echo_arr[0], [
 "message" => $file_arr["path"],
+"message_id" => $messages_arr[$x]["id"],
 "message_type" => 2,
 "read_yet" => htmlspecialchars($messages_arr[$x]["read_yet"], ENT_QUOTES, "utf-8"), 
 "time_string" => date("H:i",strtotime($messages_arr[$x]["date_of"])),

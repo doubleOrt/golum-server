@@ -12,3 +12,9 @@ desolate and empty element, with no content. The following lines are supposed to
 it won't count as a click, but we want it to count as a click, since all the apps on my S7 count a hold-release as a click.
 
 5- In out PHP code, we run htmlspecialchars() on all our output, which will replace single quotes with an HTML entity that contains "#" character, so if we immediately called the handleTags() function on that raw value, the function would replace everything that comes after the "#" in that entity with the markup for a tag (it shouldn't do that, obviously), which will result in that entity not being loaded correctly when it is added to the page. To work around this, we add the raw values to the page first (the ones where hashtags are still just raw text), and then we run the handleTags() function on the value that has been already rendered (meaning that the "#" character is no longer there, so we won't run into the bug).
+
+6- the lines concerning chat_prevent_multiple_calls here have been added because of the line that 
+empties the $(".chatWindowChild"), because that emptying would trigger a scroll event which we are 
+capturing, so an Ajax request will be made (it should not be made since the user did not actually 
+scroll) that will mess all our logic (mainly the subscribing and unsubscribing part, since this 
+request will mess up our last_opened_chat_id variable).
