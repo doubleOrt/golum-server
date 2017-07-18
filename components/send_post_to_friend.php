@@ -24,10 +24,6 @@ $prepared->bindParam(":type",$type);
 $prepared->bindParam(":extra",$_POST["post_id"]);	
 
 if($prepared->execute()) {
-$shmid = $_POST["friend_id"] . "" . 6; 
-$shm = shmop_open($shmid, 'c', 0777, 1024);
-shmop_write($shm, str_to_nts("true"), 0);
-shmop_close($shm);	
 echo "1";
 }
 	

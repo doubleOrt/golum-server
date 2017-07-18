@@ -56,7 +56,6 @@ $("#recipient_current_status").html(data["current_state"]);
 });
 $("#sendMessage").attr("data-chat-id", data[1]["chat_id"]);
 CHAT_ID_HOLDER.attr("data-chat-id", data[1]["chat_id"]);
-currently_opened_chat_id = data[1]["chat_id"];
 currently_opened_chat_recipient_id = data[1]["recipient_id"];
 }	
 
@@ -326,14 +325,11 @@ return `<div class='messageContainer imageMessageContainer message`+ (data["mess
 
 
 
-var currently_opened_chat_id = 0;
 var currently_opened_chat_recipient_id = 0;
 function unsubscribe_from_last_chat() {
-if(currently_opened_chat_id != 0) {	
-websockets_con.unsubscribe("chat_" + currently_opened_chat_id);		
+if(currently_opened_chat_recipient_id != 0) {	
 websockets_con.unsubscribe("user_state_" + currently_opened_chat_recipient_id);		
 // so that we don't get an error in case we unsubscribe twice (happens when you close a chat using the close button and then open a new chat).
-currently_opened_chat_id = 0;
 currently_opened_chat_recipient_id = 0;
 }
 }
@@ -394,6 +390,43 @@ set_all_chat_messages_read_yet_to_true(chat_id);
 
 
 
+// this function is called whenever there is a new message, regardless of whether or not a chat is opened.
+function there_are_new_messages(data) {
+
+/* if these two conditionals evaluate to true, then it means that the user just 
+saw the new message therefore we don't need to tell them that they have new messages 
+by adding those badges to the components. Instead, we just append the new message */
+if(CHAT_ID_HOLDER.attr("data-chat-id") == data["chat_id"]) {	
+/* this conditional prevents the message from being duplicate-added to the original sender's chat modal, since the sender has already appended the message onto their chatModal directly after they pressed the "send" button, there is no need to append another one that is broadcasted by our websocket architecture. Another way would be to not send the websocket message to the sender in the back-end, but we went with this solution. */
+if($(".messageContainer[data-message-id='" + data["message_id"] + "']").length < 1) {	
+$(".chatWindowChild").find(".emptyNowPlaceholder").remove();	
+$(".chatWindowChild").append(get_message_markup(data));	
+$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);		
+
+if(check_if_modal_is_currently_being_viewed("chatModal") === true) {
+set_message_read_yet_to_true(data["message_id"]);
+}
+
+}
+}	
+
+	
+if(check_if_modal_is_currently_being_viewed("chatModal") === false) {	
+// if the code executes as far as this point, then it means we have to update our new-messages badges and chat portals.	
+get_new_messages_num(function(num) {	
+if(parseFloat(num) > 0) {
+USER_PROFILE_NEW_MESSAGES_NUM.html(num).css("display", "inline-block");	
+}
+});
+
+getChatPortalActivities(updateChatPortalActivities);
+}
+}
+
+
+
+
+
 $(document).ready(function(){
 
 CHAT_ID_HOLDER = $(".chatWindowChild");
@@ -431,12 +464,6 @@ recipient_id = $(this).attr("data-user-id");
 $(".chatWindowChild").html("");
 
 start_chat(chat_id, recipient_id, unhide_chat_if_hidden, 0, function(data){
-
-/* we don't need to receive any updates from the last chat since the user just opened a new one and 
-overwrote the last one with it (this line of code is necessary for cases where the user opens a new chat 
-not by closing their current one and selecting a new one from the chat portals, but by sneaking their way 
-to a chat portal without closing their current chat). */
-unsubscribe_from_last_chat();
 	
 start_chat_callback(false, data);
 // we want to update the badge on the user's profile that displays the number of their unread messages each time they view some of those unread messages.
@@ -449,21 +476,6 @@ USER_PROFILE_NEW_MESSAGES_NUM.html(num).hide();
 }
 });
 
-
-websockets_con.subscribe('chat_' + data[1]["chat_id"], function(topic, data) {
-/* this conditional prevents the message from being duplicate-added to the original sender's chat modal, since the sender has already appended the message onto their chatModal directly after they pressed the "send" button, there is no need to append another one that is broadcasted by our websocket architecture. Another way would be to not send the websocket message to the sender in the back-end, but we went with this solution. */
-if($(".messageContainer[data-message-id='" + data["message_id"] + "']").length < 1) {	
-$(".chatWindowChild").find(".emptyNowPlaceholder").remove();	
-$(".chatWindowChild").append(get_message_markup(data));	
-$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);		
-
-if(check_if_modal_is_currently_being_viewed("chatModal") === true) {
-set_message_read_yet_to_true(data["message_id"]);
-}
-
-}
-
-});
 
 websockets_con.subscribe("user_state_" + data[1]["recipient_id"], function(topic, data) {
 var data_arr = JSON.parse(data);
@@ -499,6 +511,7 @@ setTimeout(function(){
 chat_prevent_multiple_calls = false;	
 }, 100);
 $(".chatWindowChild").html("");
+$(".chatWindowChild").attr("data-chat-id", "");
 $("#recipient_name").html("");
 $("#recipient_current_status").html("");
 // we don't need to receive any updates from the last chat since the user just closed it.

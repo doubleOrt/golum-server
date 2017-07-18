@@ -62,6 +62,7 @@ $messager_avatar_positions = [0,0];
 }
 
 array_push($echo_arr[0],[
+"update_type" => "0",
 "chat_id" => htmlspecialchars($_POST["chat_id"], ENT_QUOTES, "utf-8"),
 "chatter_ids" => $chatter_ids_arr,
 "message" => $new_path,

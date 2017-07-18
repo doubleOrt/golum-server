@@ -7,13 +7,6 @@ use Ratchet\Wamp\WampServerInterface;
 class Pusher implements WampServerInterface {    
 
 
-/* note that the "type" field in a message we send back to the client is to distinguish
-   between messages that are made in reponse to a published websocket by the user and 
-   messages that the user does not request themselves. So, 0 is for messages that are a response
-   to a user's publish while 1 is for messages that are not a response, such as when we send 
-   a user a message to alert them that there is a new message.
-   */
-
 	private $connection;
 
 	public function __construct() {
@@ -37,24 +30,16 @@ class Pusher implements WampServerInterface {
     public function onBlogEntry($entry) {
         $data = json_decode($entry, true);
 		
-		$message_topic = "chat_" . $data["chat_id"];
-		
-        // handle broadcasting this message to those who are viewing this chat at the moment.
-        if (array_key_exists($message_topic, $this->subscribedTopics)) {
-		$topic = $this->subscribedTopics[$message_topic];
-        // re-send the data to all the clients subscribed to that category
-        $topic->broadcast($data);
-        }
-		
-		for($i = 0; $i < count($data["chatter_ids"]); $i++) {
-			$user_topic = "user_" . $data["chatter_ids"][$i];
-			if(array_key_exists($user_topic, $this->subscribedTopics)) {
-				$this->subscribedTopics[$user_topic]->broadcast(json_encode([
-				"type" => "1", 
-				"data" => [
-					"chat_id" => $data["chat_id"], 
-					"sender_id" => $data["sender_info"]["id"]]
-				]));
+		// update_type 0 means new message
+		if($data["update_type"] == "0") {
+			for($i = 0; $i < count($data["chatter_ids"]); $i++) {
+				$user_topic = "user_" . $data["chatter_ids"][$i];
+				if(array_key_exists($user_topic, $this->subscribedTopics)) {
+					$this->subscribedTopics[$user_topic]->broadcast(json_encode([
+					"type" => "1",
+					"data" => $data
+					]));
+				}
 			}
 		}
 

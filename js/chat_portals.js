@@ -62,29 +62,6 @@ callback();
 }
 
 
-// this function is called whenever there is a new message, regardless of whether or not a chat is opened.
-function there_are_new_messages(data) {
-
-/* if these two conditionals evaluate to true, then it means that the user just 
-saw the new message therefore we don't need to tell them that they have new messages 
-by adding those badges to the components. */
-if(check_if_modal_is_currently_being_viewed("chatModal") === true) {
-if(CHAT_ID_HOLDER.attr("data-chat-id") == data["chat_id"]) {
-return;	
-}	
-}
-	
-// if the code executes as far as this point, then it means we have to update our new-messages badges and chat portals.
-	
-get_new_messages_num(function(num) {	
-if(parseFloat(num) > 0) {
-USER_PROFILE_NEW_MESSAGES_NUM.html(num).css("display", "inline-block");	
-}
-});
-
-getChatPortalActivities(updateChatPortalActivities);
-}
-
 
 
 function get_chat_portal_markup(data) {
