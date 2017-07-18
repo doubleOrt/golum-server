@@ -1,4 +1,6 @@
 
+var CHAT_ID_HOLDER;
+
 // we use this variable to prevent multiple calls to "previous_messages.php", otherwise there would be duplicate messages, be sure to set this variable to true whenever you call "showPreviousMessages()", and set it to false after a successful return in the function.
 var chat_prevent_multiple_calls = false;
 
@@ -53,8 +55,9 @@ console.log("get_user_state callback:\n" + data);
 $("#recipient_current_status").html(data["current_state"]);		
 });
 $("#sendMessage").attr("data-chat-id", data[1]["chat_id"]);
-last_opened_chat_id = data[1]["chat_id"];
-last_opened_chat_recipient_id = data[1]["recipient_id"];
+CHAT_ID_HOLDER.attr("data-chat-id", data[1]["chat_id"]);
+currently_opened_chat_id = data[1]["chat_id"];
+currently_opened_chat_recipient_id = data[1]["recipient_id"];
 }	
 
 // this chat has no messages
@@ -323,20 +326,21 @@ return `<div class='messageContainer imageMessageContainer message`+ (data["mess
 
 
 
-var last_opened_chat_id = 0;
-var last_opened_chat_recipient_id = 0;
+var currently_opened_chat_id = 0;
+var currently_opened_chat_recipient_id = 0;
 function unsubscribe_from_last_chat() {
-if(last_opened_chat_id != 0) {	
-websockets_con.unsubscribe("chat_" + last_opened_chat_id);		
-websockets_con.unsubscribe("user_state_" + last_opened_chat_recipient_id);		
+if(currently_opened_chat_id != 0) {	
+websockets_con.unsubscribe("chat_" + currently_opened_chat_id);		
+websockets_con.unsubscribe("user_state_" + currently_opened_chat_recipient_id);		
 // so that we don't get an error in case we unsubscribe twice (happens when you close a chat using the close button and then open a new chat).
-last_opened_chat_id = 0;
-last_opened_chat_recipient_id = 0;
+currently_opened_chat_id = 0;
+currently_opened_chat_recipient_id = 0;
 }
 }
 
 
 
+// use this function to get a string of the online/offline state of a user.
 function get_user_state(user_id, callback) {
 websockets_con.publish("user_" + BASE_USER_ID_HOLDER.attr("data-user-id"), [0,"user_" + user_id, websocket_request_id]);	
 handle_user_channel_message_callbacks.push({
@@ -348,9 +352,54 @@ websocket_request_id++;
 
 
 
+// use this function to set a message from unread to read.
+function set_message_read_yet_to_true(message_id) {
+	
+if(typeof message_id == "undefined") {
+return false;	
+}	
+
+$.post({
+url: "components/set_messages_read_yet_to_true.php",
+data: {
+"message_id": message_id
+}
+});
+
+}
+
+// use this function to set the read_yet of all a chat's messages to true.
+function set_all_chat_messages_read_yet_to_true(chat_id) {
+
+if(typeof chat_id == "undefined") {
+return false;	
+}
+
+$.post({
+url: "components/set_messages_read_yet_to_true.php",
+data: {
+"chat_id": chat_id
+}	
+});
+	
+}
+
+function chat_modal_visible() {
+var chat_id = CHAT_ID_HOLDER.attr("data-chat-id");	
+if(typeof chat_id != "undefined" && /^\d+$/.test(chat_id) === true) {
+set_all_chat_messages_read_yet_to_true(chat_id);	
+}
+}
+
+
 
 
 $(document).ready(function(){
+
+CHAT_ID_HOLDER = $(".chatWindowChild");
+
+
+$("#chatModal").data("on_visible", chat_modal_visible);
 
 
 
@@ -407,7 +456,13 @@ if($(".messageContainer[data-message-id='" + data["message_id"] + "']").length <
 $(".chatWindowChild").find(".emptyNowPlaceholder").remove();	
 $(".chatWindowChild").append(get_message_markup(data));	
 $('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);		
+
+if(check_if_modal_is_currently_being_viewed("chatModal") === true) {
+set_message_read_yet_to_true(data["message_id"]);
 }
+
+}
+
 });
 
 websockets_con.subscribe("user_state_" + data[1]["recipient_id"], function(topic, data) {

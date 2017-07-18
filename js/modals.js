@@ -57,7 +57,14 @@ this_modal_modal_overlay.css("z-index", modal_overlay_new_zindex);
 
 
 openedModals.push(modalId);
+// if a callback has been set for whenever the modal is set to visible, call it.
+if(typeof $("#" + openedModals[openedModals.length - 1]).data("on_visible") == "function") {
+$("#" + openedModals[openedModals.length - 1]).data("on_visible")();
+}
 
+/* the callback for this function, note that this is different from the callback 
+above in that this one is unique to this function, while the callback defined above
+is different for each modal */
 if(typeof callback == "function") {	
 callback();
 }
@@ -68,13 +75,19 @@ function closeModal(modalId, callback) {
 	
 var this_modal_modal_overlay = $(".modal-overlay[data-modal=" + modalId + "]");
 
-for(var i = 0;i<openedModals.length;i++) {
+for(var i = openedModals.length - 1;i > -1; i--) {
 if(openedModals[i] == modalId) {
 openedModals.splice(i,1);
 break;
 }	
 }
 
+if(openedModals.length > 0) {
+// if a callback has been set for whenever the modal is set to visible, call it.
+if(typeof $("#" + openedModals[openedModals.length - 1]).data("on_visible") == "function") {
+$("#" + openedModals[openedModals.length - 1]).data("on_visible")();
+}
+} 
 
 // if only one element is remaining from the stack, then remove its data-marked attribute
 for(var i = marks_stack.length - 1; i > -1; i--) {
@@ -111,6 +124,13 @@ callback();
 }
 
 
+function check_if_modal_is_currently_being_viewed(modal_id) {
+return openedModals[openedModals.length - 1] === modal_id;
+}
+
+
+
+
 function initialize_all_things_again() {
 		
 $('.dropdown-button').dropdown({
@@ -141,7 +161,7 @@ clear: null
 
 $(document).ready(function(){
 	
-
+	
 // initialize the modals
 $('.modal').modal({
 inDuration: 300, // Transition in duration
