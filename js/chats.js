@@ -48,10 +48,13 @@ function start_chat_callback(is_infinite_scroll, data) {
 if(data.length > 1) {	
 $("#emojisContainer").appendTo(".chatModalContentChild");	
 $("#recipient_name").html(data[1]["recipient_first_name"]);	
-$("#recipient_current_status").attr("data-current-status", data[1]["recipient_current_status"]);	
-$("#recipient_current_status").html(data[1]["recipient_current_status_string"]);	
+get_user_state(data[1]["recipient_id"], function(data){
+console.log("get_user_state callback:\n" + data);	
+$("#recipient_current_status").html(data["current_state"]);		
+});
 $("#sendMessage").attr("data-chat-id", data[1]["chat_id"]);
 last_opened_chat_id = data[1]["chat_id"];
+last_opened_chat_recipient_id = data[1]["recipient_id"];
 }	
 
 // this chat has no messages
@@ -320,16 +323,28 @@ return `<div class='messageContainer imageMessageContainer message`+ (data["mess
 
 
 
-
 var last_opened_chat_id = 0;
+var last_opened_chat_recipient_id = 0;
 function unsubscribe_from_last_chat() {
 if(last_opened_chat_id != 0) {	
 websockets_con.unsubscribe("chat_" + last_opened_chat_id);		
+websockets_con.unsubscribe("user_state_" + last_opened_chat_recipient_id);		
 // so that we don't get an error in case we unsubscribe twice (happens when you close a chat using the close button and then open a new chat).
 last_opened_chat_id = 0;
+last_opened_chat_recipient_id = 0;
 }
 }
 
+
+
+function get_user_state(user_id, callback) {
+websockets_con.publish("user_" + BASE_USER_ID_HOLDER.attr("data-user-id"), [0,"user_" + user_id, websocket_request_id]);	
+handle_user_channel_message_callbacks.push({
+"request_id": websocket_request_id, 
+"callback": callback
+});
+websocket_request_id++;
+}
 
 
 
@@ -387,7 +402,6 @@ USER_PROFILE_NEW_MESSAGES_NUM.html(num).hide();
 
 
 websockets_con.subscribe('chat_' + data[1]["chat_id"], function(topic, data) {
-console.log(data);	
 /* this conditional prevents the message from being duplicate-added to the original sender's chat modal, since the sender has already appended the message onto their chatModal directly after they pressed the "send" button, there is no need to append another one that is broadcasted by our websocket architecture. Another way would be to not send the websocket message to the sender in the back-end, but we went with this solution. */
 if($(".messageContainer[data-message-id='" + data["message_id"] + "']").length < 1) {	
 $(".chatWindowChild").find(".emptyNowPlaceholder").remove();	
@@ -395,6 +409,12 @@ $(".chatWindowChild").append(get_message_markup(data));
 $('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);		
 }
 });
+
+websockets_con.subscribe("user_state_" + data[1]["recipient_id"], function(topic, data) {
+var data_arr = JSON.parse(data);
+$("#recipient_current_status").html(data_arr["current_state"]);
+});		
+
 
 });
 });

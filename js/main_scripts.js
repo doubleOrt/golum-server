@@ -1,5 +1,6 @@
 
 var websockets_con;
+var websockets_connection_is_good = false;
 
 
 // will be set on document load. This element will contain a "data-user-id" attribute that points to the id of the logged_in user.
@@ -234,19 +235,44 @@ setTimeout(function(){thisItem.removeClass("bottomTabsItemActiveColor");},30);
 
 
 
-websockets_con = new ab.Session('ws://192.168.1.103:8080',
-function() {
-	alert();
-},
-function() {
-console.warn('WebSocket connection closed');
-},
-{'skipSubprotocolCheck': true}
-);
-
-
 });
 
 
+var websocket_request_id = 0;
+var handle_user_channel_message_callbacks = [];
+function handle_user_channel_message(topic, data) {
+console.log("handle_user_channel_message:\n" + data);	
+var data_arr = JSON.parse(data);	
+for(var i = 0; i < handle_user_channel_message_callbacks.length; i++) {
+if(handle_user_channel_message_callbacks[i]["request_id"] == data_arr["request_id"]) {
+handle_user_channel_message_callbacks[i]["callback"](data_arr);	
+}	
+}
+}
+
+
+function open_web_socket_connection() {
+websockets_con = new ab.Session('ws://192.168.1.104:8080',
+function() {
+console.warn("Websocket connection opened");	
+websockets_connection_is_good = true;
+var base_user_id = BASE_USER_ID_HOLDER.attr("data-user-id"); 
+open_user_channel(base_user_id);
+// this call will send an "online now" message to all users who want to receive it.
+websockets_con.publish("user_" + base_user_id, [2,"user_state_" + base_user_id]);	
+},
+function() {
+console.warn('WebSocket connection closed');
+websockets_connection_is_good = false;
+},
+{'skipSubprotocolCheck': true}
+);
+}
+
+function open_user_channel(user_id) {
+if(websockets_connection_is_good === true && /^\d+$/.test(user_id) === true) {
+websockets_con.subscribe('user_' + user_id, handle_user_channel_message);
+}	
+}
 
 

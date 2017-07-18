@@ -66,7 +66,10 @@ window.location.href = "login_and_sign_up.html";
 // user has logged in
 else {
 BASE_USER_ID_HOLDER.attr("data-user-id", data);
+// the websocket connection must be opened only after we have the user's id, since our onopen code relies on the base user's id.
+open_web_socket_connection();
 }
+
 }
 });	
 

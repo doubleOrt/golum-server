@@ -160,9 +160,8 @@ $current_status = 0;
 
 array_push($echo_arr, [
 "chat_id" => $chat_id,
-"recipient_first_name" => htmlspecialchars($chat_recipient_info_arr["first_name"], ENT_QUOTES, "utf-8"),
-"recipient_current_status" => $current_status,
-"recipient_current_status_string" => $current_status_string
+"recipient_id" => $chat_recipient_info_arr["id"],
+"recipient_first_name" => htmlspecialchars($chat_recipient_info_arr["first_name"], ENT_QUOTES, "utf-8")
 ]);
 }
 
@@ -173,41 +172,6 @@ unset($con);
 
 
 
-
-
-function last_online($time) {
-	
-if($time == 0) {
-return $time;	
-}
-	
-$time = intval($time);	
-	
-$today = new DateTime(); // This object represents current date/time
-$today->setTime( 0, 0, 0 ); // reset time part, to prevent partial comparison
-
-$match_date = DateTime::createFromFormat( "Y-m-d H:i", date("Y-m-d H:i",$time));
-$match_date->setTime( 0, 0, 0 ); // reset time part, to prevent partial comparison
-
-$diff = $today->diff( $match_date );
-$diffDays = (integer)$diff->format( "%R%a" ); // Extract days count in interval
-
-if(time() - $time < 120) {# we say he was online that number of minutes ago.
-return "Just Went Offline";
-}	
-else if($diffDays == 0) {
-return "Last Online At " . date("H:i",$time);	
-}
-else if($diffDays == -1) {
-return "Last Online Yesterday At " . date("H:i",$time);	
-} 
-else if(time() - $time < 604800){
-return "Last Online On " . date("l",$time);	
-}
-else {
-return "Last Online On " . date("j, M Y",$time);		
-}
-}
 
 
 
