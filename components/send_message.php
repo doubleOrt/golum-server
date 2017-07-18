@@ -29,36 +29,12 @@ $prepare->bindParam(":message_type",$message_type);
 if($prepare->execute()) {
 	
 $message_id = $con->lastInsertId();	
-	
-$recipient_is_in_this_chat_modal = false;	
-	
+		
 $con->exec("update chats set latest_activity = ".time()." where id = ".$chat_id);	
 # takes care of updating the new messages field of the users table for all recipients.
 $chat_id_arr = $con->query("select * from chats where id = ".$chat_id)->fetch();	
 $chatter_ids_arr = explode("-",$chat_id_arr["chatter_ids"]);
-for($i = 0;$i<count($chatter_ids_arr);$i++) {
-if($chatter_ids_arr[$i] == $_SESSION["user_id"]) {
-continue;	
-}
 
-
-$shmop_id = $chatter_ids_arr[$i] . "" . 4;
-$shmop = shmop_open($shmop_id,"c",0777,1024);
-$shmop_val = shmop_read($shmop, 0, shmop_size($shmop));
-$rawStr =  str_from_mem($shmop_val);
-if($rawStr != "none") {
-$recipient_is_in_this_chat_modal = true;	
-}
-else {
-$recipient_is_in_this_chat_modal = false;	
-}
-shmop_close($shmop);
-
-$shmid = $chatter_ids_arr[$i] . "" . 1; 
-$shm = shmop_open($shmid, 'c', 0777, 1024);
-shmop_write($shm, str_to_nts("true"), 0);
-shmop_close($shm);
-}
 
 if($_POST["type"] == "text-message") {
 $message_type = 0;	
@@ -83,6 +59,7 @@ $messager_avatar_positions = [0,0];
 
 array_push($echo_arr[0],[
 "chat_id" => $chat_id,
+"chatter_ids" => $chatter_ids_arr,
 "message" => htmlspecialchars($_POST["message"], ENT_QUOTES, "utf-8"),
 "message_id" => $message_id,
 "message_type" => $message_type,

@@ -241,13 +241,27 @@ setTimeout(function(){thisItem.removeClass("bottomTabsItemActiveColor");},30);
 var websocket_request_id = 0;
 var handle_user_channel_message_callbacks = [];
 function handle_user_channel_message(topic, data) {
-console.log("handle_user_channel_message:\n" + data);	
+	
 var data_arr = JSON.parse(data);	
+
+console.log(data_arr);
+	
+if(typeof data_arr["type"] == "undefined") {
+return false;
+}
+
+if(data_arr["type"] == "0") {
 for(var i = 0; i < handle_user_channel_message_callbacks.length; i++) {
-if(handle_user_channel_message_callbacks[i]["request_id"] == data_arr["request_id"]) {
-handle_user_channel_message_callbacks[i]["callback"](data_arr);	
+if(handle_user_channel_message_callbacks[i]["request_id"] == data_arr["data"]["request_id"]) {
+handle_user_channel_message_callbacks[i]["callback"](data_arr["data"]);	
 }	
 }
+}
+else if(data_arr["type"] == "1") {
+there_are_new_messages(data_arr["data"]);	
+}
+
+
 }
 
 

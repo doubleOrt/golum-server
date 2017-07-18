@@ -49,27 +49,6 @@ $con->exec("update chats set latest_activity = ".time()." where id = ". $_POST["
 $chat_id_arr = $con->query("select * from chats where id = ". $_POST["chat_id"])->fetch();	
 $chatter_ids_arr = explode("-",$chat_id_arr["chatter_ids"]);
 
-$recipient_is_in_this_chat_modal = false;	
-
-//update users so they reveive the message immediately.
-for($i = 0;$i<count($chatter_ids_arr);$i++) {
-if($chatter_ids_arr[$i] == $_SESSION["user_id"]) {
-continue;	
-}
-
-$shmop_id = $chatter_ids_arr[$i] . "" . 4;
-$shmop = shmop_open($shmop_id,"c",0777,1024);
-$shmop_val = shmop_read($shmop, 0, shmop_size($shmop));
-$rawStr =  str_from_mem($shmop_val);
-if($rawStr != "none") {
-$recipient_is_in_this_chat_modal = true;	
-}
-else {
-$recipient_is_in_this_chat_modal = false;	
-}
-
-}
-
 $messager_arr = $con->query("select id,first_name,last_name,avatar_picture from  users where id = ". $_SESSION["user_id"])->fetch();
 $messager_avatar_arr = $con->query("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = ". $messager_arr["id"] ." order by id desc limit 1")->fetch();
 
@@ -84,6 +63,7 @@ $messager_avatar_positions = [0,0];
 
 array_push($echo_arr[0],[
 "chat_id" => htmlspecialchars($_POST["chat_id"], ENT_QUOTES, "utf-8"),
+"chatter_ids" => $chatter_ids_arr,
 "message" => $new_path,
 "message_id" => $message_id,
 "message_type" => 2,

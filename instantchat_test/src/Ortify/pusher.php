@@ -7,6 +7,13 @@ use Ratchet\Wamp\WampServerInterface;
 class Pusher implements WampServerInterface {    
 
 
+/* note that the "type" field in a message we send back to the client is to distinguish
+   between messages that are made in reponse to a published websocket by the user and 
+   messages that the user does not request themselves. So, 0 is for messages that are a response
+   to a user's publish while 1 is for messages that are not a response, such as when we send 
+   a user a message to alert them that there is a new message.
+   */
+
 	private $connection;
 
 	public function __construct() {
@@ -28,19 +35,29 @@ class Pusher implements WampServerInterface {
      * @param string JSON'ified string we'll receive from ZeroMQ
      */
     public function onBlogEntry($entry) {
-        $entryData = json_decode($entry, true);
+        $data = json_decode($entry, true);
 		
-		$message_topic = "chat_" . $entryData["chat_id"];
+		$message_topic = "chat_" . $data["chat_id"];
 		
-        // If the lookup topic object isn't set there is no one to publish to
-        if (!array_key_exists($message_topic, $this->subscribedTopics)) {
-            return;
-        }
-
-        $topic = $this->subscribedTopics[$message_topic];
-
+        // handle broadcasting this message to those who are viewing this chat at the moment.
+        if (array_key_exists($message_topic, $this->subscribedTopics)) {
+		$topic = $this->subscribedTopics[$message_topic];
         // re-send the data to all the clients subscribed to that category
-        $topic->broadcast($entryData);
+        $topic->broadcast($data);
+        }
+		
+		for($i = 0; $i < count($data["chatter_ids"]); $i++) {
+			$user_topic = "user_" . $data["chatter_ids"][$i];
+			if(array_key_exists($user_topic, $this->subscribedTopics)) {
+				$this->subscribedTopics[$user_topic]->broadcast(json_encode([
+				"type" => "1", 
+				"data" => [
+					"chat_id" => $data["chat_id"], 
+					"sender_id" => $data["sender_info"]["id"]]
+				]));
+			}
+		}
+
     }
 
 	
@@ -76,7 +93,7 @@ class Pusher implements WampServerInterface {
     }
 	
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible) {
-
+			
 		if(count($event) >= 3 && filter_var($event[2], FILTER_VALIDATE_INT) !== false) {
 			// if event type is 0, then it means that the client is querying a user's online/offline state
 			if($event[0] === 0) {
@@ -86,18 +103,24 @@ class Pusher implements WampServerInterface {
 						$is_user_online = $this->is_user_online($event[1], $user_id);
 						if($is_user_online === true) {
 							$user_state_arr = json_encode([
-							"request_type" => "0", 
-							"request_id" => $event[2],
-							"user_id" => $user_id, 
-							"current_state" => "Online"
+							"type" => "0", 
+							"data" => [
+								"request_type" => "0", 
+								"request_id" => $event[2],
+								"user_id" => $user_id, 
+								"current_state" => "Online"
+								]
 							]);
 						}
 						else {
 							$user_state_arr = json_encode([
-							"request_type" => "0", 
-							"request_id" => $event[2],
-							"user_id" => $user_id, 
-							"current_state" => $is_user_online
+							"type" => "0", 
+							"data" => [
+								"request_type" => "0", 
+								"request_id" => $event[2],
+								"user_id" => $user_id, 
+								"current_state" => $is_user_online
+								]
 							]);
 						}
 						echo var_dump($user_state_arr);
