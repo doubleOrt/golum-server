@@ -243,8 +243,6 @@ var handle_user_channel_message_callbacks = [];
 function handle_user_channel_message(topic, data) {
 	
 var data_arr = JSON.parse(data);	
-
-console.log(data_arr);
 	
 if(typeof data_arr["type"] == "undefined") {
 return false;
@@ -266,7 +264,7 @@ there_are_new_messages(data_arr["data"]);
 
 
 function open_web_socket_connection() {
-websockets_con = new ab.Session('ws://192.168.1.100:8080',
+websockets_con = new ab.Session('ws://192.168.1.102:8080',
 function() {
 console.warn("Websocket connection opened");	
 websockets_connection_is_good = true;

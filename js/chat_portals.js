@@ -9,7 +9,7 @@ var CHAT_PORTALS_EMPTY_NOW_MESSAGE = "No chats started :(";
 var chat_portals_prevent_multiple_calls = false;;
 
 //this takes care of showing the chat portals
-function getChatPortals(row_offset, callback) {
+function getChatPortals(row_offset, callback) {	
 	
 if(typeof row_offset == "undefined") {
 return false;	
@@ -41,7 +41,7 @@ chat_portals_prevent_multiple_calls = false;
 
 
 function get_chat_portals_callback(data, empty_now_message, callback) {
-								
+																
 if(data[0].length < 1 && CHAT_PORTALS_CONTAINER_ELEMENT.find(".singleChatPortal").length < 1) {
 CHAT_PORTALS_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>" + empty_now_message + "</div>");	
 }	
@@ -53,7 +53,7 @@ CHAT_PORTALS_CONTAINER_ELEMENT.attr("data-end-of-results", "true");
 for(var i = 0; i < data[0].length; i++) {
 CHAT_PORTALS_CONTAINER_ELEMENT.append(get_chat_portal_markup(data[0][i]));	
 }
-	
+
 getChatPortalActivities(updateChatPortalActivities);
 
 if(typeof callback == "function") {
@@ -197,7 +197,6 @@ callback(data_arr[0]);
 
 
 $(document).ready(function(){
-
 
 CHAT_PORTALS_CONTAINER_ELEMENT = $("#chat_portals_modal .modal-content");
 

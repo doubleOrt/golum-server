@@ -493,7 +493,7 @@ USER_PROFILE_NEW_MESSAGES_NUM.html(num).hide();
 });
 
 
-$(document).on("click",".chatModalCloseButton",function() {	
+$(document).on("click",".chatModalCloseButton",function() {
 /* bugs.txt #5 */
 chat_prevent_multiple_calls = true;
 setTimeout(function(){

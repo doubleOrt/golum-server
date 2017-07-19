@@ -99,6 +99,7 @@ $("#" + modalId).css("opacity", "1");
 $("#" + modalId).css("z-index", zindex);		
 $("#" + modalId).show();		
 });		
+console.log(marks_stack[marks_stack.length - 1]["state"]);
 $("#" + modalId).html(marks_stack[marks_stack.length - 1]["state"]);	
 if(modalId == "user_modal") {	
 // see bug 3 in the bugs.txt file.
@@ -211,7 +212,7 @@ if(click_on_touch_end == true) {
 
 closeModal($(this).attr("data-modal"), function(){
 /* See bugs.txt: bug 2 */	
-if($(".modal.open").length < 1 && PROFILE_CONTAINER_ELEMENT.parents("#main_screen_user_profile").length < 1 && $("#bottomNav #bottom_nav_user_profile").hasClass("active")) {
+if($(".modal.open").length < 1 && PROFILE_CONTAINER_ELEMENT.parents("#main_screen_user_profile").length < 1 && $("#bottom_nav_user_profile").hasClass("active")) {
 $("#bottomNav #bottom_nav_user_profile").click();	
 }
 });
