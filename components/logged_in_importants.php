@@ -10,10 +10,13 @@ $user_full_name = $user_info_arr["first_name"] . " " . $user_info_arr["last_name
 
 $base_user_avatar_arr = $con->query("SELECT * FROM avatars WHERE id_of_user = ". $_SESSION["user_id"] ." order by id desc limit 1")->fetch();
 
+if($base_user_avatar_arr[0] != "") {
+$base_user_avatar_rotate_degree = $base_user_avatar_arr["rotate_degree"];
 $base_user_avatar_positions = explode(",",$base_user_avatar_arr["positions"]);
-//if avatar positions does not exist 
-if(count($base_user_avatar_positions) < 2) {
-$base_user_avatar_positions = [0,0];
+}
+else {
+$base_user_avatar_rotate_degree = 0;
+$base_user_avatar_positions = [0,0];	
 }
 
 $user_favorite_posts_arr = $con->query("select post_id from favorites where user_id = ". $_SESSION["user_id"])->fetchAll();

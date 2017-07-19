@@ -72,15 +72,33 @@ $messager_avatar_positions = [0,0];
 }
 
 
-$sent_message_last = 0;
-
 for($x = 0;$x < count($messages_arr);$x++) {	
 
 $message_raw = openssl_decrypt($messages_arr[$x]["message"],"aes-128-cbc","georgedies",OPENSSL_RAW_DATA,"dancewithdragons");
 
 //if this message is a sent by this user to someone else, then set this variable to true, else set it to false.
 $sent_message = ($messages_arr[$x]["message_from"] == $_SESSION["user_id"] ? 1 : 0);		
-$message_is_first_in_sequence =  ($sent_message_last !=  $sent_message ? 1 : 0);		
+
+if($sent_message == 1) {
+$sender_info = [
+"id" => $user_info_arr["id"],
+"first_name" => htmlspecialchars($user_info_arr["first_name"], ENT_QUOTES, "utf-8"),
+"last_name" => htmlspecialchars($user_info_arr["last_name"], ENT_QUOTES, "utf-8"),
+"avatar" => htmlspecialchars($user_info_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_rotate_degree" => htmlspecialchars($base_user_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
+"avatar_positions" => $base_user_avatar_positions
+];	
+}
+else {
+$sender_info = [
+"id" => $messager_arr["id"],
+"first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
+"last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
+"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
+"avatar_positions" => $messager_avatar_positions
+];	
+}
 			
 if($messages_arr[$x]["message_type"] == "text-message") {
 array_push($echo_arr[0], [
@@ -90,15 +108,7 @@ array_push($echo_arr[0], [
 "read_yet" => htmlspecialchars($messages_arr[$x]["read_yet"], ENT_QUOTES, "utf-8"), 
 "time_string" => date("H:i",strtotime($messages_arr[$x]["date_of"])),
 "message_sent_by_base_user" => $sent_message,
-"message_is_first_in_sequence" => $message_is_first_in_sequence,
-"sender_info" => [
-"id" => $messager_arr["id"],
-"first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
-"last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
-"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
-"avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
-"avatar_positions" => $messager_avatar_positions
-]
+"sender_info" => $sender_info
 ]);
 }
 else if($messages_arr[$x]["message_type"] == "emoji-message") {	
@@ -109,15 +119,7 @@ array_push($echo_arr[0], [
 "read_yet" => htmlspecialchars($messages_arr[$x]["read_yet"], ENT_QUOTES, "utf-8"), 
 "time_string" => date("H:i",strtotime($messages_arr[$x]["date_of"])),
 "message_sent_by_base_user" => $sent_message,
-"message_is_first_in_sequence" => $message_is_first_in_sequence,
-"sender_info" => [
-"id" => $messager_arr["id"],
-"first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
-"last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
-"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
-"avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
-"avatar_positions" => $messager_avatar_positions
-]
+"sender_info" => $sender_info
 ]);
 }
 else if($messages_arr[$x]["message_type"] == "file-message") {
@@ -129,19 +131,10 @@ array_push($echo_arr[0], [
 "read_yet" => htmlspecialchars($messages_arr[$x]["read_yet"], ENT_QUOTES, "utf-8"), 
 "time_string" => date("H:i",strtotime($messages_arr[$x]["date_of"])),
 "message_sent_by_base_user" => $sent_message,
-"message_is_first_in_sequence" => $message_is_first_in_sequence,
-"sender_info" => [
-"id" => $messager_arr["id"],
-"first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
-"last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
-"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
-"avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
-"avatar_positions" => $messager_avatar_positions
-]
+"sender_info" => $sender_info
 ]);
 }
 
-$sent_message_last = $sent_message;
 }
 
 #set all messages's read_yet to true

@@ -170,6 +170,22 @@ user-select:none;
 perspective:1px;
 }
 
+
+.chatRecipientAvatar {
+display:none;	
+}
+
+/* we use .messageContainer:not(.message0) instead of a simple .message1 just in case classes 
+higher than .message1 such as .message2 are added in the future. */
+.message0 + .messageContainer:not(.message0) .chatRecipientAvatar {
+display:inline-block;	
+}
+
+.imageMessageContainer .chatRecipientAvatar {
+display:none !important;	
+}
+
+
 .imageMessageContainer.message1 .messageDate {
 position:relative;
 top:-10px;	
@@ -178,10 +194,6 @@ top:-10px;
 .imageMessageContainer {
 display:inline-block;	
 width:100%;	
-}
-
-.imageMessageContainer .chatRecipientAvatar {
-transform:translate(0,-50%);	
 }
 
 .fileMessageContainer img {
@@ -201,7 +213,6 @@ background-color:#303030;
 /* the avatar of message senders */
 
 .chatRecipientAvatar {
-display:inline-block;
 position:absolute !important;
 margin-left:5px;
 top:5px;

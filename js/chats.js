@@ -51,7 +51,6 @@ if(data.length > 1) {
 $("#emojisContainer").appendTo(".chatModalContentChild");	
 $("#recipient_name").html(data[1]["recipient_first_name"]);	
 get_user_state(data[1]["recipient_id"], function(data){
-console.log("get_user_state callback:\n" + data);	
 $("#recipient_current_status").html(data["current_state"]);		
 });
 $("#sendMessage").attr("data-chat-id", data[1]["chat_id"]);
@@ -225,9 +224,6 @@ if(data["message_type"] == "0") {
 of 1 and 0 would be reverted, with 1 referring to the base user, and 0 to the recipient */
 return `
 <div class='messageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `' data-message-id='` + data["message_id"] + `'>
-
-`+ ((data["message_sent_by_base_user"] == "0" && data["message_is_first_in_sequence"] == "1") ? `
-
 <div class='avatarContainer chatRecipientAvatar'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["sender_info"]["id"] + `'>
 <div class='rotateContainer' style='margin-top:` + data["sender_info"]["avatar_positions"][0] + `%;margin-left:` + data["sender_info"]["avatar_positions"][1] +`%;'>
@@ -236,7 +232,7 @@ return `
 </div>
 </div>
 </div>
-</div>` : "") + `
+</div>
 
 <div class='message'>
 ` + data["message"] + `
@@ -257,8 +253,6 @@ return `
 else if(data["message_type"] == "1") {
 return `<div class='messageContainer emojiMessageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `' data-message-id='` + data["message_id"] + `'>
 
-`+ ((data["message_sent_by_base_user"] == "0" && data["message_is_first_in_sequence"] == "1") ? `
-
 <div class='avatarContainer chatRecipientAvatar'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["sender_info"]["id"] + `'>
 <div class='rotateContainer' style='margin-top:` + data["sender_info"]["avatar_positions"][0] + `%;margin-left:` + data["sender_info"]["avatar_positions"][1] +`%;'>
@@ -267,8 +261,7 @@ return `<div class='messageContainer emojiMessageContainer message`+ (data["mess
 </div>
 </div>
 </div>
-</div>` : "") + `
-
+</div>
 
 <div class='message emojiMessage ` + (data["message_sent_by_base_user"] == "0" && data["read_yet"] == "0" ? "unreadEmoji" : "") + `'>
 <img src='` + data["message"] + `' alt='Emoji'/>
@@ -276,8 +269,6 @@ return `<div class='messageContainer emojiMessageContainer message`+ (data["mess
 <div class='messageDate'>
 ` + data["time_string"] + `
 </div>
-
-</div><!-- end messageContainer -->
 
 <script>
 	$('#chat_avatar` + random_num + `').on('load',function(){
@@ -292,8 +283,6 @@ return `<div class='messageContainer emojiMessageContainer message`+ (data["mess
 else if(data["message_type"] == "2") {
 return `<div class='messageContainer imageMessageContainer message`+ (data["message_sent_by_base_user"] != "1" ? "1" : "0") +`' id='message` + random_num + `' data-message-id='` + data["message_id"] + `'>
 
-`+ ((data["message_sent_by_base_user"] == "0" && data["message_is_first_in_sequence"] == "1") ? `
-
 <div class='avatarContainer chatRecipientAvatar'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["sender_info"]["id"] + `'>
 <div class='rotateContainer' style='margin-top:` + data["sender_info"]["avatar_positions"][0] + `%;margin-left:` + data["sender_info"]["avatar_positions"][1] +`%;'>
@@ -302,7 +291,7 @@ return `<div class='messageContainer imageMessageContainer message`+ (data["mess
 </div>
 </div>
 </div>
-</div>` : "") + `
+</div>
 
 <div class='fileMessageContainer'>
 <img id='file` + random_num + `' src='` + data["message"] + `' alt='File' />
