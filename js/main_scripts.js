@@ -234,7 +234,6 @@ setTimeout(function(){thisItem.removeClass("bottomTabsItemActiveColor");},30);
 });
 
 
-
 });
 
 

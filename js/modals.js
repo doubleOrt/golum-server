@@ -59,7 +59,7 @@ this_modal_modal_overlay.css("z-index", modal_overlay_new_zindex);
 openedModals.push(modalId);
 // if a callback has been set for whenever the modal is set to visible, call it.
 if(typeof $("#" + openedModals[openedModals.length - 1]).data("on_visible") == "function") {
-$("#" + openedModals[openedModals.length - 1]).data("on_visible")();
+$("#" + openedModals[openedModals.length - 1]).data("on_visible")(false);
 }
 
 /* the callback for this function, note that this is different from the callback 
@@ -85,7 +85,7 @@ break;
 if(openedModals.length > 0) {
 // if a callback has been set for whenever the modal is set to visible, call it.
 if(typeof $("#" + openedModals[openedModals.length - 1]).data("on_visible") == "function") {
-$("#" + openedModals[openedModals.length - 1]).data("on_visible")();
+$("#" + openedModals[openedModals.length - 1]).data("on_visible")(true);
 }
 } 
 
@@ -99,7 +99,7 @@ $("#" + modalId).css("opacity", "1");
 $("#" + modalId).css("z-index", zindex);		
 $("#" + modalId).show();		
 });		
-console.log(marks_stack[marks_stack.length - 1]["state"]);
+
 $("#" + modalId).html(marks_stack[marks_stack.length - 1]["state"]);	
 if(modalId == "user_modal") {	
 // see bug 3 in the bugs.txt file.

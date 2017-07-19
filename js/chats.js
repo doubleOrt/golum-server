@@ -1,5 +1,6 @@
 
 var CHAT_ID_HOLDER;
+var CHAT_CONTENT_CONTAINER_ELEMENT;
 
 // we use this variable to prevent multiple calls to "previous_messages.php", otherwise there would be duplicate messages, be sure to set this variable to true whenever you call "showPreviousMessages()", and set it to false after a successful return in the function.
 var chat_prevent_multiple_calls = false;
@@ -47,9 +48,14 @@ chat_prevent_multiple_calls = false;
 
 function start_chat_callback(is_infinite_scroll, data) {
 		
+CHAT_CONTENT_CONTAINER_ELEMENT.fadeIn("fast");
+$("#recipient_name").fadeIn("fast");
+$("#recipient_current_status").fadeIn("fast");		
+		
 if(data.length > 1) {	
 $("#emojisContainer").appendTo(".chatModalContentChild");	
 $("#recipient_name").html(data[1]["recipient_first_name"]);	
+$("#recipient_name").attr("data-recipient-id", data[1]["recipient_id"]);	
 get_user_state(data[1]["recipient_id"], function(data){
 $("#recipient_current_status").html(data["current_state"]);		
 });
@@ -59,32 +65,30 @@ currently_opened_chat_recipient_id = data[1]["recipient_id"];
 }	
 
 // this chat has no messages
-if(data[0].length < 1 && $(".chatWindowChild .messageContainer").length < 1) {
-$(".chatWindowChild").html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>This chat has no messages</div>");	
+if(data[0].length < 1 && CHAT_CONTENT_CONTAINER_ELEMENT.find(".messageContainer").length < 1) {
+CHAT_CONTENT_CONTAINER_ELEMENT.html("<div class='emptyNowPlaceholder'><i class='material-icons'>info</i><br>This chat has no messages</div>");	
 }
 
 /* all this (new/old)_scroll_height stuff is to take care of scrolling back to the element that was the 
 oldest message before this query (because jquery scrolls to the top on prepending). */
 if(is_infinite_scroll === true) {
-var old_scroll_height = $(".chatWindowChild")[0].scrollHeight;
+var old_scroll_height = CHAT_CONTENT_CONTAINER_ELEMENT[0].scrollHeight;
 }
 
 /* needs to be "prepend" instead of "append", because of the scrolling nature of the chat modal, 
 which is different than the rest of the modals, in that you scroll to the top to see the older messages, 
 while in the other modals, you scroll to the bottom to see the older whatevers. */
 for(var i = 0; i < data[0].length; i++) {	
-
-$(".chatWindowChild").prepend(get_message_markup(data[0][i]));	
+CHAT_CONTENT_CONTAINER_ELEMENT.prepend(get_message_markup(data[0][i]));	
 }
-
 
 if(is_infinite_scroll === false) {
 // scroll to the bottom
-$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);	
+CHAT_CONTENT_CONTAINER_ELEMENT.scrollTop(CHAT_CONTENT_CONTAINER_ELEMENT[0].scrollHeight);	
 }
 else if(is_infinite_scroll === true) {
-var new_scroll_height = $(".chatWindowChild")[0].scrollHeight;
-$(".chatWindowChild").scrollTop(new_scroll_height - old_scroll_height);
+var new_scroll_height = CHAT_CONTENT_CONTAINER_ELEMENT[0].scrollHeight;
+CHAT_CONTENT_CONTAINER_ELEMENT.scrollTop(new_scroll_height - old_scroll_height);
 }
 
 getChatPortalActivities(updateChatPortalActivities);
@@ -106,9 +110,9 @@ data:{
 "last_message": lastMessage
 },
 success:function(data) {	
-$(".chatWindowChild").append(data);
+CHAT_CONTENT_CONTAINER_ELEMENT.append(data);
 // scroll to the bottom
-$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);
+CHAT_CONTENT_CONTAINER_ELEMENT.scrollTop(CHAT_CONTENT_CONTAINER_ELEMENT[0].scrollHeight);
 }
 });
 
@@ -323,6 +327,13 @@ currently_opened_chat_recipient_id = 0;
 }
 }
 
+function subscribe_to_chat(recipient_id) {
+websockets_con.subscribe("user_state_" + recipient_id, function(topic, data) {
+var data_arr = JSON.parse(data);
+$("#recipient_current_status").html(data_arr["current_state"]);
+});			
+}
+
 
 
 // use this function to get a string of the online/offline state of a user.
@@ -369,11 +380,57 @@ data: {
 	
 }
 
-function chat_modal_visible() {
+
+function chat_modal_visible(from_back_button) {
+
 var chat_id = CHAT_ID_HOLDER.attr("data-chat-id");	
+
+if(typeof $("#recipient_name").attr("data-recipient-id") !== "undefined" && from_back_button == true) {
+currently_opened_chat_recipient_id = $("#recipient_name").attr("data-recipient-id");
+subscribe_to_chat(currently_opened_chat_recipient_id);
+get_user_state(currently_opened_chat_recipient_id, function(data){
+$("#recipient_current_status").html(data["current_state"]);		
+});
+}
+
 if(typeof chat_id != "undefined" && /^\d+$/.test(chat_id) === true) {
 set_all_chat_messages_read_yet_to_true(chat_id);	
 }
+load_chat_constants();
+
+CHAT_CONTENT_CONTAINER_ELEMENT.fadeIn("fast");
+$("#recipient_name").fadeIn("fast");
+$("#recipient_current_status").fadeIn("fast");		
+
+/* we have to do this because of the absence of an "on" handler for the scroll event, otherwise 
+whenever we opened a chat modal on top of another chat modal, after closing it we would lose 
+the scroll event (because due to the architecture of the modals, we would change the html of 
+the chat-modal in our modals.js page. */
+CHAT_CONTENT_CONTAINER_ELEMENT.off("scroll");
+CHAT_CONTENT_CONTAINER_ELEMENT.scroll(function(event){
+if($(this).scrollTop() == 0) {
+console.log("Yes");		
+start_chat($("#sendMessage").attr("data-chat-id"), undefined, true, CHAT_CONTENT_CONTAINER_ELEMENT.find(".messageContainer").length, function(data){
+start_chat_callback(true, data);
+// we want to update the badge on the user's profile that displays the number of their unread messages each time they view some of those unread messages.
+get_new_messages_num(function(num) {
+if(parseFloat(num) > 0) {
+USER_PROFILE_NEW_MESSAGES_NUM.html(num).css("display", "inline-block");	
+}
+else {
+USER_PROFILE_NEW_MESSAGES_NUM.html(num).hide();	
+}
+});
+	
+});
+}
+});
+
+}
+
+function load_chat_constants() {
+CHAT_ID_HOLDER = $("#chat_content_container");
+CHAT_CONTENT_CONTAINER_ELEMENT = $("#chat_content_container");	
 }
 
 
@@ -388,9 +445,9 @@ by adding those badges to the components. Instead, we just append the new messag
 if(CHAT_ID_HOLDER.attr("data-chat-id") == data["chat_id"]) {	
 /* this conditional prevents the message from being duplicate-added to the original sender's chat modal, since the sender has already appended the message onto their chatModal directly after they pressed the "send" button, there is no need to append another one that is broadcasted by our websocket architecture. Another way would be to not send the websocket message to the sender in the back-end, but we went with this solution. */
 if($(".messageContainer[data-message-id='" + data["message_id"] + "']").length < 1) {	
-$(".chatWindowChild").find(".emptyNowPlaceholder").remove();	
-$(".chatWindowChild").append(get_message_markup(data));	
-$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);		
+CHAT_CONTENT_CONTAINER_ELEMENT.find(".emptyNowPlaceholder").remove();	
+CHAT_CONTENT_CONTAINER_ELEMENT.append(get_message_markup(data));	
+CHAT_CONTENT_CONTAINER_ELEMENT.scrollTop(CHAT_CONTENT_CONTAINER_ELEMENT[0].scrollHeight);		
 
 if(check_if_modal_is_currently_being_viewed("chatModal") === true) {
 set_message_read_yet_to_true(data["message_id"]);
@@ -418,8 +475,7 @@ getChatPortalActivities(updateChatPortalActivities);
 
 $(document).ready(function(){
 
-CHAT_ID_HOLDER = $(".chatWindowChild");
-
+load_chat_constants();
 
 $("#chatModal").data("on_visible", chat_modal_visible);
 
@@ -450,7 +506,8 @@ if(typeof $(this).attr("data-user-id") != "undefined") {
 recipient_id = $(this).attr("data-user-id");
 }
 
-$(".chatWindowChild").html("");
+CHAT_CONTENT_CONTAINER_ELEMENT.html("");
+unsubscribe_from_last_chat();
 
 start_chat(chat_id, recipient_id, unhide_chat_if_hidden, 0, function(data){
 	
@@ -466,31 +523,12 @@ USER_PROFILE_NEW_MESSAGES_NUM.html(num).hide();
 });
 
 
-websockets_con.subscribe("user_state_" + data[1]["recipient_id"], function(topic, data) {
-var data_arr = JSON.parse(data);
-$("#recipient_current_status").html(data_arr["current_state"]);
-});		
+subscribe_to_chat(data[1]["recipient_id"])
 
 
 });
 });
-$(".chatWindowChild").scroll(function(event){
-if($(this).scrollTop() == 0) {
-start_chat($("#sendMessage").attr("data-chat-id"), undefined, true, $(".chatWindowChild .messageContainer").length, function(data){
-start_chat_callback(true, data);
-// we want to update the badge on the user's profile that displays the number of their unread messages each time they view some of those unread messages.
-get_new_messages_num(function(num) {
-if(parseFloat(num) > 0) {
-USER_PROFILE_NEW_MESSAGES_NUM.html(num).css("display", "inline-block");	
-}
-else {
-USER_PROFILE_NEW_MESSAGES_NUM.html(num).hide();	
-}
-});
-	
-});
-}
-});
+
 
 
 $(document).on("click",".chatModalCloseButton",function() {
@@ -499,21 +537,27 @@ chat_prevent_multiple_calls = true;
 setTimeout(function(){
 chat_prevent_multiple_calls = false;	
 }, 100);
-$(".chatWindowChild").html("");
-$(".chatWindowChild").attr("data-chat-id", "");
-$("#recipient_name").html("");
-$("#recipient_current_status").html("");
+CHAT_CONTENT_CONTAINER_ELEMENT.hide();
+$("#recipient_name").hide();
+$("#recipient_current_status").hide();
 // we don't need to receive any updates from the last chat since the user just closed it.
 unsubscribe_from_last_chat();
 });
 
 
 // on double tapping, toggle .emojisContainer's display.
-$(document).on("doubletap",".chatWindowChild",function(e){
+$(document).on("doubletap","#" + CHAT_CONTENT_CONTAINER_ELEMENT.attr("id"),function(e){	
 setTimeout(function(){
-$("#emojisContainer").toggle();	
+$("#emojisContainer").show();	
 },50);
 });
+// hide the .emojisContainer when its sides are clicked.	
+$(document).on("click", "#emojisContainer", function(event){
+if(event.target.tagName != "IMG") {	
+$(this).hide();	
+}
+});
+
 
 
 // when a user is writing a message we call this, if the message is currently empty, we change the send message button to a send photo button, otherwise we change it to a send mesage button.
@@ -531,13 +575,6 @@ switchChatModalSendButton(1);
 });
 
 
-// hide the .emojisContainer when its sides are clicked.	
-$("#emojisContainer").click(function(event){
-if(event.target.tagName != "IMG") {	
-$(this).hide();	
-}
-});
-
 // when the user presses the #chatModal's send message button.
 $(document).on("click","#sendMessage",function(){
 
@@ -550,9 +587,9 @@ return;
 else {
 switchChatModalSendButton(0);
 sendTextMessage($("#sendMessage").attr("data-chat-id"), $(".messageTextarea").val(), function(data){
-$(".chatWindowChild").find(".emptyNowPlaceholder").remove();	
-$(".chatWindowChild").append(get_message_markup(data[0][0]));	
-$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);	
+CHAT_CONTENT_CONTAINER_ELEMENT.find(".emptyNowPlaceholder").remove();	
+CHAT_CONTENT_CONTAINER_ELEMENT.append(get_message_markup(data[0][0]));	
+CHAT_CONTENT_CONTAINER_ELEMENT.scrollTop(CHAT_CONTENT_CONTAINER_ELEMENT[0].scrollHeight);	
 });
 $(".messageTextarea").val("");	
 }
@@ -563,9 +600,9 @@ $(".messageTextarea").val("");
 $(document).on("click",".emoji",function(e){	
 $("#emojisContainer").fadeOut();
 sendMessage($("#sendMessage").attr("data-chat-id"), $(this).attr("src"), "emoji-message", function(data){
-$(".chatWindowChild").find(".emptyNowPlaceholder").remove();	
-$(".chatWindowChild").append(get_message_markup(data[0][0]));	
-$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);	
+CHAT_CONTENT_CONTAINER_ELEMENT.find(".emptyNowPlaceholder").remove();	
+CHAT_CONTENT_CONTAINER_ELEMENT.append(get_message_markup(data[0][0]));	
+CHAT_CONTENT_CONTAINER_ELEMENT.scrollTop(CHAT_CONTENT_CONTAINER_ELEMENT[0].scrollHeight);	
 });
 });
 
@@ -574,10 +611,10 @@ $(document).on("change","#sendImage",function(){
 sendImage(function(data){
 // there were no errors	
 if(data[1] == "0") {	
-$(".chatWindowChild").find(".emptyNowPlaceholder").remove();
-$('.chatWindowChild').append(get_message_markup(data[0][0]));
+CHAT_CONTENT_CONTAINER_ELEMENT.find(".emptyNowPlaceholder").remove();
+CHAT_CONTENT_CONTAINER_ELEMENT.append(get_message_markup(data[0][0]));
 // scroll to the bottom
-$('.chatWindowChild').scrollTop($('.chatWindowChild')[0].scrollHeight);		
+CHAT_CONTENT_CONTAINER_ELEMENT.scrollTop(CHAT_CONTENT_CONTAINER_ELEMENT[0].scrollHeight);		
 }
 else {
 Materialize.toast(data[1], 6000, "red");	

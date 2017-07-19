@@ -34,7 +34,7 @@ background-color:#f4f4f4;
 }
 
 
-.chatWindowChild {
+.chat_window_child {
 width:100%;
 height:100%;
 overflow:hidden;
@@ -44,15 +44,15 @@ padding-top:20px;
 padding-bottom:20px;
 }
 
-.chatWindowChild::-webkit-scrollbar {
+.chat_window_child::-webkit-scrollbar {
 width:2px;
 }
 
-.chatWindowChild::-webkit-scrollbar-thumb {
+.chat_window_child::-webkit-scrollbar-thumb {
 	background-color:#ebebeb;
 }
 
-.chatWindowChild::-webkit-scrollbar-thumb {
+.chat_window_child::-webkit-scrollbar-thumb {
     border-radius: 6px;
 }
 

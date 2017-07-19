@@ -8,8 +8,6 @@ require_once "logged_in_importants.php";
 include_once "letter_avatars.php";
 
 
-
-
 $echo_arr = [[]];
 
 
