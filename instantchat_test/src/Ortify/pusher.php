@@ -42,6 +42,18 @@ class Pusher implements WampServerInterface {
 				}
 			}
 		}
+		// update_type 1 means new notifications
+		else if($data["update_type"] == "1") {
+			if(array_key_exists("notification_to", $data)) {
+				$user_topic = "user_" . $data["notification_to"];
+				if(array_key_exists($user_topic, $this->subscribedTopics)) {
+					$this->subscribedTopics[$user_topic]->broadcast(json_encode([
+					"type" => "2",
+					"data" => $data
+					]));
+				}
+			}
+		}
 
     }
 

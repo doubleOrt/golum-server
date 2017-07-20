@@ -237,6 +237,14 @@ setTimeout(function(){thisItem.removeClass("bottomTabsItemActiveColor");},30);
 });
 
 
+function check_if_main_screen_is_open(main_screen_id) {
+return $("#" + main_screen_id).hasClass("main_screen_active");
+}
+
+
+
+
+
 var websocket_request_id = 0;
 var handle_user_channel_message_callbacks = [];
 function handle_user_channel_message(topic, data) {
@@ -256,6 +264,9 @@ handle_user_channel_message_callbacks[i]["callback"](data_arr["data"]);
 }
 else if(data_arr["type"] == "1") {
 there_are_new_messages(data_arr["data"]);	
+}
+else if(data_arr["type"] == "2") {
+there_are_new_notifications(data_arr["data"]);	
 }
 
 

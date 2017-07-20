@@ -15,6 +15,8 @@ data:{
 },
 success:function(data) {
 	
+console.log(data);	
+	
 // post was sent successfully	
 if(data == 1) {
 callback();

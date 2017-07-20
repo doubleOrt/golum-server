@@ -24,7 +24,35 @@ $prepared->bindParam(":type",$type);
 $prepared->bindParam(":extra",$_POST["post_id"]);	
 
 if($prepared->execute()) {
+$notification_id = $con->lastInsertId();
 echo "1";
+
+$socket_message = [
+"update_type" => "1",
+"notification_id" => $notification_id,
+"notification_time" => $time, 
+"notification_time_string" => time_to_string($time),
+"notification_type" => $type, 
+"notification_extra" => htmlspecialchars($_POST["post_id"], ENT_QUOTES, "utf-8"), 
+"notification_extra2" => "0", 
+"notification_extra3" => "0", 
+"notification_read_yet" => "0", 
+"notification_and_others" => "0", 
+"notification_to" => htmlspecialchars($_POST["friend_id"], ENT_QUOTES, "utf-8"),
+"notification_sender_info" => [
+	"id" => $user_info_arr["id"], 
+	"first_name" => htmlspecialchars($user_info_arr["first_name"], ENT_QUOTES, "utf-8"),
+	"last_name" => htmlspecialchars($user_info_arr["last_name"], ENT_QUOTES, "utf-8"),
+	"avatar" => htmlspecialchars($user_info_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+	"avatar_positions" => $base_user_avatar_positions,
+	"avatar_rotate_degree" => $base_user_avatar_rotate_degree
+	] 
+];	
+	
+$context = new ZMQContext();
+$socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
+$socket->connect("tcp://localhost:5555");
+$socket->send(json_encode($socket_message));
 }
 	
 	

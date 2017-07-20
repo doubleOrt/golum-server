@@ -265,7 +265,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Upvoted Your Comment+<br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Upvoted Your Comment.<br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -292,7 +292,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Downvoted Your Comment+  <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) +` Downvoted Your Comment. <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -319,7 +319,7 @@ return `
 
 <div class='notificationTextContainer'>
 <div class='notificationText'>
-<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) + ` Upvoted Your Reply.  <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra"] +`'>View Post</a>)</span>
+<a href='#modal1' class='commonLink notificationFromFullName showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `'>`+ notification_sender_full_name +`</a> `+ (notification_arr["notification_and_others"] > 0 ?  `And ` + notification_arr["notification_and_others"] + ` Other` + (notification_arr["notification_and_others"] == 1 ? `` : `s`) : ``) + ` Upvoted Your Reply.  <br><span class='smallerFontSize boldText'>(<a href='#singlePostModal' class='commonLink openSinglePost modal-trigger' data-actual-post-id='`+ notification_arr["notification_extra2"] +`'>View Post</a>)</span>
 </div>
 <div class='notificationTime'>` + notification_arr["notification_time_string"] + `</div>
 </div>
@@ -449,7 +449,63 @@ removeLoading(SECOND_TAB_NOTIFICATIONS_CONTAINER);
 }
 
 
+function there_are_new_notifications(data) {
 
+
+// if the user is not in the notifications section, then just update the new-notifications badge.
+if(check_if_main_screen_is_open("main_screen_notifications") == false) {
+get_new_notifications_num(function(num) {	
+if(parseFloat(num) > 0) {
+NEW_NOTIFICATIONS_NUM_CONTAINER.html(num).show();	
+}
+});	
+}
+else {	
+if(NOTIFICATIONS_TABS_STATE_HOLDER.attr("data-active-tab") == "0") {
+FIRST_TAB_NOTIFICATIONS_CONTAINER.scrollTop("0");		
+FIRST_TAB_NOTIFICATIONS_CONTAINER.find(".emptyNowPlaceholder").remove();	
+FIRST_TAB_NOTIFICATIONS_CONTAINER.prepend(get_notification_markup(data));
+FIRST_TAB_NOTIFICATIONS_CONTAINER.find(".avatarImages").on("load", function(){
+fitToParent($(this));
+adaptRotateWithMargin($(this), $(this).parent().attr("data-rotate-degree"), false);	
+});
+}	
+else {
+SECOND_TAB_NOTIFICATIONS_CONTAINER.scrollTop("0");		
+SECOND_TAB_NOTIFICATIONS_CONTAINER.find(".emptyNowPlaceholder").remove();		
+SECOND_TAB_NOTIFICATIONS_CONTAINER.prepend(get_notification_markup(data));
+SECOND_TAB_NOTIFICATIONS_CONTAINER.find(".avatarImages").on("load", function(){
+fitToParent($(this));
+adaptRotateWithMargin($(this), $(this).parent().attr("data-rotate-degree"), false);	
+});	
+}
+set_notifications_read_yet_to_true(data["notification_id"]);
+}
+
+}
+
+
+
+// use this function to set a message from unread to read.
+function set_notifications_read_yet_to_true(notification_id) {
+	
+console.log(notification_id);	
+	
+if(typeof notification_id == "undefined") {
+return false;	
+}	
+
+$.post({
+url: "components/set_notifications_read_yet_to_true.php",
+data: {
+"notification_id": notification_id
+},
+success:function(data) {
+console.log(data);	
+}
+});
+
+}
 
 
 

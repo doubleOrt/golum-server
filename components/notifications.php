@@ -40,7 +40,7 @@ $sender_avatar_positions = [0,0];
 }
 
 array_push($echo_arr, [
-"notification_id" => htmlspecialchars($notification["id"], ENT_QUOTES, "utf-8") ,
+"notification_id" => htmlspecialchars($notification["id"], ENT_QUOTES, "utf-8"),
 "notification_time" => htmlspecialchars($notification["time"], ENT_QUOTES, "utf-8"), 
 "notification_time_string" => time_to_string($notification["time"]),
 "notification_type" => htmlspecialchars($notification["type"], ENT_QUOTES, "utf-8"), 
@@ -66,44 +66,6 @@ array_push($echo_arr, [
 
 echo json_encode($echo_arr);
 
-
-
-
-
-
-
-function time_to_string($time) {
-		
-$time = intval($time);	
-	
-$today = new DateTime(); // This object represents current date/time
-$today->setTime( 0, 0, 0 ); // reset time part, to prevent partial comparison
-
-$match_date = DateTime::createFromFormat( "Y-m-d H:i", date("Y-m-d H:i",$time));
-$match_date->setTime( 0, 0, 0 ); // reset time part, to prevent partial comparison
-
-$diff = $today->diff( $match_date );
-$diffDays = (integer)$diff->format( "%R%a" ); // Extract days count in interval
-
-if(time() - $time < 120) {
-return "Just Now";
-}	
-else if(time() - $time < 3600) {
-return round((time() - $time)/60) ." Minutes Ago";
-}
-else if($diffDays == 0) {
-return round((((time() - $time)/60)/60)) . " Hour". (round((((time() - $time)/60)/60)) != 1 ? "s" : "")  ." Ago";	
-}
-else if($diffDays == -1) {
-return "Yesterday At ". date("H:i",$time);	
-} 
-else if(time() - $time < 604800){
-return date("l",$time);	
-}
-else {
-return date("Y/m/d H:i",$time);		
-}
-}
 
 
 ?>
