@@ -274,7 +274,7 @@ there_are_new_notifications(data_arr["data"]);
 
 
 function open_web_socket_connection() {
-websockets_con = new ab.Session('ws://192.168.1.102:8080',
+websockets_con = new ab.Session('ws://192.168.1.100:8080',
 function() {
 console.warn("Websocket connection opened");	
 websockets_connection_is_good = true;
