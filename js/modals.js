@@ -191,6 +191,14 @@ openModalCustom(modalId);
 });
 
 
+$(document).on("click", ".modal-overlay", function(){
+closeModal($(this).attr("data-modal"), function(){
+/* See bugs.txt: bug 2 */	
+if($(".modal.open").length < 1 && PROFILE_CONTAINER_ELEMENT.parents("#main_screen_user_profile").length < 1 && $("#bottom_nav_user_profile").hasClass("active")) {
+$("#bottomNav #bottom_nav_user_profile").click();	
+}
+});	
+});
 
 /* bugs.txt bug-4 */
 var click_on_touch_end;
@@ -221,4 +229,11 @@ $("#bottomNav #bottom_nav_user_profile").click();
 });
 
 
-})
+});
+
+function inViewport($el) {
+    var elH = $el.outerHeight(),
+        H   = $(window).height(),
+        r   = $el[0].getBoundingClientRect(), t=r.top, b=r.bottom;
+    return Math.max(0, t>0? Math.min(elH, H-t) : (b<H?b:H));
+}
