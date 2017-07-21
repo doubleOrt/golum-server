@@ -7,7 +7,7 @@ var comment_owner_vote = ["a","b","c","d"];
 
 // potential bug awaiting (data['comment_by_base_user'] == true)
 function get_comment_markup(data, comment_or_reply) {
-								
+																
 var random_num = Math.floor(Math.random() * 1000000);	
 
 var commenter_avatar_id = "avatar" + random_num;
@@ -32,10 +32,11 @@ return `<div class='singleComment scaleHorizontallyCenteredItem myGreyBackground
 </div><!-- end .avatarContainerChild -->
 </div><!-- end .avatarContainer -->
 </div><!-- end .commenterAvatarContainerParent -->
+
 <div class='actualComment col l10 m10 s10'>
 <a href='#modal1' class='commenterFullName showUserModal modal-trigger ` + (data["comment_by_poster"] == true ? "commentByPoster" : "") + `' data-user-id='` + data["comment_owner_info"]["id"] + `' data-target='user_modal'><span class='` + (data["comment_by_base_user"] == true ? "baseUserFullNameContainers" : "") + `'>` + comment_owner_full_name + `</span></a><!-- end .commenterFullName -->
 ` + (data["comment_owner_vote"] != "" ? ("<span class='commenterVotedThis'>" + comment_owner_vote[data["comment_owner_vote"]] + "</span>") : "") + `
-<div class='actualCommentComment' >` + handle_tags(data["comment_text"]) + `</div>
+<div class='actualCommentComment' >` + data["comment_text"] + `</div>
 <div class='postCommentActions' data-comment-id='` + data["comment_id"] + `'>
 <a href='#` + (comment_or_reply == 0 ? "commentRepliesModal" : "") + `' class='` + (comment_or_reply == 0 ? "modal-trigger addReplyToComment' data-comment-id='" + data["comment_id"] + "'" : "addReplyToReply' data-commenter-id='" + data["comment_owner_info"]["id"] + "' data-commenter-full-name='" + comment_owner_full_name + "'") + ">Reply" + "&nbsp;&nbsp;<span class='commentActionNums reply_button_total_replies' data-total-number='" + data["comment_replies_num"] + "'>" +  (data["comment_replies_num"] > 0 ? ("(" + data["comment_replies_num"] + ")") : "") + "</span>" + `</a>
 <a href='#' class='waves-effect waves-lightgrey upvoteOrDownvote ` + (data["base_user_upvoted_comment"] == 1 ? "upvoteOrDownvoteActive" : "") + `' data-upvote-or-downvote='upvote'><i class='material-icons'>arrow_upward</i></a> <span class='commentUpvotes commentActionNums'>` + (data["comment_upvotes_num"] > 0 ? "(" + data["comment_upvotes_num"] + ")" : "") + `</span>
@@ -44,6 +45,7 @@ return `<div class='singleComment scaleHorizontallyCenteredItem myGreyBackground
 </div><!-- end .postCommentActions -->
 </div>
 </div>
+
 <script>
 	$('#` + commenter_avatar_id + `').on('load',function(){
 		fitToParent($(this));
@@ -51,3 +53,4 @@ return `<div class='singleComment scaleHorizontallyCenteredItem myGreyBackground
 	});
 </script>`;
 }
+

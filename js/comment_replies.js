@@ -141,6 +141,9 @@ for(var i = 0; i < data[0].length; i++) {
 REPLIES_CONTAINER_ELEMENT.append(get_comment_markup(data[0][i], 1));	
 }
 
+REPLIES_CONTAINER_ELEMENT.find(".singleComment .actualCommentComment").each(function(){
+$(this).html(handle_tags($(this).html()));	
+});
 
 REPLIES_CONTAINER_ELEMENT.find('.actualCommentComment').readmore({
 speed: 500,
@@ -343,7 +346,18 @@ isReplyTo = $("#replyToCommentTextarea").find("a").attr("data-reply-to");
 $("#replyToCommentTextarea").find("a").remove();	
 }
 
-addReplyToComment( $(this).attr("data-comment-id"), $("#replyToCommentTextarea").html(), isReplyTo, add_reply_to_comment_callback);
+/* we use text() because our only other option is html() which would give us the encoded html characters 
+which would in turn mess-up with the architecture and therefore some html entities would not be rendered
+correctly (such as < and >). and remember that val() is not an option since the #postCommentTextarea is 
+actually a div. 
+*/
+addReplyToComment( $(this).attr("data-comment-id"), $("#replyToCommentTextarea").text(), isReplyTo, function(data){
+add_reply_to_comment_callback(data);
+REPLIES_CONTAINER_ELEMENT.find(".singleComment .actualCommentComment").each(function(){
+$(this).html(handle_tags($(this).html()));	
+});	
+});
+
 });
 
 

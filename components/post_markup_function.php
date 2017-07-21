@@ -1,7 +1,6 @@
 <?php
 // you need this function to retrieve the markup of a post, you just need to pass the post's array (from the database) as the first argument and you are good to go.
 
-require_once "handleTagsFunction.php";
 
 function get_post_markup($post_arr) {
 global $con;

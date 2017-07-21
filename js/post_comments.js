@@ -37,9 +37,7 @@ ajax_call_to_get_comments = $.get({
 url:"components/get_post_comments.php",
 data:dataObj,
 success:function(data) {
-		
-console.log(data);		
-		
+				
 var data_arr = JSON.parse(data);
 
 callback(data_arr);	
@@ -134,8 +132,12 @@ COMMENTS_CONTAINER_ELEMENT.append(get_end_of_results_mark_up("End of comments"))
 }
 
 for(var i = 0; i < data[0].length; i++) {
-COMMENTS_CONTAINER_ELEMENT.append(get_comment_markup(data[0][i], 0));	
+COMMENTS_CONTAINER_ELEMENT.append(get_comment_markup(data[0][i], 0));
 }
+
+COMMENTS_CONTAINER_ELEMENT.find(".singleComment .actualCommentComment").each(function(){
+$(this).html(handle_tags($(this).html()));	
+});
 
 
 $('#commentsModal .actualCommentComment').readmore({
@@ -269,7 +271,18 @@ $("#postCommentTextarea").attr("data-state") == "0" || $("#postCommentTextarea")
 return false;
 }
 
-addCommentToPost($(this).attr("data-actual-post-id"), $("#postCommentTextarea").html(), add_comment_to_post_callback);
+/* we use text() because our only other option is html() which would give us the encoded html characters 
+which would in turn mess-up with the architecture and therefore some html entities would not be rendered
+correctly (such as < and >). and remember that val() is not an option since the #postCommentTextarea is 
+actually a div. 
+*/
+addCommentToPost($(this).attr("data-actual-post-id"), $("#postCommentTextarea").text(), function(data){
+add_comment_to_post_callback(data);	
+COMMENTS_CONTAINER_ELEMENT.find(".singleComment .actualCommentComment").each(function(){
+$(this).html(handle_tags($(this).html()));	
+});
+});
+
 });
 
 
