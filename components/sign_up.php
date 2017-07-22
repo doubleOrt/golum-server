@@ -80,7 +80,6 @@ write_shm($_SESSION["user_id"] . "" . 4,"none");
 write_shm($_SESSION["user_id"] . "" . 5,"none");
 
 
-
 echo "success";
 die();
 }

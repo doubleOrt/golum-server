@@ -13,7 +13,7 @@ this.onWrong = onWrong;
 
 this.validate = function(make_toasts) {
 if(this.regEx.test(this.ref.value) == false) {
-this.ref.style.borderBottom = "1px solid red";		
+this.ref.style.borderBottom = "2px solid red";		
 if(make_toasts === true) {
 Materialize.toast(this.onWrong, 5000,"red");
 }
@@ -22,7 +22,7 @@ return false;
 /* this is necessary to override the red borders, e.g you have 2 form elements you click submit, they're both false, now they have red borders, you correct one, 
 click on submit again, now without this the border would still be red, but with this the border's going to be green. */
 else {
-this.ref.style.borderBottom = "1px solid #42dc12";
+this.ref.style.borderBottom = "2px solid #42dc12";
 return true;	
 }		
 }
@@ -318,6 +318,41 @@ Materialize.toast('Invalid confirmation code :(',5000,'red');
 }	
 });
 }
+});
+
+
+$(document).on("click", "#set_password_for_first_time_modal_confirm", function(){
+
+var password_regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*([$@$!%*#?& ]*))[A-Za-z\d($@$!%*#?& )*]{8,50}$/;
+
+var set_password_password = $("#set_password_for_first_time_modal_password").val();
+
+if(password_regex.test(set_password_password) === true) {
+	
+$.post({
+url: "components/set_password_for_first_time.php",	
+data: {
+"password": set_password_password	
+},
+success: function(data) {
+
+var data_arr = JSON.parse(data);
+
+if(data_arr[0] == 1) {
+closeModal("set_password_for_first_time_modal");	
+}
+else {
+Materialize.toast(data_arr[1], 5000, "red");	
+}
+
+}
+});
+
+}
+else {
+Materialize.toast("Password Must Contain At Least 1 Digit And Must Be Between 8-50 Characters, Special Characters And Spaces Are Optional", 5000, "red");	
+}
+
 });
 	
 

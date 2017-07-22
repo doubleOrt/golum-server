@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -59,8 +58,10 @@ $.get({
 url:"components/login_to_logout.php",
 success:function(data) {
 
+var data_arr = JSON.parse(data);
+
 // user shouldn't be here because he hasn't logged in yet
-if(data == 0) {
+if(data_arr[0] == 0) {
 window.location.href = "login_and_sign_up.html";
 }
 // user has logged in
@@ -68,6 +69,12 @@ else {
 BASE_USER_ID_HOLDER.attr("data-user-id", data);
 // the websocket connection must be opened only after we have the user's id, since our onopen code relies on the base user's id.
 open_web_socket_connection();
+
+if(data_arr[1] == 1) {
+$("#set_password_for_first_time_modal").modal("open");
+openModalCustom("set_password_for_first_time_modal");
+} 
+
 }
 
 }
@@ -298,11 +305,11 @@ open_web_socket_connection();
 	
 <div id="profile_background_bottom_overlay" class="stopPropagationOnClick"><!-- adding .stopPropagationOnClick to prevent the #changeBackgroundButton from being shown everytime the user interacts with this -->
 <div id="profile_background_buttons_container">
-<a href="#" class="get_chat_portals baseUserOnly opacityChangeOnActive modal-trigger" data-target="chat_portals_modal"><i class="material-icons">chat</i>
+<a href="#chat_portals_modal" class="get_chat_portals baseUserOnly opacityChangeOnActive modal-trigger"><i class="material-icons">chat</i>
 <span id="user_profile_new_messages_num" class="custom_badge"></span></a>
 <a href="#" class="dropdown-button opacityChangeOnActive" data-activates="profile_settings"><i class="material-icons">more_vert</i></a>
 <ul id='profile_settings' class='dropdown-content'>
-<li class="baseUserOnly"><a href='#!' class='waves-effect waves-lightgrey modal-trigger' data-target="settingsModal">Settings</a></li>
+<li class="baseUserOnly"><a href='#settingsModal' class='waves-effect waves-lightgrey modal-trigger'>Settings</a></li>
 <li class="notBaseUserOnly"><a id='user_profile_block_button' data-user-id='' data-current-state='' href='#!' class='waves-effect waves-lightgrey'>Block</a></li>
 <li class="baseUserOnly"><a href='#!' class='waves-effect waves-lightgrey log_out'>Logout</a></li>
 </ul>
@@ -1460,6 +1467,48 @@ Type the code that you received with <b id="confirm_email_modal_email_address_in
  
  
  
+ 
+
+<div id="set_password_for_first_time_modal" class="modal hasFooterAndHeader dismissible_false">
+
+<div class="modal-content">
+<div class="row">
+<div class='col l12 m12 s12 row'>
+
+
+<div id="helper_text_container" class="col l12 m12 s12">
+<p></p>
+</div>
+<div class='input-field col l12 m12 s12'>
+<input id='set_password_for_first_time_modal_password' type='password'>
+<label for='set_password_for_first_time_modal_password'>Password</label>
+</div>
+
+</div><!-- end .col -->
+</div><!-- end .row -->
+</div><!-- end .modal-content -->
+
+<div class="modalHeaderContainer">
+<div class="modal-header mobileOnly">
+<a class="modalCloseButton waves-effect wavesCustom disabledButton" href="#" data-modal="set_password_modal">
+<i class="material-icons">close</i>
+</a>
+<span class="modalHeaderFullName">Set Password</span>
+</div><!-- end modal header -->
+</div>
+
+<div class="modal-footer col l12 m12 s12 row" style="box-shadow:0 -5px 8px rgba(0,0,0,.1);margin:0;">
+<div class="col l5 m12 s12 offset-l7">
+<div class="col l6 m6 s6" style="padding:0 1%;">
+<a href="#" class="waves-effect wavesCustom btn commonButtonWhite modalCloseButton disabledButton" data-modal="set_password_modal" style="width:100%;">Cancel</a>
+</div>
+<div class="col l6 m6 s6" style="padding:0 1%;">
+<a id="set_password_for_first_time_modal_confirm" href="#" class="waves-effect wavesCustom btn commonButton" style="width:100%;">Confirm</a>
+</div>	
+</div>
+</div><!-- .modal-footer -->
+
+</div>
  
  
  

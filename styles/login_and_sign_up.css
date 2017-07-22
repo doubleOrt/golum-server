@@ -140,3 +140,13 @@ position:relative;
 top:45%;
 transform:translate(0,-50%);	
 }
+
+
+#social_logins_container {
+display:inline-block;
+margin:0;
+margin-top:5px;
+position:relative;
+left:50%;
+transform:translate(-50%,0%);	
+}

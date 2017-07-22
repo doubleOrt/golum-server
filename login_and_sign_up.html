@@ -33,7 +33,6 @@
 <link rel="stylesheet" href="styles/inputs.css">
 <link rel="stylesheet" href="styles/modals.css">
 
-
 <script>
 
 $.get({
@@ -104,7 +103,12 @@ eval(data);
 
 <div class="col l6 m6 s6 offset-l3 offset-m3 offset-s3 smallDivider" style="margin-top:10px !important;margin-bottom:10px !important;"></div>
 
-<div id="my-signin2" class="col l10 m10 s10 offset-l1 offset-m1 offset-s1" style="margin-top:10px;"></div>
+<div class="col l12 m12 s12">
+<div id="social_logins_container">
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
+</div>
+</div>
+
 
 </div><!-- end .row -->
 
@@ -229,33 +233,44 @@ it is a login form, so to workaround that, we moved this to the top of the input
 
 <script>
 
-$(function(){
-render_google_sign_in_button();
-});
 
 function onSignIn(googleUser) {
 
-var profile = googleUser.getBasicProfile();
-console.log("Basic user profile: " + JSON.stringify(profile));
-  
-  $.get({
-  url: "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + profile.getId(),
-  success:function(data) {
-  console.log(JSON.stringify(data));
-  }
-  });
-  
+var auth2 = gapi.auth2.getAuthInstance();
+
+// prevents auto sign-in
+auth2.signOut();
+
+// prevents Google from signing-in a user automatically to the last account (i think) they signed into in our app.
+auth2.disconnect();
+
+if (auth2.isSignedIn.get()) {
+var profile = auth2.currentUser.get().getBasicProfile();
+
+$.post({
+url:"components/external_login.php",
+data: {
+"id": googleUser.getAuthResponse().id_token
+},
+success:function(data){
+console.log(data);
+var data_arr = JSON.parse(data);
+
+if(data_arr[0] === 1) {
+window.location.href = "logged_in.html";
+}
+else {
+Materialize.toast(data_arr[1], 6000, "green");
 }
 
-function render_google_sign_in_button() {
- gapi.signin2.render('my-signin2', {
-        'scope': 'profile email',
-        'width': $("#my-signin2").width(),
-        'height': 40,
-        'longtitle': true,
-		"onsuccess": onSignIn
-     });
 }
+});
+
+}
+
+}
+
+
 
 </script>
 

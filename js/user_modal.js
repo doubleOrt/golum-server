@@ -185,7 +185,6 @@ handle_user_info_widget( "birthdate" , (data["birthdate"] != "" ? data["birthdat
 
 // initialize the #birthdate datepicker and preselect it with the user's birthdate. in case you need to make some modifications, go to the documentation for pickadate.js
 $('#birthdate').pickadate({
-max:-3939,
 selectMonths: true,
 selectYears: 80,
 today: null,

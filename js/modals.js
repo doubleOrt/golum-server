@@ -21,7 +21,16 @@ return false;
 
 var this_modal_modal_overlay;
 
-setTimeout(function(){$(".modal-overlay").last().attr("data-modal", modalId);this_modal_modal_overlay = $(".modal-overlay[data-modal='" + modalId + "']");},300);
+setTimeout(function(){
+$(".modal-overlay").last().attr("data-modal", modalId);
+this_modal_modal_overlay = $(".modal-overlay[data-modal='" + modalId + "']");
+if($("#" + modalId).hasClass("dismissible_false")) {
+var handle_dismissible_false_id = "handle_dismissible_false" + Math.floor(Math.random() * 1000000);	
+this_modal_modal_overlay.after("<div id='" + handle_dismissible_false_id + "' style='width:100%;height:100%;position:absolute;top:0;left:0;bottom:0;right:0;background:transparent;z-index:" + this_modal_modal_overlay.css("z-index") +"'></div>");	
+$("#" + modalId).attr("data-handle-dismissible-false", handle_dismissible_false_id);
+}
+},300);
+
 $("#" + modalId).css("opacity", 1);
 
 var is_not_already_opened = true;
@@ -72,8 +81,12 @@ callback();
 }
 
 function closeModal(modalId, callback) {
-	
+		
 var this_modal_modal_overlay = $(".modal-overlay[data-modal=" + modalId + "]");
+
+if(typeof $("#" + modalId).attr("data-handle-dismissible-false") != "undefined") {
+$("#" + $("#" + modalId).attr("data-handle-dismissible-false")).remove();	
+}
 
 for(var i = openedModals.length - 1;i > -1; i--) {
 if(openedModals[i] == modalId) {
@@ -170,11 +183,12 @@ outDuration: 150, // Transition out duration
 startingTop: "100%",
 endingTop: "50%",	
 ready:function(){
-var this_modal = $(this);	
-setTimeout(function(){z_index_stack = parseFloat(this_modal.css("z-index"));},300);
+var this_modal_id = $(this).attr("id");	
+setTimeout(function(){
+z_index_stack = parseFloat($("#" + this_modal_id).css("z-index"));
+},300);
 }
 });
-
 
 
 $(document).on("click",".modal-trigger",function(){
@@ -192,6 +206,11 @@ openModalCustom(modalId);
 
 
 $(document).on("click", ".modal-overlay", function(){
+	
+if($("#" + $(this).attr("data-modal")).hasClass("dismissible_false")) {
+return false;	
+}	
+				
 closeModal($(this).attr("data-modal"), function(){
 /* See bugs.txt: bug 2 */	
 if($(".modal.open").length < 1 && PROFILE_CONTAINER_ELEMENT.parents("#main_screen_user_profile").length < 1 && $("#bottom_nav_user_profile").hasClass("active")) {

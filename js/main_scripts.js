@@ -10,6 +10,10 @@ $(document).ready(function(){
  
 BASE_USER_ID_HOLDER = $("#megaContainer");
 	 	 
+		 		 
+		 
+		 
+		 
 //hide the loading bar and show the document body
 removeLoading($("#main_screen_main_posts_container"));
 $("#showOnBodyLoad").show();
@@ -274,7 +278,7 @@ there_are_new_notifications(data_arr["data"]);
 
 
 function open_web_socket_connection() {
-websockets_con = new ab.Session('ws://192.168.1.100:8080',
+websockets_con = new ab.Session('ws://192.168.1.101:8080',
 function() {
 console.warn("Websocket connection opened");	
 websockets_connection_is_good = true;
@@ -292,7 +296,7 @@ websockets_connection_is_good = false;
 }
 
 function open_user_channel(user_id) {
-if(websockets_connection_is_good === true && /^\d+$/.test(user_id) === true) {
+if(websockets_connection_is_good === true && /^d+$/.test(user_id) === true) {
 websockets_con.subscribe('user_' + user_id, handle_user_channel_message);
 }	
 }

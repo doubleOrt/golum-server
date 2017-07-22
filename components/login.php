@@ -46,7 +46,7 @@ $con->query("update users set failed_login_count = failed_login_count + 1 where 
 }	
 }
 else {
-$prepared = $con->prepare("SELECT * FROM users WHERE user_name = :user_name_or_email or email_address = :user_name_or_email");
+$prepared = $con->prepare("SELECT * FROM users WHERE user_name = :user_name_or_email or (email_address = :user_name_or_email and activated = 'true')");
 $prepared->bindParam(":user_name_or_email",$login_user_name_or_email);
 $prepared->execute();
 $login_arr = $prepared->fetch();

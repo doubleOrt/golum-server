@@ -20,6 +20,10 @@ return true;
 }			
 }
 
+public function on_wrong() {
+return $this->on_wrong;	
+}
+
 }
 
 ?>
