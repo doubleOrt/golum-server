@@ -10,9 +10,15 @@ $echo_arr = [[]];
 	
 if(isset($_SESSION["user_id"]) && isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {
 
-$chat_portals_arr = $con->query("select * from chats where chatter_ids like '%".$_SESSION["user_id"]."%' order by latest_activity desc limit 15 OFFSET ". $_GET["row_offset"])->fetchAll();
+$chat_portals_arr_prepared = $con->prepare("select * from (select *, case SUBSTRING_INDEX(chatter_ids, '-', 1) when :base_user_id then SUBSTRING_INDEX(chatter_ids, '-', -1) else SUBSTRING_INDEX(chatter_ids, '-', 1) end as chat_recipient from chats where chatter_ids like concat('%', :base_user_id, '%')) t1 where chat_recipient not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and chat_recipient not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and chat_recipient not in (SELECT user_id from account_states) order by latest_activity desc limit 15 offset :row_offset");
+$chat_portals_arr_prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
+$chat_portals_arr_prepared->bindValue(":row_offset", (int) $_GET["row_offset"], PDO::PARAM_INT);
+$chat_portals_arr_prepared->execute();
+$chat_portals_arr = $chat_portals_arr_prepared->fetchAll();
 
-$hidden_chats_arr = $con->query("select * from hidden_chats where user_id = ". $_SESSION["user_id"])->fetchAll();
+$hidden_chats_arr_prepared = $con->prepare("select * from hidden_chats where user_id = :base_user_id");
+$hidden_chats_arr_prepared->execute([":base_user_id" => $_SESSION["user_id"]]);
+$hidden_chats_arr = $hidden_chats_arr_prepared->fetchAll();
 
 foreach($chat_portals_arr as $row) {
 		
@@ -22,22 +28,9 @@ continue 2;
 }	
 }	
 
-# we use this to parse the chat recipient's id.
-$chat_portal_user_id = explode("-",$row["chatter_ids"])[0] == $_SESSION["user_id"] ? explode("-",$row["chatter_ids"])[1] : explode("-",$row["chatter_ids"])[0];
-
-$current_state = $con->query("select id from blocked_users where user_ids = '". $chat_portal_user_id ."-" . $_SESSION["user_id"]."'")->fetch();	
-if($current_state[0] != "") {
-continue;	
-}
-if($con->query("SELECT * FROM account_states where user_id = ". $chat_portal_user_id)->fetch()[0] != "") {
-continue;	
-}	
-
-
-$chat_portal_user_info_arr = $con->query("select * from users where id = ".$chat_portal_user_id)->fetch();
-$chat_portal_avatar_arr = $con->query("SELECT * FROM avatars WHERE id_of_user = ".$chat_portal_user_id." order by id desc limit 1")->fetch();	
+$chat_portal_user_info_arr = $con->query("select * from users where id = ". $row["chat_recipient"])->fetch();
+$chat_portal_avatar_arr = $con->query("SELECT * FROM avatars WHERE id_of_user = ". $row["chat_recipient"] ." order by id desc limit 1")->fetch();	
 $chat_portal_avatar_positions = explode(",",$chat_portal_avatar_arr["positions"]);	
-
 
 if($chat_portal_avatar_arr[0] != "") {
 $avatar_rotate_degree = $chat_portal_avatar_arr["rotate_degree"];
@@ -49,11 +42,10 @@ $avatar_positions = [0,0];
 }
 
 
-
 array_push($echo_arr[0], [
 "id" => htmlspecialchars($row["id"], ENT_QUOTES, "utf-8"),
 "recipient_info" => [
-"id" => htmlspecialchars($chat_portal_user_id, ENT_QUOTES, "utf-8"),
+"id" => htmlspecialchars($row["chat_recipient"], ENT_QUOTES, "utf-8"),
 "first_name" => htmlspecialchars($chat_portal_user_info_arr["first_name"], ENT_QUOTES, "utf-8"),
 "last_name" => htmlspecialchars($chat_portal_user_info_arr["last_name"], ENT_QUOTES, "utf-8"),
 "avatar" => htmlspecialchars($chat_portal_user_info_arr["avatar_picture"], ENT_QUOTES, "utf-8"),

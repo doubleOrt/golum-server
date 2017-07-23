@@ -342,12 +342,14 @@ if(user_followers_num > 0) {
 set_user_profile_followers_num(user_followers_num - 1);	
 }
 $("#user_profile_follow_button").addClass("disabledButton");
+$("#startChatButton").addClass("disabledButtonLight");
 }	
 else if(newState == "1") {
 Materialize.toast('User Unblocked, Tap Button To Block',3000,'red');	
 $("#user_profile_block_button").html("Block");	
 $("#user_profile_block_button").attr("data-current-state","0");		
 $("#user_profile_follow_button").removeClass("disabledButton");
+$("#startChatButton").removeClass("disabledButtonLight");
 }
 }
 

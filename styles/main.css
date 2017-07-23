@@ -528,6 +528,11 @@ pointer-events:none;
 opacity:.4;	
 }
 
+.disabledButtonLight {
+pointer-events:none;
+opacity:.7;	
+}
+
 
 
 

@@ -5,11 +5,6 @@ require_once "handleTagsFunction.php";
 function get_comment($comment_arr) {
 global $con;
 
-// if target has delete or deactivated their account, or the current user has been blocked by the target.
-if($con->query("select id from account_states where user_id = ". $comment_arr["user_id"])->fetch()[0] != "" || $con->query("select id from blocked_users where user_ids = '".$comment_arr["user_id"]. "-" . $_SESSION["user_id"]."'")->fetch() != "") {	
-return "";
-}
-
 $commenter_arr = $con->query("select id,first_name, last_name, avatar_picture from users where id = ". $comment_arr["user_id"])->fetch();
 $commenter_avatar_arr = $con->query("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = ". $comment_arr["user_id"] ." order by id desc limit 1")->fetch();
 $commenter_avatar_positions = explode(",", htmlspecialchars($commenter_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
@@ -17,7 +12,6 @@ $commenter_avatar_positions = explode(",", htmlspecialchars($commenter_avatar_ar
 if(count($commenter_avatar_positions) < 2) {
 $commenter_avatar_positions = [0,0];
 }
-
 
 //if the current comment is actually a comment reply inside another comment reply.
 $is_reply_to_markup = "";

@@ -18,7 +18,7 @@ $.get({
 url:urlOfFile,
 data:dataObject,
 success:function(data) {	
-console.log(data);
+
 // if the ajax call actually returned something.
 if(data != "") {
 		

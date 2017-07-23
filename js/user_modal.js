@@ -100,10 +100,12 @@ $("#user_profile_follow_button").attr("data-user-id", data["id"]);
 $("#user_profile_block_button").attr("data-user-id", data["id"]);
 if(data["user_blocked_state"] == "1") {
 $("#user_profile_follow_button").addClass("disabledButton");	
+$("#startChatButton").addClass("disabledButtonLight");	
 $("#user_profile_block_button").html("Unblock");	
 }
 else {
 $("#user_profile_follow_button").removeClass("disabledButton");	
+$("#startChatButton").removeClass("disabledButtonLight");	
 $("#user_profile_block_button").html("Block");		
 }
 

@@ -35,13 +35,15 @@ $avatar_rotate_degree = 0;
 $avatar_positions = [0,0];	
 }
 
-$user_followed_by_num_prepared = $con->prepare("select count(id) from contacts where contact = :user_id");
+$user_followed_by_num_prepared = $con->prepare("select count(id) from contacts where contact = :user_id and contact_of not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and contact_of not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and contact_of not in (SELECT user_id from account_states)");
 $user_followed_by_num_prepared->bindParam(":user_id", $user_id);
+$user_followed_by_num_prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
 $user_followed_by_num_prepared->execute();
 $user_followed_by_num = $user_followed_by_num_prepared->fetch()[0];
 
-$user_following_num_prepared = $con->prepare("select count(id) from contacts where contact_of = :user_id");
+$user_following_num_prepared = $con->prepare("select count(id) from contacts where contact_of = :user_id and contact not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and contact not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and contact not in (SELECT user_id from account_states)");
 $user_following_num_prepared->bindParam(":user_id", $user_id);
+$user_following_num_prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
 $user_following_num_prepared->execute();
 $user_following_num = $user_following_num_prepared->fetch()[0];
 

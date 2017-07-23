@@ -6,37 +6,11 @@ require_once "logged_in_importants.php";
 
 $echo_arr = [[]];
 
-$user_chats = $con->query("select id, chatter_ids from chats where chatter_ids like '%". $_SESSION["user_id"] ."%'")->fetchAll();
+$new_messages_num_prepared = $con->prepare("select count(id) from messages where read_yet = 0 and message_from != :base_user_id and chat_id in (select id from (select *, case SUBSTRING_INDEX(chatter_ids, '-', 1) when :base_user_id then SUBSTRING_INDEX(chatter_ids, '-', -1) else SUBSTRING_INDEX(chatter_ids, '-', 1) end as chat_recipient from chats where chatter_ids like concat('%', :base_user_id, '%')) t1 where chat_recipient not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and chat_recipient not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and chat_recipient not in (SELECT user_id from account_states))");
+$new_messages_num_prepared->execute([":base_user_id" => $_SESSION["user_id"]]);
+$new_messages_num = $new_messages_num_prepared->fetch()[0];
 
-$this_user_related_blocks = $con->query("select id, user_ids from blocked_users where user_ids like '%-" . $_SESSION["user_id"]."'")->fetchAll();	
-
-$chat_ids_string = "";
-for($i = 0;$i<count($user_chats);$i++) {
-	
-	
-# we use this to parse the chat recipient's id.
-$chat_portal_user_id = explode("-", $user_chats[$i]["chatter_ids"])[0] == $_SESSION["user_id"] ? explode("-", $user_chats[$i]["chatter_ids"])[1] : explode("-", $user_chats[$i]["chatter_ids"])[0];
-
-if($con->query("SELECT * FROM account_states where user_id = ". $chat_portal_user_id)->fetch()[0] != "") {
-continue;	
-}	
-
-for($x = 0; $x < count($this_user_related_blocks); $x++) {
-if(explode("-", $this_user_related_blocks[$x]["user_ids"])[0] == $chat_portal_user_id) {
-continue 2;
-}
-}
-
-if($i != 0) {
-$chat_ids_string .= " or ";	
-}	
-$chat_ids_string .= " chat_id = ". $user_chats[$i]["id"];	
-}
-
-if($chat_ids_string != "") {
-array_push($echo_arr[0], $con->query("select count(id) from messages where (". $chat_ids_string .") and message_from != ". $_SESSION["user_id"] ." and read_yet = false")->fetch()[0]
-);
-}
+array_push($echo_arr[0], $new_messages_num);
 
 echo json_encode($echo_arr);
 

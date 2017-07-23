@@ -14,7 +14,7 @@ if($_GET["row_offset"] < 1) {
 $echo_arr[1] = $con->query("select * from contacts where contact_of = ". $_SESSION["user_id"] ." and contact = ". $_GET["user_id"])->fetch()[0] == "" ? 0 : 1;
 }	
 	
-$prepared = $con->prepare("SELECT * FROM favorites INNER JOIN posts ON favorites.post_id = posts.id WHERE favorites.user_id = :user_id and (posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and posted_by not in (SELECT user_id from account_states)) ORDER BY favorites.id DESC LIMIT 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
+$prepared = $con->prepare("SELECT * FROM favorites INNER JOIN posts ON favorites.post_id = posts.id WHERE favorites.user_id = :user_id and (posted_by not in (SELECT * FROM (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) t1 where blocked_user != :user_id) and posted_by not in (SELECT * FROM (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) t1 where blocker != :user_id) and posted_by not in (SELECT user_id from account_states)) ORDER BY favorites.id DESC LIMIT 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
 $prepared->bindParam(":user_id", $_GET["user_id"]);
 $prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
 $prepared->execute();

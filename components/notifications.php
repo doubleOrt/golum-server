@@ -10,10 +10,14 @@ if(isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE
 
 
 if($_GET["type"] === "0") {
-$notifications_arr = $con->query("select * from (select *, (count(*) - 1) as and_others, (select count(id) from blocked_users where user_ids = concat(notification_to, '-', notification_from)) as user_blocked_by_base_user from (select * from notifications) t1 where notification_to = ". $_SESSION["user_id"] ." and read_yet = '0' group by type, extra, read_yet) t3 where user_blocked_by_base_user = '0' order by id desc limit 15 OFFSET ". $_GET["row_offset"])->fetchAll();	
+$notifications_arr_prepared = $con->prepare("select * from (select *, (count(*) - 1) as and_others from (select * from notifications) t1 where notification_to = :base_user_id and read_yet = 0 group by type, extra, read_yet) t3 where notification_from not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and notification_from not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and notification_from not in (SELECT user_id from account_states) order by id desc limit 15 OFFSET ". $_GET["row_offset"]);
+$notifications_arr_prepared->execute([":base_user_id" => $_SESSION["user_id"]]);
+$notifications_arr = $notifications_arr_prepared->fetchAll();	
 }
 else if($_GET["type"] === "1") {
-$notifications_arr = $con->query("select * from (select *, (count(*) - 1) as and_others, (select count(id) from blocked_users where user_ids = concat(notification_to, '-', notification_from)) as user_blocked_by_base_user from (select * from notifications) t1 where notification_to = ". $_SESSION["user_id"] ." group by type, extra, read_yet) t3 where user_blocked_by_base_user = '0' order by id desc limit 15 OFFSET ". $_GET["row_offset"])->fetchAll();		
+$notifications_arr_prepared = $con->prepare("select * from (select *, (count(*) - 1) as and_others from (select * from notifications) t1 where notification_to = :base_user_id group by type, extra, read_yet) t3 where notification_from not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and notification_from not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and notification_from not in (SELECT user_id from account_states) order by id desc limit 15 OFFSET ". $_GET["row_offset"]);
+$notifications_arr_prepared->execute([":base_user_id" => $_SESSION["user_id"]]);
+$notifications_arr = $notifications_arr_prepared->fetchAll();		
 }
 
 if(count($notifications_arr) > 0) {

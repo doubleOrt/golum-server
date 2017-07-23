@@ -23,7 +23,9 @@ $posts_query_string .= "posts.id = ". $_GET["post_ids"][$i];
 }
 
 
-$all_posts_arr = $con->query("select distinct posts.id, posts.time, favorites.id as added_to_favorites, (select count(id) from post_comments where post_id = posts.id) as post_comments_num from posts left join favorites on posts.id = favorites.post_id and favorites.user_id = ". $_SESSION["user_id"] ." left join post_comments on post_comments.post_id = posts.id where (". $posts_query_string .")")->fetchAll();
+$all_posts_arr_prepared = $con->prepare("select distinct posts.id, posts.time, favorites.id as added_to_favorites, (select count(id) from post_comments where post_id = posts.id and post_comments.user_id not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and post_comments.user_id not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and post_comments.user_id not in (SELECT user_id from account_states)) as post_comments_num from posts left join favorites on posts.id = favorites.post_id and favorites.user_id = ". $_SESSION["user_id"] ." left join post_comments on post_comments.post_id = posts.id where (". $posts_query_string .")");
+$all_posts_arr_prepared->execute([":base_user_id" => $_SESSION["user_id"]]);
+$all_posts_arr = $all_posts_arr_prepared->fetchAll();
 
 
 foreach($all_posts_arr as $post_arr) {

@@ -27,7 +27,7 @@ $search_value = $search_value_raw . "%";
 
 
 // this query selects only accounts not existing in the account_states database table.
-$search_prepare = $con->prepare("SELECT users.id, users.first_name, users.last_name, users.user_name, users.avatar_picture, (select id from contacts where contact_of = :base_user_id and contact = users.id) as current_state FROM users LEFT JOIN account_states ON users.id = account_states.user_id WHERE (concat(first_name,' ',last_name) LIKE :search_value or user_name LIKE :search_value) AND users.id != :base_user_id and type IS NULL LIMIT 15 OFFSET :row_offset");
+$search_prepare = $con->prepare("SELECT users.id, users.first_name, users.last_name, users.user_name, users.avatar_picture, (select id from contacts where contact_of = :base_user_id and contact = users.id) as current_state FROM users LEFT JOIN account_states ON users.id = account_states.user_id WHERE ((concat(first_name,' ',last_name) LIKE :search_value or user_name LIKE :search_value) AND users.id != :base_user_id and type IS NULL) and (users.id not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and users.id not in (SELECT user_id from account_states)) LIMIT 15 OFFSET :row_offset");
 $search_prepare->bindParam(":base_user_id",$_SESSION["user_id"]);
 $search_prepare->bindParam(":search_value",$search_value);
 $search_prepare->bindParam(":row_offset", $row_offset , PDO::PARAM_INT);
