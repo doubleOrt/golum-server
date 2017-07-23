@@ -18,6 +18,12 @@ $my_posts_arr = $prepared->fetchAll();
 
 if(count($my_posts_arr) > 0) {
 for($i = 0;$i<count($my_posts_arr);$i++) {
+
+// if post has been reported too many times
+if($my_posts_arr[$i]["disabled"] === "true") {
+continue;	
+}			
+	
 array_push($echo_arr, get_post_markup($my_posts_arr[$i]));
 }
 }

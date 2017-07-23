@@ -4,7 +4,7 @@ require_once "common_requires.php";
 require_once "logged_in_importants.php";
 
 
-$NUMBER_OF_REPORTS_TO_DISABLE_POST = 1;
+$NUMBER_OF_REPORTS_TO_DISABLE_POST = 30;
 
 if(isset($_POST["post_id"]) && filter_var($_POST["post_id"], FILTER_VALIDATE_INT) !== false) {
 

@@ -33,7 +33,12 @@ if($posts_arr[$i]["posted_by"] == $blocked_or_blocking_user_id) {
 continue 2;	
 }
 }
-	
+
+// if post has been reported too many times
+if($posts_arr[$i]["disabled"] === "true") {
+continue;	
+}	
+
 array_push($echo_arr, get_post_markup($posts_arr[$i]));
 }
 

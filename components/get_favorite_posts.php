@@ -34,6 +34,11 @@ continue 2;
 }
 }		
 
+// if post has been reported too many times
+if($posts_arr[$i]["disabled"] === "true") {
+continue;	
+}		
+
 array_push($echo_arr[0], get_post_markup($posts_arr[$i]));
 }
 }
