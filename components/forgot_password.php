@@ -6,11 +6,13 @@ require_once '../../phpmailer/PHPMailerAutoload.php';
 
 $echo_arr = [0, ""];
 
+$ONLY_ONE_PASSWORD_RESET_IN_EVERY_X_SECONDS = 30;
 
-if(isset($_GET["user_name"]) && !isset($_GET["reset_code"])) {
+
+if(isset($_GET["user_name_or_email_address"]) && !isset($_GET["reset_code"])) {
 		
-$prepared = $con->prepare("select id, user_name, email_address, last_forgot_password_email_sent from users where user_name = :user_name");	
-$prepared->bindParam(":user_name",$_GET["user_name"]);
+$prepared = $con->prepare("select id, user_name, email_address, activated, last_forgot_password_email_sent from users where user_name = :user_name_or_email_address or (email_address = :user_name_or_email_address and activated = 'true')");	
+$prepared->bindParam(":user_name_or_email_address",$_GET["user_name_or_email_address"]);
 $prepared->execute();	
 
 $user_name_info_array = $prepared->fetch();			
@@ -20,9 +22,11 @@ if($user_name_info_array["id"] != "") {
 	
 if($user_name_info_array["email_address"] != "") {
 	
+if($user_name_info_array["activated"] === "true") {
+	
 $last_forgot_password_email_sent = $con->query("select last_forgot_password_email_sent from users where id = ". $user_name_info_array["id"])->fetch()[0];	
 	
-if(time() - $last_forgot_password_email_sent >= 30) {
+if(time() - $last_forgot_password_email_sent >= $ONLY_ONE_PASSWORD_RESET_IN_EVERY_X_SECONDS) {
 	
 $forgot_password_code = rand(100000,1000000);			
 
@@ -66,7 +70,11 @@ $echo_arr[1] = "Something Went Wrong, Sorry";
 }
 }
 else {
-$echo_arr[1] = "Please Try Again In ". date("i:s",(($user_name_info_array["last_forgot_password_email_sent"] + 120)-time()));	
+$echo_arr[1] = "Please Try Again In ". date("i:s",(($user_name_info_array["last_forgot_password_email_sent"] + $ONLY_ONE_PASSWORD_RESET_IN_EVERY_X_SECONDS) - time()));	
+}
+}
+else {
+$echo_arr[1] = "The Email Address Associated with this account has not been confirmed, You Can Not Reset Your Password, Sorry :(";		
 }
 }	
 else{
@@ -75,7 +83,7 @@ $echo_arr[1] = "You Can Not Reset Your Password Because This Account Is Not Link
 
 }
 else {
-$echo_arr[1] = "Not a Single Account With The Username You Provided Exists On Our App :(";	
+$echo_arr[1] = "Not a Single Account With The Username Or Email Address You Provided Exists On Our App :(";	
 }
 
 }
@@ -83,10 +91,10 @@ $echo_arr[1] = "Not a Single Account With The Username You Provided Exists On Ou
 
 
 
-if(isset($_GET["user_name"]) && isset($_GET["reset_code"]) && !isset($_GET["new_password"]) && filter_var($_GET["reset_code"], FILTER_VALIDATE_INT) !== false) {
+if(isset($_GET["user_name_or_email_address"]) && isset($_GET["reset_code"]) && !isset($_GET["new_password"]) && filter_var($_GET["reset_code"], FILTER_VALIDATE_INT) !== false) {
 
-$check_if_valid_reset_code = $con->prepare("select id from users where user_name = :user_name and password_reset_code = :password_reset_code");	
-$check_if_valid_reset_code->bindParam(":user_name",$_GET["user_name"]);
+$check_if_valid_reset_code = $con->prepare("select id from users where password_reset_code = :password_reset_code and (user_name = :user_name_or_email_address or (email_address = :user_name_or_email_address and activated = 'true'))");	
+$check_if_valid_reset_code->bindParam(":user_name_or_email_address",$_GET["user_name_or_email_address"]);
 $check_if_valid_reset_code->bindParam(":password_reset_code",$_GET["reset_code"]);
 $check_if_valid_reset_code->execute();	
 
@@ -103,10 +111,10 @@ $echo_arr[1] = "Invalid Code :(";
 }
 
 
-if(isset($_GET["user_name"]) && isset($_GET["reset_code"]) && isset($_GET["new_password"]) && filter_var($_GET["reset_code"], FILTER_VALIDATE_INT) !== false) {
+if(isset($_GET["user_name_or_email_address"]) && isset($_GET["reset_code"]) && isset($_GET["new_password"]) && filter_var($_GET["reset_code"], FILTER_VALIDATE_INT) !== false) {
 
-$check_if_valid_reset_code = $con->prepare("select id from users where user_name = :user_name and password_reset_code = :password_reset_code");	
-$check_if_valid_reset_code->bindParam(":user_name",$_GET["user_name"]);
+$check_if_valid_reset_code = $con->prepare("select id from users where password_reset_code = :password_reset_code and (user_name = :user_name_or_email_address or (email_address = :user_name_or_email_address and activated = 'true'))");	
+$check_if_valid_reset_code->bindParam(":user_name_or_email_address",$_GET["user_name_or_email_address"]);
 $check_if_valid_reset_code->bindParam(":password_reset_code",$_GET["reset_code"]);
 $check_if_valid_reset_code->execute();	
 

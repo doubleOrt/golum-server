@@ -36,14 +36,14 @@ var current_step = parseFloat($(this).attr("data-current-step"));
 var data_object = {};
 	
 if(current_step == 0) {
-data_object["user_name"] = $("#forgot_password_username").val();
+data_object["user_name_or_email_address"] = $("#forgot_password_username_or_email_address").val();
 }
 else if(current_step == 1) {
-data_object["user_name"] = $("#forgot_password_username").val();
+data_object["user_name_or_email_address"] = $("#forgot_password_username_or_email_address").val();
 data_object["reset_code"] = $("#password_reset_code").val();
 }
 else if(current_step == 2) {
-data_object["user_name"] = $("#forgot_password_username").val();
+data_object["user_name_or_email_address"] = $("#forgot_password_username_or_email_address").val();
 data_object["reset_code"] = $("#password_reset_code").val();
 data_object["new_password"] = $("#new_password_input").val();
 if(new_password.validate() === false) {
@@ -78,7 +78,7 @@ else if(current_step == 1) {
 $("#new_password_input_container").fadeIn();	
 }
 else if(current_step == 2) {
-$("#forgot_password_username_container").fadeIn();
+$("#forgot_password_username_or_email_address_container").fadeIn();
 reset_forgot_password_modal();
 closeModal("forgotPasswordModal");
 }
@@ -87,7 +87,7 @@ Materialize.toast(data_arr[1], 5000, "green");
 }
 // the user failed to pass this step
 else if(data_arr[0] == "0") {	
-Materialize.toast(data_arr[1], 5000, "red");	
+Materialize.toast(data_arr[1], 8000, "red");	
 }
 
 }
@@ -96,7 +96,7 @@ Materialize.toast(data_arr[1], 5000, "red");
 });
 
 function reset_forgot_password_modal() {
-$("#forgot_password_username").val("");
+$("#forgot_password_username_or_email_address").val("");
 $("#password_reset_code").val("");
 $("#new_password_input").val("");	
 $("#forgot_password_button").attr("data-current-step", "0");
