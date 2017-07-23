@@ -5,11 +5,6 @@
 function get_post_markup($post_arr) {
 global $con;
 
-// if target has delete or deactivated their account, or the current user has been blocked by the target.
-if($con->query("select id from account_states where user_id = ". $post_arr["posted_by"])->fetch()[0] != "" || $con->query("select id from blocked_users where user_ids = '". $post_arr["posted_by"] . "-" . $_SESSION["user_id"] ."'")->fetch() != "") {	
-return null;
-}
-
 // a call to this function means that the post is being viewed by 1 more user, so we need to update the post's total views.
 $con->query("update posts set post_views = post_views + 1 where id = ". $post_arr["id"]);
 // we also need to update the views for the post array passed to this function, for example i just shared a post, i make a call to this function, and without incrementing the array, i would see 0 views instead of 1.

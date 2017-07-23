@@ -18,9 +18,7 @@ $.get({
 url:urlOfFile,
 data:dataObject,
 success:function(data) {	
-
 console.log(data);
-
 // if the ajax call actually returned something.
 if(data != "") {
 		
@@ -444,7 +442,7 @@ return false;
 $("#singlePostsContainer").html("");
 showLoading($("#singlePostsContainer"), "50%");
 getPosts("components/get_single_post.php",{"post_id":$(this).attr("data-actual-post-id")},function(data_arr){
-markUpProcessor(data_arr,$("#singlePostsContainer"), "This post was deleted by its original author", function(){
+markUpProcessor(data_arr,$("#singlePostsContainer"), "This post may have been deleted by its original author", function(){
 removeLoading($("#singlePostsContainer"));	
 });	
 });		

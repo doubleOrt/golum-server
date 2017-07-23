@@ -38,13 +38,6 @@ $all_search_results = $search_prepare->fetchAll();
 
 foreach($all_search_results as $row) {
 	
-$current_state = $con->query("select id from blocked_users where user_ids = '".$row[0]. "-" . $_SESSION["user_id"]."'")->fetch();		
-// if the current user has been blocked by the user of the current iteration	
-if($current_state[0] != "") {
-continue;	
-}
-	
-	
 // get the user's current avatar row
 $search_result_avatar_arr = $con->query("SELECT * FROM avatars WHERE id_of_user = ". $row[0] ." order by id desc limit 1")->fetch();
 

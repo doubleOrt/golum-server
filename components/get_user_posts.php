@@ -14,8 +14,9 @@ if($_GET["row_offset"] < 1) {
 $echo_arr[1] = $con->query("select * from contacts where contact_of = ".$_SESSION["user_id"]." and contact = ".$_GET["user_id"])->fetch()[0] == "" ? 0 : 1;
 }
 	
-$prepared = $con->prepare("select * from posts where posted_by = :posted_by order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
+$prepared = $con->prepare("select * from posts where posted_by = :posted_by and (posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and posted_by not in (SELECT user_id from account_states)) order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
 $prepared->bindParam(":posted_by", $_GET["user_id"]);
+$prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
 $prepared->execute();
 
 $posts_arr = $prepared->fetchAll();

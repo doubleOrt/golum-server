@@ -15,25 +15,13 @@ if(isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE
 $tags_followed_by_user = $con->query("select tag from following_tags where id_of_user = ". $_SESSION["user_id"])->fetchAll();		
 	
 
-$prepared = $con->prepare("select * from posts where posted_by in (select contact from contacts where contact_of = :user_id) or posted_by = :user_id order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
-$prepared->bindParam(":user_id",$_SESSION["user_id"]);
+$prepared = $con->prepare("select * from posts where (posted_by in (select contact from contacts where contact_of = :base_user_id) or posted_by = :base_user_id) and (posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and posted_by not in (SELECT user_id from account_states)) order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
+$prepared->bindParam(":base_user_id",$_SESSION["user_id"]);
 $prepared->execute();
-
 $posts_arr = $prepared->fetchAll();
-
-// select all from the user blocking table where this user has blocked another user or this user has been blocked by another user.
-$this_user_related_blocks = $con->query("select user_ids from blocked_users where user_ids like '%-" . $_SESSION["user_id"]."' or user_ids like '". $_SESSION["user_id"] ."-%'")->fetchAll();	
 
 for($i = 0;$i<count($posts_arr);$i++) {
 	
-//iterate through the user blocking table and continue the posts loop if you find out that the poster has either blocked this user or has been blocked by this user.	
-foreach($this_user_related_blocks as $this_user_related_block) {
-$blocked_or_blocking_user_id = (explode("-",$this_user_related_block[0])[0] == $_SESSION["user_id"] ? explode("-",$this_user_related_block[0])[1] : explode("-",$this_user_related_block[0])[0]);
-if($posts_arr[$i]["posted_by"] == $blocked_or_blocking_user_id) {
-continue 2;	
-}
-}
-
 // if post has been reported too many times
 if($posts_arr[$i]["disabled"] === "true") {
 continue;	

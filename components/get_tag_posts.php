@@ -18,8 +18,9 @@ $echo_arr[1] = $current_tag_follow_state[0] != "" ? 1 : 0;
 	
 
 if($_GET["sort_posts_by"] == 0) {
-$prepared = $con->prepare("select * from posts where title like concat('%',:tag ,'%') or title like concat('%', :tag) or title like concat(:tag,'%') order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
+$prepared = $con->prepare("select * from posts where (title like concat('%',:tag ,'%') or title like concat('%', :tag) or title like concat(:tag,'%')) and (posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and posted_by not in (SELECT user_id from account_states)) order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
 $prepared->bindParam(":tag", $_GET["tag"]);
+$prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
 $prepared->execute();
 }
 else if($_GET["sort_posts_by"] == 1) {
