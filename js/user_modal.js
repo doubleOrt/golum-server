@@ -121,6 +121,9 @@ $("#user_profile_follow_button").html("unfollow");
 $(".always_hidden_initially").hide();
 
 
+// we always want edit_mode to be not active initially. 
+close_edit_mode();
+
 
 $("#profileBackground").css({"background":"url('" + data["background"] + "')", "background-position": "center", "background-size": "cover"});
 
@@ -315,6 +318,31 @@ USER_PROFILE_SELECTS_CONTAINER.find("select").material_select();
 
 
 
+function open_edit_mode() {
+$("#editProfileButton i").html("done");
+$("#userAvatarImage").css("opacity",".8");	
+$("#userModalInfoSee").slideUp();
+$("#userModalInfoChangers").slideDown();
+// if the user's avatar is editable (e.g it is not a default letter-avatar), toggle these 2 elements as well.
+if( $("#userAvatarImage").attr("data-avatar-editable") == "true") {
+$("#rotateAvatarButton").fadeIn();
+$("#repositionAvatarDiv").fadeIn();
+}
+}
+
+function close_edit_mode() {
+$("#editProfileButton i").html("mode_edit");
+$("#userAvatarImage").css("opacity","1");	
+$("#userModalInfoSee").slideDown();
+$("#userModalInfoChangers").slideUp();
+$("#rotateAvatarButton").fadeOut();
+$("#repositionAvatarDiv").fadeOut();
+}
+
+
+
+
+
 $(document).ready(function(){	
 
 
@@ -503,25 +531,16 @@ var editModeActive = false;
 
 /* takes care of enabling and disabling edit mode. (profile editing) */
 $(document).on("click","#editProfileButton",function(){
-$("#userModalInfoSee").slideToggle();
-$("#userModalInfoChangers").slideToggle();
-
-// if the user's avatar is editable (e.g it is not a default letter-avatar), toggle these 2 elements as well.
-if( $("#userAvatarImage").attr("data-avatar-editable") == "true") {
-$("#rotateAvatarButton").fadeToggle();
-$("#repositionAvatarDiv").fadeToggle();
-}
-
+	
 if(editModeActive == false) {
-$("#editProfileButton i").html("done");
-$("#userAvatarImage").css("opacity",".8");
+open_edit_mode();	
 editModeActive = true;
 }
 else {
-$("#editProfileButton i").html("mode_edit");
-$("#userAvatarImage").css("opacity","1");
+close_edit_mode();	
 editModeActive = false;
 }
+
 });
 
 
