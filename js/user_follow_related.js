@@ -74,9 +74,12 @@ url:"components/block_user.php",
 data:{"user_id":userId},
 success:function(data) {
 if(data != "") {
+
+var data_arr = JSON.parse(data);	
+	
 // if the callback has a parameter that we can pass the data to	
 if(callback.length > 0) {	
-callback(data);
+callback(data_arr);
 }
 }
 }	
@@ -330,22 +333,23 @@ $(document).on("click","#user_profile_block_button",function(){
 var user_id = $(this).attr("data-user-id");
 blockOrUnblockUser(user_id, blockOrUnblockUserCallback);
 
-function blockOrUnblockUserCallback(newState) {
+function blockOrUnblockUserCallback(data) {
 // the user is now blocked	
-if(newState == "0") {
+if(data[0] == "0") {
 Materialize.toast('User Blocked, Tap Button To Unblock',3000,'red');	
 $("#user_profile_block_button").html("Unblock");	
 $("#user_profile_block_button").attr("data-current-state","1");	
 $(".follow_user[data-user-id='" + user_id + "']").html("Follow +");
-// since you unfollow a user when you block them, we have to decrease that user's followings by 1
-var user_followers_num = get_user_profile_followers_num(); 
-if(user_followers_num > 0) {
+/* since you unfollow a user when you block them, we have to decrease that user's 
+followings by 1, data[1] = "1" means that the base user was following the blocked user. */
+if(data[1] == "1") {
+var user_followers_num = get_user_profile_followers_num(); 	
 set_user_profile_followers_num(user_followers_num - 1);	
 }
 $(".follow_user[data-user-id='" + user_id + "']").addClass("disabledButton");
 $("#startChatButton").addClass("disabledButtonLight");
 }	
-else if(newState == "1") {
+else if(data[0] == "1") {
 Materialize.toast('User Unblocked, Tap Button To Block',3000,'red');	
 $("#user_profile_block_button").html("Block");	
 $("#user_profile_block_button").attr("data-current-state","0");		
