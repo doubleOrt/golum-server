@@ -2,11 +2,7 @@
 #we make a call to this page everytime a user wants to chat with someone.
 
 require_once "common_requires.php";
-
 require_once "logged_in_importants.php";
-
-include_once "letter_avatars.php";
-
 
 $echo_arr = [[]];
 

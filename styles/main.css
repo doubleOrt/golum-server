@@ -8,8 +8,6 @@
 
 @import url(avatars.css);
 
-@import url(avatarsHorizontalContainer.css);
-
 @import url(modals.css);
 
 @import url(bottom_sheet_modals.css);
@@ -31,8 +29,6 @@
 @import url(settings.css);
 
 @import url(confirmation_code.css);
-
-@import url(add_tags.css);
 
 @import url(new_post.css);
 

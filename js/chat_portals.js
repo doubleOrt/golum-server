@@ -25,7 +25,6 @@ data: {
 },
 type:"get",
 success: function(data) {
-console.log(data);
 if(data != "" && typeof callback == "function") {
 var data_arr = JSON.parse(data);			
 callback(data_arr);
@@ -135,7 +134,7 @@ function getChatPortalActivities(callback) {
 $.get({
 url:"components/chat_portal_activities.php",
 success:function(data) {
-
+	
 if(data != "") {
 
 var dataArr = JSON.parse(data);	
@@ -185,7 +184,6 @@ return false;
 $.get({
 url: "components/get_new_messages_num.php",
 success:function(data) {
-console.log(data);	
 var data_arr = JSON.parse(data);
 callback(data_arr[0]);
 }	

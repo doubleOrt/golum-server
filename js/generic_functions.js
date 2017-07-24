@@ -273,3 +273,9 @@ target_element.find(".preloader-wrapper_container").css("opacity", "0");
 function get_end_of_results_mark_up(message) {
 return "<div class='end_of_results'><i class='material-icons'>info</i><br>" + (typeof message != "undefined" ? message : "End of results") + "</div>";
 }
+
+
+function check_if_main_screen_is_open(main_screen_id) {
+return $("#" + main_screen_id).hasClass("main_screen_active");
+}
+

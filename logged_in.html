@@ -67,7 +67,7 @@ window.location.href = "login_and_sign_up.html";
 }
 // user has logged in
 else {
-BASE_USER_ID_HOLDER.attr("data-user-id", data);
+BASE_USER_ID_HOLDER.attr("data-user-id", data_arr[0]);
 // the websocket connection must be opened only after we have the user's id, since our onopen code relies on the base user's id.
 open_web_socket_connection();
 
@@ -114,6 +114,7 @@ openModalCustom("set_password_for_first_time_modal");
 <script src="js/tags.js"></script>
 <script src="js/log_out.js"></script> 
 <script src="js/main_scripts.js"></script> 
+<script src="js/websockets.js"></script> 
 
 
 </head>		

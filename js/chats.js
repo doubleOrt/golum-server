@@ -2,14 +2,13 @@
 var CHAT_ID_HOLDER;
 var CHAT_CONTENT_CONTAINER_ELEMENT;
 
-// we use this variable to prevent multiple calls to "previous_messages.php", otherwise there would be duplicate messages, be sure to set this variable to true whenever you call "showPreviousMessages()", and set it to false after a successful return in the function.
 var chat_prevent_multiple_calls = false;
 
 var startChatId;
 var startChatRecipientId;
 
 // this function is called whenever a chat modal is opened, and whenever the user wants to see previous messages.
-function start_chat(chat_id, user_id, unhide_chat_if_hidden, row_offset, callback) {	
+function get_chat(chat_id, user_id, unhide_chat_if_hidden, row_offset, callback) {	
 
 if(typeof callback != "function" || typeof row_offset == "undefined") {
 return false;
@@ -33,7 +32,7 @@ dataObj["user_id"] = user_id;
 chat_prevent_multiple_calls = true;	
 
 $.get({
-url:"components/start_chat.php",
+url:"components/get_chat.php",
 data:dataObj,
 type:"get",
 success: function(data) {	
@@ -46,7 +45,7 @@ chat_prevent_multiple_calls = false;
 
 }
 
-function start_chat_callback(is_infinite_scroll, data) {
+function get_chat_callback(is_infinite_scroll, data) {
 		
 CHAT_CONTENT_CONTAINER_ELEMENT.fadeIn("fast");
 $("#recipient_name").fadeIn("fast");
@@ -94,29 +93,6 @@ CHAT_CONTENT_CONTAINER_ELEMENT.scrollTop(new_scroll_height - old_scroll_height);
 getChatPortalActivities(updateChatPortalActivities);
 }
 
-
-
-function getNewMessages(chatId, lastMessage) {
-	
-if(typeof chatId == "undefined" || typeof lastMessage == "undefined") {
-return false;
-}	
-	
-$.get({	
-type:"get",
-url:"components/new_messages.php",
-data:{
-"chat_id": chatId,
-"last_message": lastMessage
-},
-success:function(data) {	
-CHAT_CONTENT_CONTAINER_ELEMENT.append(data);
-// scroll to the bottom
-CHAT_CONTENT_CONTAINER_ELEMENT.scrollTop(CHAT_CONTENT_CONTAINER_ELEMENT[0].scrollHeight);
-}
-});
-
-}
 
 
 
@@ -409,9 +385,8 @@ the chat-modal in our modals.js page. */
 CHAT_CONTENT_CONTAINER_ELEMENT.off("scroll");
 CHAT_CONTENT_CONTAINER_ELEMENT.scroll(function(event){
 if($(this).scrollTop() == 0) {
-console.log("Yes");		
-start_chat($("#sendMessage").attr("data-chat-id"), undefined, true, CHAT_CONTENT_CONTAINER_ELEMENT.find(".messageContainer").length, function(data){
-start_chat_callback(true, data);
+get_chat($("#sendMessage").attr("data-chat-id"), undefined, true, CHAT_CONTENT_CONTAINER_ELEMENT.find(".messageContainer").length, function(data){
+get_chat_callback(true, data);
 // we want to update the badge on the user's profile that displays the number of their unread messages each time they view some of those unread messages.
 get_new_messages_num(function(num) {
 if(parseFloat(num) > 0) {
@@ -509,9 +484,9 @@ recipient_id = $(this).attr("data-user-id");
 CHAT_CONTENT_CONTAINER_ELEMENT.html("");
 unsubscribe_from_last_chat();
 
-start_chat(chat_id, recipient_id, unhide_chat_if_hidden, 0, function(data){
+get_chat(chat_id, recipient_id, unhide_chat_if_hidden, 0, function(data){
 	
-start_chat_callback(false, data);
+get_chat_callback(false, data);
 // we want to update the badge on the user's profile that displays the number of their unread messages each time they view some of those unread messages.
 get_new_messages_num(function(num) {
 if(parseFloat(num) > 0) {

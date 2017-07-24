@@ -82,9 +82,6 @@ post_element.attr("data-post-type") == "3" || post_element.attr("data-post-type"
 }
 }
 
-// show the user's friends who voted 
-//getFriendsWhoVotedOnThisPost(post_element,do_animations);
-
 // if the user has already voted.
 if(post_element.attr("data-already-voted") == "true") {
 post_element.find(".votesContainer").show();	
@@ -229,32 +226,4 @@ $("body").append("<div class='postReaction postReactionAnimation' style='positio
 }
 	
 }
-
-
-
-
-// get the friends who have voted on this post.
-function getFriendsWhoVotedOnThisPost(singlePostObject,scaleModalAnimation) {
-
-$.get({
-url:"components/friends_who_voted_on_this.php",
-data:{"post_id":singlePostObject.attr("data-actual-post-id")},
-success:function(data) {
-
-var dataArr = JSON.parse(data);
-console.log(dataArr);
-for(var i = 0;i<dataArr.length;i++) {
-singlePostObject.find(".vote_holder[data-option-index=" + dataArr[i][0] + "] .votesContainer").find(".friendsWhoVotedThis").remove();	
-singlePostObject.find(".vote_holder[data-option-index=" + dataArr[i][0] + "] .votesContainer").append(dataArr[i][1]);
-}
-
-if(scaleModalAnimation == true) {
-singlePostObject.find(".friendsWhoVotedThisChild").addClass(".scaleItem");	
-}
-
-}	
-});
-	
-}
-
 

@@ -106,8 +106,6 @@ array_push($echo_arr,[htmlspecialchars($chats_arr[$i]["id"], ENT_QUOTES, "utf-8"
 }
 
 echo json_encode($echo_arr);
-
-write_shm($_SESSION["user_id"] . "" . 1,"false");
 }
 
 
