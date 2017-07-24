@@ -378,7 +378,7 @@ emptyAllPostsContainer();
 showLoading(MAIN_SCREEN_POSTS_CONTAINER, "60%");
 getPosts("components/get_discover_posts.php",{"row_offset":0},function(data_arr){
 console.log(data_arr);	
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "After you favorite some posts, you should look for them here :)" , function(){
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Nothing here, sorry :(" , function(){
 MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","favoritePosts");
 MAIN_SCREEN_POSTS_CONTAINER.scrollTop(0);
 removeLoading(MAIN_SCREEN_POSTS_CONTAINER);
@@ -418,7 +418,7 @@ MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","featuredPosts");
 else if(allPostsContainerContainsWhichPosts == "favoritePosts") {
 add_secondary_loading(MAIN_SCREEN_POSTS_CONTAINER);			
 getPosts("components/get_discover_posts.php",{"row_offset":$("#allPostsContainer .singlePost").length},function(data_arr){
-markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "After you favorite some posts, you shall find them here :P" ,function(){
+markUpProcessor(data_arr,MAIN_SCREEN_POSTS_CONTAINER, "Nothing here, sorry :(" ,function(){
 remove_secondary_loading(MAIN_SCREEN_POSTS_CONTAINER);		
 MAIN_SCREEN_POSTS_CONTAINER.attr("data-contains-which-posts","favoritePosts");
 });	
