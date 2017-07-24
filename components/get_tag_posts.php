@@ -18,14 +18,16 @@ $echo_arr[1] = $current_tag_follow_state[0] != "" ? 1 : 0;
 	
 
 if($_GET["sort_posts_by"] == 0) {
-$prepared = $con->prepare("select * from posts where (title like concat('%',:tag ,'%') or title like concat('%', :tag) or title like concat(:tag,'%')) and (posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and posted_by not in (SELECT user_id from account_states)) order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
+// we have increased the time thresholds a bit here, since unlike the featured posts section, not every tag may have a lot of posts in a short period of time.
+$prepared = $con->prepare("select *, (select count(id) from post_votes where post_votes.post_id = posts.id) as total_votes, (select count(id) from favorites where favorites.post_id = posts.id) as total_favorites, (select count(id) from notifications where type = 5 and notifications.extra = posts.id) as total_sends, ROUND(time, -5) as condensed_post_time from posts where (title like concat('%',:tag ,'%') or title like concat('%', :tag) or title like concat(:tag,'%')) and (posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and posted_by not in (SELECT user_id from account_states)) order by condensed_post_time desc, total_votes desc, total_favorites desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
 $prepared->bindParam(":tag", $_GET["tag"]);
 $prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
 $prepared->execute();
 }
 else if($_GET["sort_posts_by"] == 1) {
-$prepared = $con->prepare("select * from posts where title like concat('%',:tag ,'%') or title like concat('%', :tag) or title like concat(:tag,'%') order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
+$prepared = $con->prepare("select * from posts where (title like concat('%',:tag ,'%') or title like concat('%', :tag) or title like concat(:tag,'%')) and (posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and posted_by not in (SELECT user_id from account_states)) order by id desc limit 3 ". ($_GET["row_offset"] > 0 ? "OFFSET ". $_GET["row_offset"] : ""));
 $prepared->bindParam(":tag", $_GET["tag"]);
+$prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
 $prepared->execute();
 }
 
