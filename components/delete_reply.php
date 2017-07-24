@@ -20,13 +20,6 @@ $con->exec("delete from reply_upvotes_and_downvotes where comment_id = ". $_POST
 $con->exec("delete from notifications where notification_from = ". $_SESSION["user_id"] ." and notification_to = ". $comment_arr["user_id"] ." and type = 3 and extra = ". $comment_arr["id"] ." and extra2 = ". $comment_arr["post_id"] ." and extra3 = ". $_POST["reply_id"]);
 
 
-
-
-$shmid = $comment_arr["user_id"] . "" . 6; 
-$shm = shmop_open($shmid, 'c', 0777, 1024);
-shmop_write($shm, str_to_nts("true"), 0);
-shmop_close($shm);	
-
 echo "1";
 	
 }

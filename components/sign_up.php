@@ -72,14 +72,6 @@ $last_id = $con->lastInsertId();
 // set the user_id session to the user's id in our database, this is required in order for our app to identify that the user is logged in.
 $_SESSION["user_id"] = $last_id;
 
-// shared memory segments, we need to write them.
-write_shm($_SESSION["user_id"] . "" . 1,"false");
-write_shm($_SESSION["user_id"] . "" . 2,time());
-write_shm($_SESSION["user_id"] . "" . 3,"0");
-write_shm($_SESSION["user_id"] . "" . 4,"none");	
-write_shm($_SESSION["user_id"] . "" . 5,"none");
-
-
 echo "success";
 die();
 }

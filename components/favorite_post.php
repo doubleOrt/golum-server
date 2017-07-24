@@ -54,10 +54,7 @@ $con->exec("delete from notifications where notification_from = ". $_SESSION["us
 }
 echo "var favorited = false";
 }
-$shmid = $poster_id . "" . 6; 
-$shm = shmop_open($shmid, 'c', 0777, 1024);
-shmop_write($shm, str_to_nts("true"), 0);
-shmop_close($shm);
+
 }
 
 
