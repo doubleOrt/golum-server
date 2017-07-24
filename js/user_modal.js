@@ -482,7 +482,7 @@ $(document).on("click","#editProfileButton",function(){
 
 if(editModeActive == true) {
 
-$.get({
+$.post({
 url:"components/change_infos.php",
 data:changeInfosGetObj,
 success:function(data){

@@ -9,10 +9,10 @@ $echo_arr = [0, ""];
 $ONLY_ONE_PASSWORD_RESET_IN_EVERY_X_SECONDS = 30;
 
 
-if(isset($_GET["user_name_or_email_address"]) && !isset($_GET["reset_code"])) {
+if(isset($_POST["user_name_or_email_address"]) && !isset($_POST["reset_code"])) {
 		
 $prepared = $con->prepare("select id, user_name, email_address, activated, last_forgot_password_email_sent from users where user_name = :user_name_or_email_address or (email_address = :user_name_or_email_address and activated = 'true')");	
-$prepared->bindParam(":user_name_or_email_address",$_GET["user_name_or_email_address"]);
+$prepared->bindParam(":user_name_or_email_address",$_POST["user_name_or_email_address"]);
 $prepared->execute();	
 
 $user_name_info_array = $prepared->fetch();			
@@ -91,11 +91,11 @@ $echo_arr[1] = "Not a Single Account With The Username Or Email Address You Prov
 
 
 
-if(isset($_GET["user_name_or_email_address"]) && isset($_GET["reset_code"]) && !isset($_GET["new_password"]) && filter_var($_GET["reset_code"], FILTER_VALIDATE_INT) !== false) {
+if(isset($_POST["user_name_or_email_address"]) && isset($_POST["reset_code"]) && !isset($_POST["new_password"]) && filter_var($_POST["reset_code"], FILTER_VALIDATE_INT) !== false) {
 
 $check_if_valid_reset_code = $con->prepare("select id from users where password_reset_code = :password_reset_code and (user_name = :user_name_or_email_address or (email_address = :user_name_or_email_address and activated = 'true'))");	
-$check_if_valid_reset_code->bindParam(":user_name_or_email_address",$_GET["user_name_or_email_address"]);
-$check_if_valid_reset_code->bindParam(":password_reset_code",$_GET["reset_code"]);
+$check_if_valid_reset_code->bindParam(":user_name_or_email_address",$_POST["user_name_or_email_address"]);
+$check_if_valid_reset_code->bindParam(":password_reset_code",$_POST["reset_code"]);
 $check_if_valid_reset_code->execute();	
 
 $check_if_valid_reset_code_user_id = $check_if_valid_reset_code->fetch()[0];
@@ -111,19 +111,19 @@ $echo_arr[1] = "Invalid Code :(";
 }
 
 
-if(isset($_GET["user_name_or_email_address"]) && isset($_GET["reset_code"]) && isset($_GET["new_password"]) && filter_var($_GET["reset_code"], FILTER_VALIDATE_INT) !== false) {
+if(isset($_POST["user_name_or_email_address"]) && isset($_POST["reset_code"]) && isset($_POST["new_password"]) && filter_var($_POST["reset_code"], FILTER_VALIDATE_INT) !== false) {
 
 $check_if_valid_reset_code = $con->prepare("select id from users where password_reset_code = :password_reset_code and (user_name = :user_name_or_email_address or (email_address = :user_name_or_email_address and activated = 'true'))");	
-$check_if_valid_reset_code->bindParam(":user_name_or_email_address",$_GET["user_name_or_email_address"]);
-$check_if_valid_reset_code->bindParam(":password_reset_code",$_GET["reset_code"]);
+$check_if_valid_reset_code->bindParam(":user_name_or_email_address",$_POST["user_name_or_email_address"]);
+$check_if_valid_reset_code->bindParam(":password_reset_code",$_POST["reset_code"]);
 $check_if_valid_reset_code->execute();	
 
 $check_if_valid_reset_code_user_id = $check_if_valid_reset_code->fetch()[0];
 
 if($check_if_valid_reset_code_user_id != "") {	
-$check_login_password = new ValidateItem($_GET["new_password"],"/^(?=.*[A-Za-z])(?=.*\d)(?=.*([$@$!%*#?& ]*))[A-Za-z\d($@$!%*#?& )*]{8,50}$/i","Password Must Contain At Least 1 Digit And Must Be Between 8-50 Characters, Special Characters And Spaces Are Optional"); 
+$check_login_password = new ValidateItem($_POST["new_password"],"/^(?=.*[A-Za-z])(?=.*\d)(?=.*([$@$!%*#?& ]*))[A-Za-z\d($@$!%*#?& )*]{8,50}$/i","Password Must Contain At Least 1 Digit And Must Be Between 8-50 Characters, Special Characters And Spaces Are Optional"); 
 if($check_login_password->validate() == true) {
-$new_password = password_hash($_GET["new_password"],PASSWORD_BCRYPT);
+$new_password = password_hash($_POST["new_password"],PASSWORD_BCRYPT);
 $con->exec("update users set password_reset_code = '', last_forgot_password_email_sent = 0, password = '".$new_password."' where id = ". $check_if_valid_reset_code_user_id);		
 $echo_arr[0] = 1;
 $echo_arr[1] = "Password Updated Successfully :)";

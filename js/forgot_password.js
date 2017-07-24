@@ -54,13 +54,11 @@ return false;
 // don't move this to the top without looking at the logic of the conditionals
 $(this).addClass("disabledButton");
 	
-$.get({
+$.post({
 url:"components/forgot_password.php",
 data: data_object,
 success:function(data) {
-		
-console.log(data);		
-		
+				
 var data_arr = JSON.parse(data);
 
 $("#forgot_password_button").removeClass("disabledButton");

@@ -11,11 +11,11 @@ require_once '../../phpmailer/PHPMailerAutoload.php';
 
 
 
-if(isset($_GET["current_password"])) {
+if(isset($_POST["current_password"])) {
 	
 $echo_arr = ["","true", "true"];	
 
-$current_password = $_GET["current_password"];
+$current_password = $_POST["current_password"];
 
 $check_current_password = new ValidateItem($current_password,"/^(?=.*[A-Za-z])(?=.*\d)(?=.*([$@$!%*#?& ]*))[A-Za-z\d($@$!%*#?& )*]{8,50}$/i","Wrong Info"); 
 
@@ -26,10 +26,10 @@ if($check_current_password->validate() === true) {
 if(password_verify($current_password,$user_info_arr["password"])) {
 
 # when a user wants to deactivate or delete his account.
-if(isset($_GET["deactivate_or_delete"]) && $_GET["deactivate_or_delete"] != "") {
+if(isset($_POST["deactivate_or_delete"]) && $_POST["deactivate_or_delete"] != "") {
 
 # if user wants to deactivate his/her account.
-if($_GET["deactivate_or_delete"] == "deactivate") {
+if($_POST["deactivate_or_delete"] == "deactivate") {
 $con->query("insert into account_states (user_id,type,time) values(".$_SESSION["user_id"].",'deactivate',".time().")");
 array_push($_SESSION["toasts"],"<script>Materialize.toast('Your Account Is Currently Deactivated, You Can Activate It Again By Simply Logging In.',25000,'green');</script>");
 unset($_SESSION["user_id"]);
@@ -39,7 +39,7 @@ echo json_encode($echo_arr);
 die();		
 }
 # if user wants to delete his/her account.
-else if($_GET["deactivate_or_delete"] == "delete") {
+else if($_POST["deactivate_or_delete"] == "delete") {
 $con->query("insert into account_states (user_id,type,time) values(".$_SESSION["user_id"].",'delete',".time().")");
 array_push($_SESSION["toasts"],"<script>Materialize.toast('Your Account Will Be Deleted If You Don\'t Log In In The Next 2 Weeks',25000,'red');</script>");
 unset($_SESSION["user_id"]);
@@ -57,11 +57,11 @@ die();
 
 
 $checks_arr = [
-"change_first_name"=>new ValidateItem($_GET["change_first_name"],'/^[a-zA-Z\s]{3,18}$/i',"First Name Must Only Contain Letters And Spaces And Must Be Longer Than 3 And Shorter Than 18 Characters"),
-"change_last_name"=>new ValidateItem($_GET["change_last_name"],'/^[a-zA-Z\s]{3,18}$/i',"Last Name Must Only Contain Letters And Spaces And Must Be Longer Than 3 And Shorter Than 18 Characters"),
-"change_user_name"=>new ValidateItem($_GET["change_user_name"],'/^([a-zA-Z]+[0-9 ]*){6,36}$/i',"Username Must Be A Combination Of Letters, Numbers And Spaces And Muse Be Between 6-36 Characters In Length"),
-"change_password"=>new ValidateItem($_GET["change_password"],'/^(?=.*[A-Za-z])(?=.*\d)(?=.*([$@$!%*#?& ]*))[A-Za-z\d($@$!%*#?& )*]{8,50}$/i',"Password Must Contain At Least 1 Digit And Must Be Between 8-50 Characters, Special Characters And Spaces Are Optional"),
-"add_email"=>new ValidateItem($_GET["add_email"],'/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/',"Your Email Address Is Invalid"),
+"change_first_name"=>new ValidateItem($_POST["change_first_name"],'/^[a-zA-Z\s]{3,18}$/i',"First Name Must Only Contain Letters And Spaces And Must Be Longer Than 3 And Shorter Than 18 Characters"),
+"change_last_name"=>new ValidateItem($_POST["change_last_name"],'/^[a-zA-Z\s]{3,18}$/i',"Last Name Must Only Contain Letters And Spaces And Must Be Longer Than 3 And Shorter Than 18 Characters"),
+"change_user_name"=>new ValidateItem($_POST["change_user_name"],'/^([a-zA-Z]+[0-9 ]*){6,36}$/i',"Username Must Be A Combination Of Letters, Numbers And Spaces And Muse Be Between 6-36 Characters In Length"),
+"change_password"=>new ValidateItem($_POST["change_password"],'/^(?=.*[A-Za-z])(?=.*\d)(?=.*([$@$!%*#?& ]*))[A-Za-z\d($@$!%*#?& )*]{8,50}$/i',"Password Must Contain At Least 1 Digit And Must Be Between 8-50 Characters, Special Characters And Spaces Are Optional"),
+"add_email"=>new ValidateItem($_POST["add_email"],'/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/',"Your Email Address Is Invalid"),
 ];
 
 foreach($checks_arr as $key => $item) {
@@ -81,12 +81,12 @@ die();
 }
 }
 
-$change_first_name = $_GET["change_first_name"];
-$change_last_name = $_GET["change_last_name"];
-$change_user_name = $_GET["change_user_name"];
+$change_first_name = $_POST["change_first_name"];
+$change_last_name = $_POST["change_last_name"];
+$change_user_name = $_POST["change_user_name"];
 
 $check_if_username_already_exists = $con->prepare("select id from users where user_name = :user_name and id != :id");
-$check_if_username_already_exists->bindParam(":user_name",$_GET["change_user_name"]);
+$check_if_username_already_exists->bindParam(":user_name",$_POST["change_user_name"]);
 $check_if_username_already_exists->bindParam(":id",$_SESSION["user_id"]);
 $check_if_username_already_exists->execute();
 if($check_if_username_already_exists->fetch()["id"] != "") {
@@ -97,8 +97,8 @@ echo json_encode($echo_arr);
 die();			
 }
 
-$change_password = ($_GET["change_password"] != "" ? password_hash($_GET["change_password"],PASSWORD_BCRYPT) : $user_info_arr["password"]);
-$add_email = ($_GET["add_email"] != "" ? $_GET["add_email"] : $user_info_arr["email_address"]);
+$change_password = ($_POST["change_password"] != "" ? password_hash($_POST["change_password"],PASSWORD_BCRYPT) : $user_info_arr["password"]);
+$add_email = ($_POST["add_email"] != "" ? $_POST["add_email"] : $user_info_arr["email_address"]);
 
 $prepare_changes = $con->prepare("update users set first_name = :first_name, last_name = :last_name, user_name = :user_name, password = :password, email_address = :email_address where id = ". $_SESSION["user_id"]);
 $prepare_changes->bindParam(":first_name",$change_first_name);

@@ -1,7 +1,5 @@
 <?php
 
-require_once "handleTagsFunction.php";
-
 function get_comment($comment_arr) {
 global $con;
 

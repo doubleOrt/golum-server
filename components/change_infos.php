@@ -11,9 +11,9 @@ $echo_arr = [];
 
 
 // if user wants to change his gender.
-if(isset($_GET["gender"])) {
-if($_GET["gender"] != "") {	
-$new_gender = $_GET["gender"];
+if(isset($_POST["gender"])) {
+if($_POST["gender"] != "") {	
+$new_gender = $_POST["gender"];
 $prepared = $con->prepare("update users set gender = :gender where id = ".$_SESSION["user_id"]);
 $prepared->bindParam(":gender",$new_gender);
 $prepared->execute();
@@ -21,9 +21,9 @@ $prepared->execute();
 }
 
 // if user wants to change his country.
-if(isset($_GET["country"])) {
-if($_GET["country"] != "") {		
-$new_country = $_GET["country"];
+if(isset($_POST["country"])) {
+if($_POST["country"] != "") {		
+$new_country = $_POST["country"];
 $prepared = $con->prepare("update users set country = :country where id = ".$_SESSION["user_id"]);
 $prepared->bindParam(":country",$new_country);
 $prepared->execute();
@@ -31,9 +31,9 @@ $prepared->execute();
 }
 
 // when user wants to change his birthdate.
-if(isset($_GET["birthdate"])) {
-if($_GET["birthdate"] != "") {	
-$new_birthdate = $_GET["birthdate"];	
+if(isset($_POST["birthdate"])) {
+if($_POST["birthdate"] != "") {	
+$new_birthdate = $_POST["birthdate"];	
 $prepared = $con->prepare("update users set birthdate = :birthdate where id = ".$_SESSION["user_id"]);
 $prepared->bindParam(":birthdate",$new_birthdate);
 $prepared->execute();
@@ -43,14 +43,14 @@ $echo_arr[0] = date_diff(date_create(date("Y-m-d")),date_create(str_replace(",",
 
 
 /* when a user repositions his/her avatar image, we inser the new positions into a table in our database */
-if(isset($_GET["avatar_positions"]) && is_array($_GET["avatar_positions"]) && filter_var($_GET["avatar_positions"][0], FILTER_VALIDATE_INT) !== false && filter_var($_GET["avatar_positions"][1], FILTER_VALIDATE_INT) !== false) {
-$con->exec("update avatars set positions = '". ($_GET["avatar_positions"][0] . "," . $_GET["avatar_positions"][1]) ."' where id_of_user = ". $_SESSION["user_id"] ." order by id desc limit 1");
+if(isset($_POST["avatar_positions"]) && is_array($_POST["avatar_positions"]) && filter_var($_POST["avatar_positions"][0], FILTER_VALIDATE_INT) !== false && filter_var($_POST["avatar_positions"][1], FILTER_VALIDATE_INT) !== false) {
+$con->exec("update avatars set positions = '". ($_POST["avatar_positions"][0] . "," . $_POST["avatar_positions"][1]) ."' where id_of_user = ". $_SESSION["user_id"] ." order by id desc limit 1");
 }
 
 
-if(isset($_GET["avatar_rotation"]) && filter_var($_GET["avatar_rotation"], FILTER_VALIDATE_INT) !== false) {
-if($_GET["avatar_rotation"] != "") {
-$con->exec("update avatars set rotate_degree = '". $_GET["avatar_rotation"] ."' ". (!isset($_GET["avatar_positions"]) ? ",positions = '0,0'" : "") ." where id_of_user = ". $_SESSION["user_id"] ." order by id desc limit 1");		
+if(isset($_POST["avatar_rotation"]) && filter_var($_POST["avatar_rotation"], FILTER_VALIDATE_INT) !== false) {
+if($_POST["avatar_rotation"] != "") {
+$con->exec("update avatars set rotate_degree = '". $_POST["avatar_rotation"] ."' ". (!isset($_POST["avatar_positions"]) ? ",positions = '0,0'" : "") ." where id_of_user = ". $_SESSION["user_id"] ." order by id desc limit 1");		
 }	
 }
 

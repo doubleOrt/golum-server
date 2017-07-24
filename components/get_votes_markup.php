@@ -7,9 +7,9 @@ require_once "logged_in_importants.php";
 
 $echo_arr = [];
 
-if(isset($_POST["post_id"]) && isset($_POST["post_type"]) && filter_var($_POST["post_id"], FILTER_VALIDATE_INT) !== false && filter_var($_POST["post_type"], FILTER_VALIDATE_INT) !== false) {
+if(isset($_GET["post_id"]) && isset($_GET["post_type"]) && filter_var($_GET["post_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["post_type"], FILTER_VALIDATE_INT) !== false) {
 
-$post_votes_info_arr = get_post_votes($_POST["post_id"], $_POST["post_type"]);
+$post_votes_info_arr = get_post_votes($_GET["post_id"], $_GET["post_type"]);
 
 $post_votes = $post_votes_info_arr[0];
 $user_vote_index = $post_votes_info_arr[1];
@@ -17,7 +17,7 @@ $majority_vote_index = $post_votes_info_arr[2];
 $total_votes_number = $post_votes_info_arr[3];
 
 array_push($echo_arr, [
-"post_type" => htmlspecialchars($_POST["post_type"], ENT_QUOTES, "utf-8"),
+"post_type" => htmlspecialchars($_GET["post_type"], ENT_QUOTES, "utf-8"),
 "user_vote_index" => htmlspecialchars($user_vote_index, ENT_QUOTES, "utf-8"),
 "majority_vote_index" => htmlspecialchars($majority_vote_index, ENT_QUOTES, "utf-8"),
 "total_votes_number" => htmlspecialchars($total_votes_number, ENT_QUOTES, "utf-8")

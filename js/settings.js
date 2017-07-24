@@ -222,7 +222,7 @@ if(check_current_password.validate(true) === true) {
 
 $("#saveChanges").html("Saving").addClass("disabledButton");
 
-$.get({
+$.post({
 url: 'components/change_settings.php',
 data: {
 "current_password":$("#current_password").val(),
@@ -233,9 +233,8 @@ data: {
 "add_email":$("#add_email").val(),
 "deactivate_or_delete":$("#deactivateOrDelete").val()
 },
-type: "get",
-success:function(data,status) {
-	
+success:function(data) {
+
 $("#saveChanges").html("Save").removeClass("disabledButton");
 
 var dataArr = JSON.parse(data);
@@ -296,7 +295,7 @@ Materialize.toast("Confirmation Code Must Contain Numbers Only",3000,"red");
 return;
 }
 else {
-$.get({
+$.post({
 url:"components/confirm_email.php",
 data:{
 "confirmation_code":confirmation_code

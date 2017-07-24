@@ -4,11 +4,11 @@ require_once "common_requires.php";
 
 $echo_arr = [];
 
-if(isset($_GET["confirmation_code"]) && filter_var($_GET["confirmation_code"], FILTER_VALIDATE_INT) !== false) {
+if(isset($_POST["confirmation_code"]) && filter_var($_POST["confirmation_code"], FILTER_VALIDATE_INT) !== false) {
 
 $valid_confirmation_code = $con->query("select activated from users where id = ". $_SESSION["user_id"])->fetch()[0];
 
-if($valid_confirmation_code == $_GET["confirmation_code"]) {
+if($valid_confirmation_code == $_POST["confirmation_code"]) {
 $con->exec("update users set activated = 'true' where id = ". $_SESSION["user_id"]);
 $echo_arr[0] = 1;
 }	

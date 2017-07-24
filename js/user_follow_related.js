@@ -45,10 +45,9 @@ if(typeof userId == "undefined") {
 return false;	
 }
 
-$.get({
+$.post({
 url:"components/add_remove_contacts.php",
 data:{user_id:userId},
-type:"get",
 success: function(data) {
 	
 if(data != "") {
@@ -69,7 +68,7 @@ callback(data);
 a callback function with at least one parameter as arguments.  will return 0 if the user is now blocked, 
 and 1 if they are now unblocked. */
 function blockOrUnblockUser(userId, callback) {
-$.get({
+$.post({
 url:"components/block_user.php",
 data:{"user_id":userId},
 success:function(data) {

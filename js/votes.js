@@ -48,7 +48,7 @@ if(typeof post_id == "undefined" || typeof post_type == "undefined") {
 return false;	
 }
 
-$.post({
+$.get({
 url:"components/get_votes_markup.php",
 data:{
 "post_id": post_id,
