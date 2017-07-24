@@ -1,5 +1,5 @@
 <?php
-namespace Ortify;
+namespace Golum;
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\WampServerInterface;
 
@@ -27,7 +27,7 @@ class Pusher implements WampServerInterface {
     /**
      * @param string JSON'ified string we'll receive from ZeroMQ
      */
-    public function onBlogEntry($entry) {
+    public function server_side_publish($entry) {
         $data = json_decode($entry, true);
 		
 		// update_type 0 means new message

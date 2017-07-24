@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "/../instantchat_test/vendor/autoload.php";
+require_once __DIR__ . "/../composer_things/vendor/autoload.php";
 require_once "initialization.php";
 
 $echo_arr = [0,""];
