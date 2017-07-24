@@ -8,6 +8,17 @@ $check_current_state = $con->query("select * from contacts where contact_of = ".
 
 // if the contact is not added already
 if($check_current_state["id"] == "") {
+
+/* deals with a case where one of the users has been blocked or has blocked the other user and has 
+somehow found a way to surpass our UI limits and checks which prevent a follow button between these 
+2 users to function in the first place. */
+$user_blocked_by_base_user_prepared = $con->prepare("select id from blocked_users where user_ids = concat(:base_user_id, '-', :user_id) or user_ids = concat(:user_id, '-', :base_user_id) limit 1");
+$user_blocked_by_base_user_prepared->execute([":base_user_id" => $_SESSION["user_id"], ":user_id" => $_GET["user_id"]]);
+if($user_blocked_by_base_user_prepared->fetch()[0] != "") {
+echo "1";
+die();
+}	
+	
 $con->exec("insert into contacts (contact_of,contact,date_added) values(".$_SESSION["user_id"].",". $_GET["user_id"] .",'".date("Y/m/d H:i")."')");
 
 // insert a notification

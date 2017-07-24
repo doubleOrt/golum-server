@@ -153,9 +153,6 @@ margin:0;
 display:inline-block;
 }	
 
-.modalLinks button:focus {
-background:none;	
-}		
 
 
 .hasHeader .modal-footer {

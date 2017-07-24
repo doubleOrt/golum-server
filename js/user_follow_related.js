@@ -327,7 +327,8 @@ set_user_profile_followers_num(get_user_profile_followers_num() - 1);
 // used when user blocks or unblocks contacts.
 $(document).on("click","#user_profile_block_button",function(){
 	
-blockOrUnblockUser($(this).attr("data-user-id"),blockOrUnblockUserCallback);
+var user_id = $(this).attr("data-user-id");
+blockOrUnblockUser(user_id, blockOrUnblockUserCallback);
 
 function blockOrUnblockUserCallback(newState) {
 // the user is now blocked	
@@ -335,20 +336,20 @@ if(newState == "0") {
 Materialize.toast('User Blocked, Tap Button To Unblock',3000,'red');	
 $("#user_profile_block_button").html("Unblock");	
 $("#user_profile_block_button").attr("data-current-state","1");	
-$("#user_profile_follow_button").html("Follow +");
+$(".follow_user[data-user-id='" + user_id + "']").html("Follow +");
 // since you unfollow a user when you block them, we have to decrease that user's followings by 1
 var user_followers_num = get_user_profile_followers_num(); 
 if(user_followers_num > 0) {
 set_user_profile_followers_num(user_followers_num - 1);	
 }
-$("#user_profile_follow_button").addClass("disabledButton");
+$(".follow_user[data-user-id='" + user_id + "']").addClass("disabledButton");
 $("#startChatButton").addClass("disabledButtonLight");
 }	
 else if(newState == "1") {
 Materialize.toast('User Unblocked, Tap Button To Block',3000,'red');	
 $("#user_profile_block_button").html("Block");	
 $("#user_profile_block_button").attr("data-current-state","0");		
-$("#user_profile_follow_button").removeClass("disabledButton");
+$(".follow_user[data-user-id='" + user_id + "']").removeClass("disabledButton");
 $("#startChatButton").removeClass("disabledButtonLight");
 }
 }

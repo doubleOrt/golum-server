@@ -231,41 +231,53 @@ opacity:.5;
  
 /* common button stylings, gives them a white color and f95462 background-color */
 .commonButton {
-color:white;		
+color:white !important;		
 background:-webkit-linear-gradient(36deg, yellow 10%, green 70%);
 padding:0 20px;
 text-align:center;
 font-weight:bold;
 letter-spacing:1px;
 transition:none;
+box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
 }
 
 .commonButton:hover {
-color:white;	
+color:white !important;	
 background:-webkit-linear-gradient(36deg, yellow 10%, green 70%);
 }
 
+.commonButton[disabled] {
+color:white !important;	
+box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2) !important;
+}
+
 .commonButtonWhite {
-color:yellowgreen;
+color:#494949 !important;
 background-color:white;
 font-weight:bold;
 letter-spacing:1px;
 transition:none;
+box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
 }
 
 .commonButtonWhite:hover {
-color:yellowgreen;
+color:#494949 !important;
 background-color:white;
 }
 
 .commonButtonWhite:active {
-color:yellowgreen !important;
+color:#494949 !important;
 background-color:white !important;
 }
 
 .commonButtonWhite:focus {
-color:yellowgreen !important;
+color:#494949 !important;
 background-color:white !important;
+}
+
+.commonButtonWhite[disabled] {
+color:#494949 !important;	
+box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2) !important;
 }
 
 .red_button_light {
@@ -531,6 +543,10 @@ opacity:.4;
 .disabledButtonLight {
 pointer-events:none;
 opacity:.7;	
+}
+
+.semi_transparent {
+opacity:.4;	
 }
 
 

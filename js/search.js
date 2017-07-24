@@ -332,7 +332,7 @@ var user_row_markup = `
 </div><!-- end .row_infos_container -->
 
 <div class='col l3 m3 s5 list_row_right_container skewScaleItem'>
-<a href='#' class='row_button myBackground opacityChangeOnActive follow_user stopPropagationOnClick' data-user-id='` + data["id"] + `'>` + (data["current_state"] == 0 ? "Follow +" : "Unfollow") + `</a>
+<button class='row_button myBackground opacityChangeOnActive follow_user stopPropagationOnClick ` + (data["blocked_by_base_user"] != "0" ? "semi_transparent" : "") + `' ` + (data["blocked_by_base_user"] != "0" ? "disabled='disabled' data-blocked-by-base-user='1'" : "") + ` data-user-id='` + data["id"] + `'>` + (data["current_state"] == 0 ? "Follow +" : "Unfollow") + `</button>
 </div>
 </div>
 

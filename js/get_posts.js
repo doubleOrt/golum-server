@@ -488,7 +488,8 @@ getPosts("components/get_user_posts.php",{"user_id": $(this).attr("data-user-id"
 markUpProcessor(data_arr[0], $("#userPostsContainer"), "This user does not have a single post, such a loser.", function(){
 removeLoading($("#userPostsContainer"));	
 });		
-$("#userPostsModal .navRightItemsMobile .follow_user").html((data_arr[1] == 0 ? "Follow +" : "Unfollow"));
+$("#userPostsModal .navRightItemsMobile .follow_user").html((data_arr[1][0] == 0 ? "Follow +" : "Unfollow"));
+(data_arr[1][1] != 0 ? $("#userPostsModal .navRightItemsMobile .follow_user").attr({"disabled": "disabled", "data-blocked-by-base-user": "1"}).addClass("semi_transparent") : $("#userPostsModal .navRightItemsMobile .follow_user").removeAttr("disabled").removeAttr("data-blocked-by-base-user").removeClass("semi_transparent"));
 });
 });
 // user is infinite scrolling the user posts modal
@@ -544,7 +545,8 @@ getPosts("components/get_favorite_posts.php",{"user_id": $(this).attr("data-user
 markUpProcessor(data_arr[0], $("#favorite_posts_container"), "This user has not faved a single post, such a loser.", function(){
 removeLoading($("#favorite_posts_container"));	
 });		
-$("#favorite_posts_modal .navRightItemsMobile .follow_user").html((data_arr[1] == 0 ? "Follow +" : "Unfollow"));
+$("#favorite_posts_modal .navRightItemsMobile .follow_user").html((data_arr[1][0] == 0 ? "Follow +" : "Unfollow"));
+(data_arr[1][1] != 0 ? $("#favorite_posts_modal .navRightItemsMobile .follow_user").attr({"disabled": "disabled", "data-blocked-by-base-user": "1"}).addClass("semi_transparent") : $("#favorite_posts_modal .navRightItemsMobile .follow_user").removeAttr("disabled").removeAttr("data-blocked-by-base-user").removeClass("semi_transparent"));
 });
 });
 // user is infinite scrolling the user posts modal
