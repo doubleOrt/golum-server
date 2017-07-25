@@ -307,6 +307,16 @@ var thisCommentObject = $(this).parents(".singleComment");
 deleteReply($(this).attr("data-comment-id"),function(){thisCommentObject.fadeOut('fast',function(){ $(this).remove();});});
 
 setNewNumber($("#totalNumberOfReplies"),"data-total-number",false,true,"");	
+setNewNumber($("#commentsModal .singleComment[data-comment-id='" + REPLIES_CONTAINER_ELEMENT.attr("data-comment-id") + "']"),"data-total-number",false,true,"");	
+
+// the post element that is the parent of this comment.
+var reply_single_comment_element = $("#commentsModal .singleComment[data-actual-comment-id=" + REPLIES_CONTAINER_ELEMENT.attr("data-comment-id") + "] .reply_button_total_replies");
+
+if(reply_single_comment_element.length > 0) {
+// update the reply button's reply number element
+setNewNumber(reply_single_comment_element, "data-total-number", false, true,"");	
+}
+
 
 });
 

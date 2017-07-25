@@ -364,16 +364,17 @@ return false;
 
 var thisCommentObject = $(this).parents(".singleComment");
 
-// the post element that is the parent of this comment.
-var commentSinglePostElement = $(".singlePost [data-actual-post-id=" + COMMENTS_CONTAINER_ELEMENT.attr("data-actual-post-id") + "]");
-
 deleteComment($(this).attr("data-comment-id"),function(){thisCommentObject.fadeOut('fast',function(){$(this).remove();});});
 
 setNewNumber($("#totalNumberOfComments"),"data-total-number",false,true,"");
 
+
+// the post element that is the parent of this comment.
+var commentSinglePostElement = $(".singlePost[data-actual-post-id=" + COMMENTS_CONTAINER_ELEMENT.attr("data-actual-post-id") + "]");
+
 if(commentSinglePostElement.length > 0) {
 // update the comments button's comment number element
-setNewNumber(commentSinglePostElement.find(".commentButtonCommentsNumber"),"data-total-number",false,true,"");
+set_post_comments_number_string(commentSinglePostElement, parseFloat(commentSinglePostElement.find(".comments_number").attr("data-total-number")) - 1);
 }
 
 });
