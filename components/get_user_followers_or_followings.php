@@ -35,14 +35,8 @@ die();
 }
 
 foreach($all_contacts_arr as $row) {
-	
-// check if the user in the current iteration has disabled or requested to delete his account, if so then skip this iteration.
-if($con->query("SELECT * FROM account_states where user_id = ". $row["id"])->fetch()[0] != "") {
-continue;	
-}	
 
-
-$avatar_arr = $con->query("SELECT * FROM avatars WHERE id_of_user = ".$row["id"]." order by id desc limit 1")->fetch();	
+$avatar_arr = custom_pdo("SELECT * FROM avatars WHERE id_of_user = :user_id order by id desc limit 1", [":user_id" => $row["id"]])->fetch();	
 $avatar_positions = explode(",",$avatar_arr["positions"]);	
 
 if(count($avatar_positions) < 2) {

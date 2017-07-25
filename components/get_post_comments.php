@@ -25,10 +25,10 @@ $post_comments_arr = $post_comments_arr_prepared->fetchAll();
 
 // now we want to append the comment the user wants to pin to the top to the beginning of the $post_comments_arr
 if(isset($_GET["pin_comment_to_top"]) && is_integer(intval($_GET["pin_comment_to_top"])) && $_GET["pin_comment_to_top"] != 0) {
-array_unshift($post_comments_arr,$con->query("SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE comment_id = post_comments.id) AS replies, (SELECT type FROM comment_upvotes_and_downvotes WHERE user_id = ". $_SESSION["user_id"] ." AND comment_id = post_comments.id) as base_user_opinion FROM post_comments LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON post_comments.user_id = post_votes.user_id2 AND post_comments.post_id = post_votes.post_id2 WHERE post_id = ". $_GET["post_id"] ." and id = ". $_GET["pin_comment_to_top"])->fetch());
+array_unshift($post_comments_arr,custom_pdo("SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE comment_id = post_comments.id) AS replies, (SELECT type FROM comment_upvotes_and_downvotes WHERE user_id = :base_user_id AND comment_id = post_comments.id) as base_user_opinion FROM post_comments LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON post_comments.user_id = post_votes.user_id2 AND post_comments.post_id = post_votes.post_id2 WHERE post_id = :post_id and id = :pin_comment_to_top", [":base_user_id" => $_SESSION["user_id"], ":post_id" => $_GET["post_id"], ":pin_comment_to_top" => $_GET["pin_comment_to_top"]])->fetch());
 }
 
-$poster_id = $con->query("select posted_by from posts where id = ". $_GET["post_id"])->fetch()[0];		
+$poster_id = custom_pdo("select posted_by from posts where id = :post_id", [":post_id" => $_GET["post_id"]])->fetch()[0];		
 
 for( $i = 0; $i < count($post_comments_arr); $i++ )	{
 $post_comments_arr[$i]["original_post_by"] = $poster_id;	

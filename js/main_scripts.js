@@ -130,34 +130,6 @@ reportPost($(this).attr("data-actual-post-id"));
 
 
 
-/* when a user wants to favorite a post */
-
-$(document).on("click",".favoritePost",function(){
-
-if(typeof $(this).attr("data-actual-post-id") == "undefined") {
-return false;
-}	
-
-var thisPostElement = $(this).parents(".singlePost");
-
-favoritePost($(this).attr("data-actual-post-id"),favoritePostCallback);
-
-
-function favoritePostCallback(postIsNowFavorited) {
-if(postIsNowFavorited == true) {
-thisPostElement.find('.favoritePost').find('i').html('bookmark');	
-}	
-else {
-thisPostElement.find('.favoritePost').find('i').html('bookmark_border');	
-}
-}
-
-
-});
-
-
-
-
 var openFullScreenFileViewTimeout;
 var postSingleImageContainerObject;
 var doubleClicked = false;

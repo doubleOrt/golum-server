@@ -11,29 +11,6 @@ $_SESSION["toasts"] = [];
 }
 
 
-
-function dataQuery($query, $params) {
-global $con;
-$queryType = explode(' ', $query);
-
-// run query
-try {
-$queryResults = $con->prepare($query);
-$queryResults->execute($params);
-if($queryResults != null && 'SELECT' == strtoupper($queryType[0])) {
-$results = $queryResults->fetchAll();
-return $results;
-}
-$queryResults = null; // first of the two steps to properly close
-$dbh = null; // second step to close the connection
-}
-catch(PDOException $e) {
-$errorMsg = $e->getMessage();
-echo $errorMsg;
-}
-}
-
-
 function time_to_string($time) {
 		
 $time = intval($time);	
@@ -67,6 +44,27 @@ return date("Y/m/d H:i",$time);
 }
 }
 
+
+function custom_pdo($query, $params) {
+global $con;
+try {
+$prepared = $con->prepare($query);
+foreach($params as $key => $value) {
+if(filter_var($value, FILTER_VALIDATE_INT) !== false) {
+$prepared->bindValue($key, (int) $value, PDO::PARAM_INT);	
+}
+else {
+$prepared->bindParam($key, $value);	
+}
+}
+$prepared->execute();
+return $prepared;	
+}
+catch(PDOException $e) {
+$errorMsg = $e->getMessage();
+return $errorMsg;
+}
+}
 
 
 

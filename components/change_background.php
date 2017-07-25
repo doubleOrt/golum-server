@@ -28,7 +28,7 @@ if($upload_pathinfo == "jpeg" || $upload_pathinfo == "jpg" || $upload_pathinfo =
 if(move_uploaded_file($_FILES["new_background"]["tmp_name"],$upload_to . basename($_FILES["new_background"]["name"]))) {
 
 //what is going to be the id of the new avatar picture ? we get this by getting the id of the last row and adding 1 to it.
-$what_id_query = $con->query("SELECT * FROM backgrounds where id_of_user = ". $_SESSION["user_id"])->fetchAll();
+$what_id_query = custom_pdo("SELECT * FROM backgrounds where id_of_user = :base_user_id", [":base_user_id" => $_SESSION["user_id"]])->fetchAll();
 
 $what_id = count($what_id_query) > 0 ? $what_id_query[count($what_id_query)-1]["id"] + 1 : 1;
 
@@ -43,12 +43,12 @@ $daily_background_uploads_limit_exceeded = daily_background_uploads_limit_exceed
 // the background upload limit has not been exceeded.
 if($daily_background_uploads_limit_exceeded === false) {
 //add a new row to the backgrounds table, check if it is successful.
-$insert_into_backgrounds = $con->query("INSERT INTO backgrounds (id_of_user,background_path,date_of) values('". $_SESSION["user_id"] ."','". $new_path ."','".date("Y/m/d H:i")."')");
+$insert_into_backgrounds = custom_pdo("INSERT INTO backgrounds (id_of_user,background_path,date_of) values(:base_user_id, :new_path, :date_of)", [":base_user_id" => $_SESSION["user_id"], ":new_path" => $new_path, ":date_of" => date("Y/m/d H:i")]);
 
 //if query was successful
 if($insert_into_backgrounds->rowCount() > 0) {
 //change the user's background column in the users table
-$update_users = $con->query("UPDATE USERS SET background_path = '". $new_path ."' where id = ".$_SESSION["user_id"]);
+$update_users = custom_pdo("UPDATE USERS SET background_path = :new_path where id = :base_user_id", [":new_path" => $new_path, ":base_user_id" => $_SESSION["user_id"]]);
 
 //if query was successful
 if($update_users->rowCount() > 0) {
@@ -104,13 +104,16 @@ $echo_arr[1] = "Something Went Wrong, Sorry!";
 returns false. */
 function daily_background_uploads_limit_exceeded($limit) {
 global $con;	
-$background_uploads_today = $con->query("SELECT count(*) from backgrounds where id_of_user = ". $_SESSION["user_id"] ." and date_of like '". date("Y/m/d") ." %'")->fetch()[0];
+$background_uploads_today = custom_pdo("SELECT count(*) from backgrounds where id_of_user = :base_user_id and date_of like concat(:date_of,' %')", [":base_user_id" => $_SESSION["user_id"], ":date_of" => date("Y/m/d")])->fetch()[0];
 return ($background_uploads_today >= $limit ? true : false);
 }
 
 
 
 echo json_encode($echo_arr);
+
+
+unset($con);
 
 
 ?>

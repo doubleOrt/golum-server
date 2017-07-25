@@ -30,13 +30,14 @@ $notification_where .= " or ";
 }
 $notification_where .= "(type = ". $notifications_arr[$i]["type"] ." and extra = ". $notifications_arr[$i]["extra"] .")";
 }
-$con->exec("update notifications set read_yet = ". time() ." where read_yet = 0 and notification_to = ". $_SESSION["user_id"] ." and (". $notification_where .")");
+
+custom_pdo("update notifications set read_yet = :time where read_yet = 0 and notification_to = :base_user_id and (". $notification_where .")", [":time" => time(), ":base_user_id" => $_SESSION["user_id"]]);
 
 for($i = 0;$i<count($notifications_arr);$i++) {
 $notification = $notifications_arr[$i];
 
-$sender_arr = $con->query("select first_name, last_name, avatar_picture from users where id = ". $notification["notification_from"])->fetch();
-$sender_avatar_arr = $con->query("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = ". $notification["notification_from"] ." order by id desc limit 1")->fetch();
+$sender_arr = custom_pdo("select first_name, last_name, avatar_picture from users where id = :notification_from", [":notification_from" => $notification["notification_from"]])->fetch();
+$sender_avatar_arr = custom_pdo("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = :notification_from order by id desc limit 1", [":notification_from" => $notification["notification_from"]])->fetch();
 $sender_avatar_positions = explode(",",htmlspecialchars($sender_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 //if avatar positions does not exist 
 if(count($sender_avatar_positions) < 2) {

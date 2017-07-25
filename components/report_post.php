@@ -8,7 +8,7 @@ $NUMBER_OF_REPORTS_TO_DISABLE_POST = 30;
 
 if(isset($_POST["post_id"]) && filter_var($_POST["post_id"], FILTER_VALIDATE_INT) !== false) {
 
-if($con->query("select id from post_reports where post_id = ". $_POST["post_id"] ." and user_id = ". $_SESSION["user_id"])->fetch()["id"] == "") {
+if(custom_pdo("select id from post_reports where post_id = :post_id and user_id = :base_user_id", [":post_id" => $_POST["post_id"], ":base_user_id" => $_SESSION["user_id"]])->fetch()["id"] == "") {
 
 if($con->prepare("insert into post_reports (post_id,user_id,time) values (:post_id, :user_id, :time)")->execute([":post_id" => $_POST["post_id"], ":user_id" => $_SESSION["user_id"], ":time" => time()])) {
 	

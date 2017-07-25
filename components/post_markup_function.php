@@ -6,13 +6,13 @@ function get_post_markup($post_arr) {
 global $con;
 
 // a call to this function means that the post is being viewed by 1 more user, so we need to update the post's total views.
-$con->query("update posts set post_views = post_views + 1 where id = ". $post_arr["id"]);
+custom_pdo("update posts set post_views = post_views + 1 where id = :post_id", [":post_id" => $post_arr["id"]]);
 // we also need to update the views for the post array passed to this function, for example i just shared a post, i make a call to this function, and without incrementing the array, i would see 0 views instead of 1.
 $post_arr["post_views"] = ++$post_arr["post_views"];
 
 
-$poster_arr = $con->query("select first_name, last_name, avatar_picture from users where id = ". $post_arr["posted_by"])->fetch();
-$poster_avatar_arr = $con->query("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = ". $post_arr["posted_by"] ." order by id desc limit 1")->fetch();
+$poster_arr = custom_pdo("select first_name, last_name, avatar_picture from users where id = :posted_by", [":posted_by" => $post_arr["posted_by"]])->fetch();
+$poster_avatar_arr = custom_pdo("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = :posted_by order by id desc limit 1", [":posted_by" => $post_arr["posted_by"]])->fetch();
 $poster_avatar_positions = explode(",", htmlspecialchars($poster_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 //if avatar positions does not exist 
 if(count($poster_avatar_positions) < 2) {
@@ -21,7 +21,7 @@ $poster_avatar_positions = [0,0];
 
 
 $posted_by_base_user = ($post_arr["posted_by"] == $_SESSION["user_id"] ? true : false);
-$base_user_already_voted = $con->query("select id from post_votes where post_id =". $post_arr["id"] ." and user_id = ". $_SESSION["user_id"])->fetch();
+$base_user_already_voted = custom_pdo("select id from post_votes where post_id = :post_id and user_id = :base_user_id", [":post_id" => $post_arr["id"], ":base_user_id" => $_SESSION["user_id"]])->fetch();
 
 
 $post_file_types_arr = explode(",", htmlspecialchars($post_arr["file_types"], ENT_QUOTES, "utf-8"));	

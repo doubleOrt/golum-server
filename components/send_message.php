@@ -30,9 +30,9 @@ if($prepare->execute()) {
 	
 $message_id = $con->lastInsertId();	
 		
-$con->exec("update chats set latest_activity = ".time()." where id = ".$chat_id);	
+custom_pdo("update chats set latest_activity = :time where id = :chat_id", [":time" => time(), ":chat_id" => $chat_id]);	
 # takes care of updating the new messages field of the users table for all recipients.
-$chat_id_arr = $con->query("select * from chats where id = ".$chat_id)->fetch();	
+$chat_id_arr = custom_pdo("select * from chats where id = :chat_id", [":chat_id" => $chat_id])->fetch();	
 $chatter_ids_arr = explode("-",$chat_id_arr["chatter_ids"]);
 
 
@@ -44,8 +44,8 @@ $message_type = 1;
 }
 
 
-$messager_arr = $con->query("select id,first_name,last_name,avatar_picture from  users where id = ". $_SESSION["user_id"])->fetch();
-$messager_avatar_arr = $con->query("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = ". $messager_arr["id"] ." order by id desc limit 1")->fetch();
+$messager_arr = custom_pdo("select id,first_name,last_name,avatar_picture from  users where id = :base_user_id", [":base_user_id" => $_SESSION["user_id"]])->fetch();
+$messager_avatar_arr = custom_pdo("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = :base_user_id order by id desc limit 1", [":base_user_id" => $_SESSION["user_id"]])->fetch();
 
 if($messager_avatar_arr[0] != "") {
 $messager_avatar_rotate_degree = $messager_avatar_arr["rotate_degree"];

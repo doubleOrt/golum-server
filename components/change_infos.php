@@ -42,20 +42,24 @@ $echo_arr[0] = date_diff(date_create(date("Y-m-d")),date_create(str_replace(",",
 }
 
 
-/* when a user repositions his/her avatar image, we inser the new positions into a table in our database */
-if(isset($_POST["avatar_positions"]) && is_array($_POST["avatar_positions"]) && filter_var($_POST["avatar_positions"][0], FILTER_VALIDATE_INT) !== false && filter_var($_POST["avatar_positions"][1], FILTER_VALIDATE_INT) !== false) {
-$con->exec("update avatars set positions = '". ($_POST["avatar_positions"][0] . "," . $_POST["avatar_positions"][1]) ."' where id_of_user = ". $_SESSION["user_id"] ." order by id desc limit 1");
-}
-
-
+// this snippet has to come before the avatar-positions one
 if(isset($_POST["avatar_rotation"]) && filter_var($_POST["avatar_rotation"], FILTER_VALIDATE_INT) !== false) {
 if($_POST["avatar_rotation"] != "") {
-$con->exec("update avatars set rotate_degree = '". $_POST["avatar_rotation"] ."' ". (!isset($_POST["avatar_positions"]) ? ",positions = '0,0'" : "") ." where id_of_user = ". $_SESSION["user_id"] ." order by id desc limit 1");		
+custom_pdo("update avatars set rotate_degree = :avatar_rotation, positions = '0,0' where id_of_user = :base_user_id order by id desc limit 1", [":avatar_rotation" => $_POST["avatar_rotation"], ":base_user_id" => $_SESSION["user_id"]]);		
 }	
 }
+
+
+/* when a user repositions his/her avatar image, we inser the new positions into a table in our database */
+if(isset($_POST["avatar_positions"]) && is_array($_POST["avatar_positions"]) && filter_var($_POST["avatar_positions"][0], FILTER_VALIDATE_INT) !== false && filter_var($_POST["avatar_positions"][1], FILTER_VALIDATE_INT) !== false) {
+custom_pdo("update avatars set positions = :new_positions where id_of_user = :base_user_id order by id desc limit 1", [":new_positions" => ($_POST["avatar_positions"][0] . "," . $_POST["avatar_positions"][1]), ":base_user_id" => $_SESSION["user_id"]]);
+}
+
 
 echo json_encode($echo_arr);
 
 
+
+unset($con);
 
 ?>

@@ -37,7 +37,7 @@ ajax_call_to_get_comments = $.get({
 url:"components/get_post_comments.php",
 data:dataObj,
 success:function(data) {
-console.log(data);	
+
 var data_arr = JSON.parse(data);
 
 callback(data_arr);	
@@ -89,6 +89,7 @@ data:{
 "comment": comment
 },
 success: function(data) {
+console.log(data);	
 var data_arr = JSON.parse(data);
 callback(data_arr);
 }	
@@ -310,8 +311,6 @@ data:{
 "type":$(this).attr("data-upvote-or-downvote")
 },
 success:function(data) {
-
-console.log(data);	
 	
 thisUpvotesObject.removeClass('upvoteOrDownvoteActive');
 thisDownvotesObject.removeClass('upvoteOrDownvoteActive');

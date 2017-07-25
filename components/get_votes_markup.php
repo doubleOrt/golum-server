@@ -46,7 +46,7 @@ unset($con);
 function get_post_votes($post_id, $post_type) {
 global $con;	
 	
-$all_votes = $con->query("select post_id, user_id, option_index from post_votes where post_id = ". $post_id)->fetchAll();
+$all_votes = custom_pdo("select post_id, user_id, option_index from post_votes where post_id = :post_id", [":post_id" => $post_id])->fetchAll();
 
 $total_votes_number = count($all_votes);
 

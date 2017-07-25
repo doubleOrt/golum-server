@@ -41,11 +41,11 @@ $prepared->bindParam(":is_reply_to",$is_reply_to);
 if($prepared->execute()) {
 $reply_id = $con->lastInsertId();	
 
-$comment_arr = $con->query("select user_id, post_id from post_comments where id =". $_POST["comment_id"])->fetch();
+$comment_arr = custom_pdo("select user_id, post_id from post_comments where id = :comment_id", [":comment_id" => $_POST["comment_id"]])->fetch();
 
-$poster_id = $con->query("select posted_by from posts where id = ". $comment_arr["post_id"])->fetch()[0];
+$poster_id = custom_pdo("select posted_by from posts where id = :post_id", [":post_id" => $comment_arr["post_id"]])->fetch()[0];
 	
-$reply_arr = $con->query("SELECT * FROM (SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE is_reply_to = comment_replies.id) AS replies, (SELECT type FROM reply_upvotes_and_downvotes WHERE user_id = ". $_SESSION["user_id"] ." AND comment_id = comment_replies.id) as base_user_opinion, (SELECT post_id from post_comments where id = ". $_POST["comment_id"] .") as reply_owner_post_id FROM comment_replies) comment_replies LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON comment_replies.user_id = post_votes.user_id2 AND reply_owner_post_id = post_votes.post_id2 WHERE comment_replies.id = ". $reply_id)->fetch();
+$reply_arr = custom_pdo("SELECT * FROM (SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE is_reply_to = comment_replies.id) AS replies, (SELECT type FROM reply_upvotes_and_downvotes WHERE user_id = :base_user_id AND comment_id = comment_replies.id) as base_user_opinion, (SELECT post_id from post_comments where id = :comment_id) as reply_owner_post_id FROM comment_replies) comment_replies LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON comment_replies.user_id = post_votes.user_id2 AND reply_owner_post_id = post_votes.post_id2 WHERE comment_replies.id = :reply_id", [":base_user_id" => $_SESSION["user_id"], ":comment_id" => $_POST["comment_id"], ":reply_id" => $reply_id])->fetch();
 $reply_arr["original_post_by"] = $poster_id;
 	
 $echo_arr[0] = get_comment($reply_arr);	
@@ -54,7 +54,7 @@ $echo_arr[0] = get_comment($reply_arr);
 // if replier is not a user replying to his own comment, send them a notification.
 if($comment_arr["user_id"] != $_SESSION["user_id"]) {
 //insert a notification 
-$con->exec("insert into notifications (notification_from,notification_to,time,type,extra,extra2,extra3) values (". $_SESSION["user_id"] .",". $comment_arr["user_id"] .",". time() .",3,". $_POST["comment_id"] .",". $comment_arr["post_id"] .",". $reply_id .");");		
+custom_pdo("insert into notifications (notification_from,notification_to,time,type,extra,extra2,extra3) values ( :base_user_id, :commenter_id, :time, 3, :comment_id, :post_id, :reply_id)", [":base_user_id" => $_SESSION["user_id"], ":commenter_id" => $comment_arr["user_id"], ":time" => time(), ":comment_id" => $_POST["comment_id"], ":post_id" => $comment_arr["post_id"], ":reply_id" => $reply_id]);		
 $notification_id = $con->lastInsertId();
 
 $socket_message = [
@@ -88,7 +88,7 @@ $socket->send(json_encode($socket_message));
 // if the user is replying to a reply, then we need to send a notification to the replied to as well.
 if(isset($_POST["is_reply_to"]) && $_POST["is_reply_to"] != $_SESSION["user_id"] && $_POST["is_reply_to"] != $comment_arr["user_id"]) {
 // if the first one is true, it means we just sent a notification to the user in the above line. so it is unnecessary to do so again.  the second just assures we don't send a notification to a user when he replies to his own reply.
-$con->exec("insert into notifications (notification_from,notification_to,time,type,extra,extra2,extra3) values (". $_SESSION["user_id"] .",". $_POST["is_reply_to"] .",". time() .",3,". $_POST["comment_id"] .",". $comment_arr["post_id"] .",". $reply_id .");");		
+custom_pdo("insert into notifications (notification_from,notification_to,time,type,extra,extra2,extra3) values ( :base_user_id, :is_reply_to, :time, 3, :comment_id, :post_id, :reply_id)", [":base_user_id" => $_SESSION["user_id"], ":is_reply_to" => $_POST["is_reply_to"], ":time" => time(), ":comment_id" => $_POST["comment_id"], ":post_id" => $comment_arr["post_id"], ":reply_id" => $reply_id]);		
 $notification_id = $con->lastInsertId();
 
 $socket_message = [

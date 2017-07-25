@@ -50,12 +50,12 @@ $echo_arr = [];
 
 // in this page we give our js file key value pairs of chat ids and new messages from each one.
 
-$chats_arr = $con->query("select id, (select count(id) from messages where chat_id = chats.id and message_from != ". $_SESSION["user_id"] ." and read_yet = false) as chat_unread_messages from chats where chatter_ids like '%".$_SESSION["user_id"]."%'")->fetchAll(); 		
+$chats_arr = custom_pdo("select id, (select count(id) from messages where chat_id = chats.id and message_from != :base_user_id and read_yet = false) as chat_unread_messages from chats where chatter_ids like concat('%', :base_user_id, '%')", [":base_user_id" => $_SESSION["user_id"]])->fetchAll(); 		
 
 
 for($i = 0;$i < count($chats_arr);$i++) {
 
-$new_messages_arr = $con->query("select message,message_type,message_from,date_of from messages where chat_id = ". $chats_arr[$i]["id"])->fetchAll();
+$new_messages_arr = custom_pdo("select message,message_type,message_from,date_of from messages where chat_id = :chat_id", [":chat_id" => $chats_arr[$i]["id"]])->fetchAll();
 
 $new_messages_num = 0;
 
@@ -88,7 +88,7 @@ $latest_message = "File";
 #if there are no new latest messages
 if($latest_message == "") {
 
-$latest_message_arr = $con->query("select message,message_type,date_of from messages where chat_id = ". $chats_arr[$i]["id"]." order by id desc limit 1")->fetch();
+$latest_message_arr = custom_pdo("select message,message_type,date_of from messages where chat_id = :chat_id order by id desc limit 1", [":chat_id" => $chats_arr[$i]["id"]])->fetch();
 
 #if the users have never sent each other any messages
 if($latest_message_arr["message"] == "") {
@@ -110,6 +110,6 @@ echo json_encode($echo_arr);
 
 
 
-
+unset($con);
 
 ?>

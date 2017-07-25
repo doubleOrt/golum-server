@@ -49,7 +49,7 @@ $.post({
 url:"components/add_remove_contacts.php",
 data:{user_id:userId},
 success: function(data) {
-	
+console.log(data);	
 if(data != "") {
 // if the callback has a parameter that we can pass the data to	
 if(callback.length > 0) {	

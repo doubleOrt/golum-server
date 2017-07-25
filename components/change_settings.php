@@ -30,7 +30,7 @@ if(isset($_POST["deactivate_or_delete"]) && $_POST["deactivate_or_delete"] != ""
 
 # if user wants to deactivate his/her account.
 if($_POST["deactivate_or_delete"] == "deactivate") {
-$con->query("insert into account_states (user_id,type,time) values(".$_SESSION["user_id"].",'deactivate',".time().")");
+custom_pdo("insert into account_states (user_id,type,time) values(:base_user_id, 'deactivate', :time)", [":base_user_id" => $_SESSION["user_id"], ":time" => time()]);
 array_push($_SESSION["toasts"],"<script>Materialize.toast('Your Account Is Currently Deactivated, You Can Activate It Again By Simply Logging In.',25000,'green');</script>");
 unset($_SESSION["user_id"]);
 $echo_arr[0] .= "window.location.href =  'login_and_sign_up.html'";
@@ -40,7 +40,7 @@ die();
 }
 # if user wants to delete his/her account.
 else if($_POST["deactivate_or_delete"] == "delete") {
-$con->query("insert into account_states (user_id,type,time) values(".$_SESSION["user_id"].",'delete',".time().")");
+custom_pdo("insert into account_states (user_id,type,time) values(:user_id, 'delete', :time)", [":base_user_id" => $_SESSION["user_id"], ":time" => time()]);
 array_push($_SESSION["toasts"],"<script>Materialize.toast('Your Account Will Be Deleted If You Don\'t Log In In The Next 2 Weeks',25000,'red');</script>");
 unset($_SESSION["user_id"]);
 $echo_arr[0] .= "window.location.href =  'login_and_sign_up.html'";
@@ -187,6 +187,8 @@ $_SESSION["toasts"] = [];
 
 
 
+
+unset($con);
 
 
 ?>

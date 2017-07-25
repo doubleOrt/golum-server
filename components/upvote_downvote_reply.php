@@ -56,7 +56,7 @@ $con->prepare("insert into notifications (notification_from,notification_to,time
 }
 
 
-update_comment($_POST["reply_id"]);
+update_reply($_POST["reply_id"]);
 $new_upvotes_downvotes_number_prepared = $con->prepare("select upvotes, downvotes from comment_replies where id = :reply_id");
 $new_upvotes_downvotes_number_prepared->bindParam(":reply_id", $_POST["reply_id"]);
 $new_upvotes_downvotes_number_prepared->execute();
@@ -69,8 +69,9 @@ echo "thisUpvotesNumberObject.html('". ($new_upvotes_number > 0 ? ("(" . htmlspe
 echo "thisDownvotesNumberObject.html('". ($new_downvotes_number > 0 ? ("(" . htmlspecialchars($new_downvotes_number, ENT_QUOTES, "utf-8") . ")") : "") ."');";
 }
 else {
-$con->exec("insert into reply_upvotes_and_downvotes (comment_id,user_id,time,type) values(". $_POST["reply_id"] .",". $_SESSION["user_id"] .",". time() .",". $action_type .")");
-update_comment($_POST["reply_id"]);
+custom_pdo("insert into reply_upvotes_and_downvotes (comment_id,user_id,time,type) values(:reply_id, :base_user_id, :time, :action_type)", [":reply_id" => $_POST["reply_id"], ":base_user_id" => $_SESSION["user_id"], ":time" => time(), ":action_type" => $action_type]);
+
+update_reply($_POST["reply_id"]);
 $new_upvotes_downvotes_number_prepared = $con->prepare("select upvotes, downvotes from comment_replies where id = :reply_id");
 $new_upvotes_downvotes_number_prepared->bindParam(":reply_id", $_POST["reply_id"]);
 $new_upvotes_downvotes_number_prepared->execute();
@@ -121,10 +122,10 @@ echo ($action_type == 0 ? "thisUpvotesObject.addClass('upvoteOrDownvoteActive');
 }
 
 // just want to reuse some code here, we need to update the comments' upvote and downvote cols once they are changed in the comment_upvotes_and_downvotes table.
-function update_comment($comment_id) {
+function update_reply($reply_id) {
 global $con, $action_type;	
-$con->exec("update comment_replies set upvotes = ". $con->query("select count(id) from reply_upvotes_and_downvotes where comment_id = ". $comment_id ." and type = 0")->fetch()[0] ." where id = ". $comment_id);	
-$con->exec("update comment_replies set downvotes = ". $con->query("select count(id) from reply_upvotes_and_downvotes where comment_id = ". $comment_id ." and type = 1")->fetch()[0] ." where id = ". $comment_id);		
+$con->prepare("update comment_replies set upvotes = (select count(id) from reply_upvotes_and_downvotes where comment_id = :reply_id and type = 0) where id = :reply_id")->execute([":reply_id" => $reply_id]);	
+$con->prepare("update comment_replies set downvotes = (select count(id) from reply_upvotes_and_downvotes where comment_id = :reply_id and type = 1) where id = :reply_id")->execute([":reply_id" => $reply_id]);	
 }
 
 

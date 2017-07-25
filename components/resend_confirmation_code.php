@@ -7,7 +7,7 @@ require_once '../../phpmailer/PHPMailerAutoload.php';
 
 $echo_arr = [0];
 
-$email_info = $con->query("select user_name, email_address, activated from users where id = ". $_SESSION["user_id"])->fetch();
+$email_info = custom_pdo("select user_name, email_address, activated from users where id = :base_user_id", [":base_user_id" => $_SESSION["user_id"]])->fetch();
 
 if($email_info["email_address"] != "" && $email_info["activated"] !== "true" && $email_info["activated"] != "") {
 if(filter_var($email_info["email_address"], FILTER_VALIDATE_EMAIL) !== false) { 

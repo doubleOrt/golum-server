@@ -3,8 +3,8 @@
 function get_comment($comment_arr) {
 global $con;
 
-$commenter_arr = $con->query("select id,first_name, last_name, avatar_picture from users where id = ". $comment_arr["user_id"])->fetch();
-$commenter_avatar_arr = $con->query("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = ". $comment_arr["user_id"] ." order by id desc limit 1")->fetch();
+$commenter_arr = custom_pdo("select id,first_name, last_name, avatar_picture from users where id = :user_id", [":user_id" => $comment_arr["user_id"]])->fetch();
+$commenter_avatar_arr = custom_pdo("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = :user_id order by id desc limit 1", [":user_id" => $comment_arr["user_id"]])->fetch();
 $commenter_avatar_positions = explode(",", htmlspecialchars($commenter_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 //if avatar positions does not exist 
 if(count($commenter_avatar_positions) < 2) {
@@ -15,7 +15,7 @@ $commenter_avatar_positions = [0,0];
 $is_reply_to_markup = "";
 if(isset($comment_arr["is_reply_to"])) {
 if($comment_arr["is_reply_to"] != 0) {
-$is_reply_to_user_arr = $con->query("select first_name, last_name from users where id = ". $comment_arr["is_reply_to"])->fetch();
+$is_reply_to_user_arr = custom_pdo("select first_name, last_name from users where id = :is_reply_to", $comment_arr["is_reply_to"])->fetch();
 $is_reply_to_markup = "<a href='#modal1' class='replyToFullname modal-trigger showUserModal view-user' data-user-id='". $comment_arr["is_reply_to"] ."'>". $is_reply_to_user_arr["first_name"] . " " . $is_reply_to_user_arr["last_name"] ."</a> ";	
 } 	
 }

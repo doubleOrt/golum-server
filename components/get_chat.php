@@ -16,7 +16,7 @@ $start_date = date("Y/m/d H:i");
 $chatter_ids = $_SESSION["user_id"] . "-" . $_GET["user_id"]; 
 $latest_activity = time();
 
-$chat_arr = $con->query("select * from chats where chatter_ids = '".$_SESSION["user_id"]."-".$_GET["user_id"]."' or chatter_ids = '".$_GET["user_id"]."-".$_SESSION["user_id"]."'")->fetch();
+$chat_arr = custom_pdo("select * from chats where chatter_ids = concat(:base_user_id, '-', :user_id) or chatter_ids = concat(:user_id, '-', :base_user_id)", [":base_user_id" => $_SESSION["user_id"], ":user_id" => $_GET["user_id"]])->fetch();
 $chat_id = $chat_arr["id"];
 # if this is the first time the users are chatting, then add a new row to the chats table (the table mainly associated with the chatPortals).
 if($chat_id == "") {
@@ -28,33 +28,32 @@ $chat_prepare->execute();
 $chat_id = $con->lastInsertId();
 }
 
-$chat_recipient_info_arr = $con->query("select * from users where id = ".$_GET["user_id"])->fetch();
+$chat_recipient_info_arr = custom_pdo("select * from users where id = :user_id", [":user_id" => $_GET["user_id"]])->fetch();
 }
 // if the users are continuing a previous chat.
 else if(isset($_GET["chat_id"]) && filter_var($_GET["chat_id"], FILTER_VALIDATE_INT) !== false){
 $chat_id = $_GET["chat_id"];	
 
-$chat_arr = $con->query("select * from chats where id = ". $chat_id)->fetch();	
+$chat_arr = custom_pdo("select * from chats where id = :chat_id", [":chat_id" => $chat_id])->fetch();	
 $chat_recipient_id = explode("-",$chat_arr["chatter_ids"])[0] == $_SESSION["user_id"] ? explode("-",$chat_arr["chatter_ids"])[1] :  explode("-",$chat_arr["chatter_ids"])[0];	
 	
-$chat_recipient_info_arr = $con->query("select * from users where id = ".$chat_recipient_id)->fetch();
+$chat_recipient_info_arr = custom_pdo("select * from users where id = :recipient_id", [":recipient_id" => $chat_recipient_id])->fetch();
 }
 
 
 // unhide the chat if the chat is hidden. (we don't do this all the time, only when the user is opening the chat by clicking the startChat button in the recipient's user modal.)
 if($_GET["unhide_chat_if_hidden"] == "true") {
-$con->exec("delete from hidden_chats where chat_id = ". $chat_id ." and user_id = ". $_SESSION["user_id"]);		
+custom_pdo("delete from hidden_chats where chat_id = :chat_id and user_id = :base_user_id", [":chat_id" => $chat_id, ":base_user_id" => $_SESSION["user_id"]]);		
 }
-
 
 if(count($chat_recipient_info_arr) > 0) {
 	
 $current_status_string	= "Online";
 
-$messages_arr =  $con->query("select id,message_from,message,read_yet,date_of,message_type from messages where chat_id = ". $chat_id ." order by id desc limit 15 OFFSET ". $_GET["row_offset"])->fetchAll();
+$messages_arr = custom_pdo("select id,message_from,message,read_yet,date_of,message_type from messages where chat_id = :chat_id order by id desc limit 15 OFFSET :row_offset", [":chat_id" => $chat_id, ":row_offset" => $_GET["row_offset"]])->fetchAll();
 
-$messager_arr = $con->query("select id,first_name,last_name,avatar_picture from  users where id = ". $chat_recipient_id)->fetch();
-$messager_avatar_arr = $con->query("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = ". $messager_arr["id"] ." order by id desc limit 1")->fetch();
+$messager_arr = custom_pdo("select id,first_name,last_name,avatar_picture from  users where id = :recipient_id", [":recipient_id" => $chat_recipient_id])->fetch();
+$messager_avatar_arr = custom_pdo("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = :messager_id order by id desc limit 1", [":messager_id" => $messager_arr["id"]])->fetch();
 
 if($messager_avatar_arr[0] != "") {
 $messager_avatar_rotate_degree = $messager_avatar_arr["rotate_degree"];
@@ -132,7 +131,7 @@ array_push($echo_arr[0], [
 }
 
 #set all messages's read_yet to true
-$con->exec("update messages set read_yet = true where chat_id = ". $chat_id." and message_from != ". $_SESSION["user_id"]);
+custom_pdo("update messages set read_yet = true where chat_id = :chat_id and message_from != :base_user_id", [":chat_id" => $chat_id, ":base_user_id" => $_SESSION["user_id"]]);
 
 
 if($current_status_string == "Online") {
@@ -155,11 +154,8 @@ array_push($echo_arr, [
 
 
 echo json_encode($echo_arr);
+
 unset($con);
-
-
-
-
 
 
 ?>

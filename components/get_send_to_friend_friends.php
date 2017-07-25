@@ -22,11 +22,11 @@ $results_arr = $prepared->fetchAll();
 foreach($results_arr as $friend_arr) {
 
 // if target has delete or deactivated their account, or the current user has been blocked by the target.
-if($con->query("select id from account_states where user_id = ". $friend_arr["id"])->fetch()[0] != "" || $con->query("select id from blocked_users where user_ids = '".$friend_arr["id"]. "-" . $_SESSION["user_id"]."'")->fetch() != "") {	
+if(custom_pdo("select id from account_states where user_id = :user_id", [":user_id" => $friend_arr["id"]])->fetch()[0] != "" || custom_pdo("select id from blocked_users where user_ids = concat(:user_id, '-', :base_user_id)", [":user_id" => $friend_arr["id"], ":base_user_id" => $_SESSION["user_id"]])->fetch() != "") {	
 continue;
 }
 
-$friend_avatar_arr = $con->query("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = ". $friend_arr["id"] ." order by id desc limit 1")->fetch();
+$friend_avatar_arr = custom_pdo("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = :user_id order by id desc limit 1", [":user_id" => $friend_arr["id"]])->fetch();
 
 $friend_avatar_positions = explode(",",htmlspecialchars($friend_avatar_arr["positions"], ENT_QUOTES, "utf-8"));
 //if avatar positions does not exist 

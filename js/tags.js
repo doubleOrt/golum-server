@@ -66,7 +66,7 @@ callback();
 
 
 function addTagsToUserById(tag,callback) {
-	
+
 $.post({
 data:{"tag":tag},	
 url:"components/add_tags.php",

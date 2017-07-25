@@ -30,12 +30,12 @@ $post_comments_arr = $post_comments_arr_prepared->fetchAll();
 
 // now we want to append the comment the user wants to pin to the top to the beginning of the $post_comments_arr
 if(intval($_GET["pin_comment_to_top"]) !== 0) {
-array_unshift($post_comments_arr,$con->query("SELECT * FROM (SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE is_reply_to = comment_replies.id) AS replies, (SELECT type FROM reply_upvotes_and_downvotes WHERE user_id = ". $_SESSION["user_id"] ." AND comment_id = comment_replies.id) as base_user_opinion, (SELECT post_id from post_comments where id = ". $_GET["comment_id"] .") as reply_owner_post_id FROM comment_replies) comment_replies LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON comment_replies.user_id = post_votes.user_id2 AND reply_owner_post_id = post_votes.post_id2 WHERE comment_replies.comment_id = ". $_GET["comment_id"] ." and id = ". $_GET["pin_comment_to_top"])->fetch());
+array_unshift($post_comments_arr,custom_pdo("SELECT * FROM (SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE is_reply_to = comment_replies.id) AS replies, (SELECT type FROM reply_upvotes_and_downvotes WHERE user_id = :base_user_id AND comment_id = comment_replies.id) as base_user_opinion, (SELECT post_id from post_comments where id = :comment_id) as reply_owner_post_id FROM comment_replies) comment_replies LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON comment_replies.user_id = post_votes.user_id2 AND reply_owner_post_id = post_votes.post_id2 WHERE comment_replies.comment_id = :comment_id and id = :pin_comment_to_top", [":base_user_id" => $_SESSION["user_id"], ":comment_id" => $_GET["comment_id"], ":pin_comment_to_top" => $_GET["pin_comment_to_top"]])->fetch());
 }
 		
 		
 // this serves one purpose only, to add a background to comments and replies by original posters.
-$poster_id = $con->query("select posted_by from posts where id in (select post_id from post_comments where id = ". $_GET["comment_id"] .")")->fetch()[0];	
+$poster_id = custom_pdo("select posted_by from posts where id in (select post_id from post_comments where id = :comment_id)", [":comment_id" => $_GET["comment_id"]])->fetch()[0];	
 		
 for( $i = 0; $i < count($post_comments_arr); $i++ )	{		
 $post_comments_arr[$i]["original_post_by"] = $poster_id;

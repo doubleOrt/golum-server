@@ -4,7 +4,7 @@ require_once "logged_in_importants.php";
 
 if(isset($_POST["user_id"]) && filter_var($_POST["user_id"], FILTER_VALIDATE_INT) !== false) {	 
 
-$check_current_state = $con->query("select * from contacts where contact_of = ".$_SESSION["user_id"]." and contact = ".$_POST["user_id"])->fetch();
+$check_current_state = custom_pdo("select * from contacts where contact_of = :base_user_id and contact = :user_id", [":base_user_id" => $_SESSION["user_id"], ":user_id" => $_POST["user_id"]])->fetch();
 
 // if the contact is not added already
 if($check_current_state["id"] == "") {
@@ -19,10 +19,11 @@ echo "1";
 die();
 }	
 	
-$con->exec("insert into contacts (contact_of,contact,date_added) values(".$_SESSION["user_id"].",". $_POST["user_id"] .",'".date("Y/m/d H:i")."')");
+custom_pdo("insert into contacts (contact_of,contact,date_added) values(:base_user_id, :user_id, :date_of)", [":base_user_id" => $_SESSION["user_id"], ":user_id" => $_POST["user_id"], ":date_of" => date("Y/m/d H:i")]);
 
 // insert a notification
-$con->exec("insert into notifications (notification_from,notification_to,time,type) values (". $_SESSION["user_id"] .",". $_POST["user_id"] .",". time() .",6);");	
+custom_pdo("insert into notifications (notification_from,notification_to,time,type) values (:base_user_id, :user_id, :time,6)", [":base_user_id" => $_SESSION["user_id"], ":user_id" => $_POST["user_id"], ":time" => time()]);	
+
 $notification_id = $con->lastInsertId();
 $socket_message = [
 "update_type" => "1",
@@ -55,11 +56,11 @@ echo "0";
 }
 // if the contact is already added meaning the user wants to remove this contact
 else {
-$con->exec("delete from contacts where contact_of = ".$_SESSION["user_id"]." and contact = ".$_POST["user_id"]);
+custom_pdo("delete from contacts where contact_of = :base_user_id and contact = :user_id", [":base_user_id" => $_SESSION["user_id"], ":user_id" => $_POST["user_id"]]);
 
 /* nullify the "x is now following you" button inserted previously, just in case the user starts following someone and then immediately unfollows them, 
 else the receiver would be confused */
-$con->exec("delete from notifications where notification_from = ". $_SESSION["user_id"] ." and notification_to = ". $_POST["user_id"] ." and type = 6");
+custom_pdo("delete from notifications where notification_from = :base_user_id and notification_to = :user_id and type = 6", [":base_user_id" => $_SESSION["user_id"], ":user_id" => $_POST["user_id"]]);
 
 echo "1";	
 }

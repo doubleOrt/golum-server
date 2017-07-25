@@ -28,8 +28,8 @@ continue 2;
 }	
 }	
 
-$chat_portal_user_info_arr = $con->query("select * from users where id = ". $row["chat_recipient"])->fetch();
-$chat_portal_avatar_arr = $con->query("SELECT * FROM avatars WHERE id_of_user = ". $row["chat_recipient"] ." order by id desc limit 1")->fetch();	
+$chat_portal_user_info_arr = custom_pdo("select * from users where id = :user_id", [":user_id" => $row["chat_recipient"]])->fetch();
+$chat_portal_avatar_arr = custom_pdo("SELECT * FROM avatars WHERE id_of_user = :user_id order by id desc limit 1", [":user_id" => $row["chat_recipient"]])->fetch();	
 $chat_portal_avatar_positions = explode(",",$chat_portal_avatar_arr["positions"]);	
 
 if($chat_portal_avatar_arr[0] != "") {

@@ -85,8 +85,11 @@ $.post({
 url:"components/add_reply_to_comment.php",
 data:dataArr,
 success: function(data) {
+console.log(data);
+if(data != "") {	
 var data_arr = JSON.parse(data);
 callback(data_arr);
+}
 }	
 });
 	
@@ -257,7 +260,6 @@ data:{
 "type":$(this).attr("data-upvote-or-downvote")
 },
 success:function(data) {
-console.log(data);	
 thisUpvotesObject.removeClass('upvoteOrDownvoteActive');
 thisDownvotesObject.removeClass('upvoteOrDownvoteActive');	
 eval(data);	

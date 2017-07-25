@@ -13,8 +13,8 @@ $bad_login_limit = 6;// if user tries 6 times to login and fails, prevent him fr
 $lockout_time = 300; //the number of seconds the user will be locked out.
 
 //current info about user login fails and login counts.
-$first_failed_login = $con->query("select first_failed_login from users where user_name = '". $login_user_name_or_email ."'")->fetch()[0];
-$failed_login_count = $con->query("select failed_login_count from users where user_name = '". $login_user_name_or_email ."'")->fetch()[0];
+$first_failed_login = custom_pdo("select first_failed_login from users where user_name = :user_name_or_email or email_address = :user_name_or_email", [":user_name_or_email" => $login_user_name_or_email])->fetch()[0];
+$failed_login_count = custom_pdo("select failed_login_count from users where user_name = :user_name_or_email or email_address = :user_name_or_email", [":user_name_or_email" => $login_user_name_or_email])->fetch()[0];
 
 //if user is currently locked out.
 if(($failed_login_count >= $bad_login_limit) && (time() - $first_failed_login < $lockout_time)) {
@@ -38,11 +38,11 @@ $echo_arr[1] = "Materialize.toast('Wrong info',5000,'red');";
 
 if(time() - $first_failed_login > $lockout_time) {
 // first unsuccessful login since $lockout_time on the last one expired
-$con->query("update users set first_failed_login = ".time()." where user_name = '".$login_user_name_or_email."'");
-$con->query("update users set failed_login_count = 1 where user_name = '".$login_user_name_or_email."'");
+custom_pdo("update users set first_failed_login = :time where user_name = :user_name_or_email or email_address = :user_name_or_email", [":time" => time(), ":user_name_or_email" => $login_user_name_or_email]);
+custom_pdo("update users set failed_login_count = 1 where user_name = :user_name_or_email or email_address = :user_name_or_email", [":user_name_or_email" => $login_user_name_or_email]);
 } 
 else {
-$con->query("update users set failed_login_count = failed_login_count + 1 where user_name = '".$login_user_name_or_email."'");
+custom_pdo("update users set failed_login_count = (failed_login_count + 1) where user_name = :user_name_or_email or email_address = :user_name_or_email", [":user_name_or_email" => $login_user_name_or_email]);
 }	
 }
 else {
@@ -55,11 +55,11 @@ if( $login_arr[0] == "" || !password_verify($login_password,$login_arr["password
 $echo_arr[1] = "Materialize.toast('Wrong info',5000,'red');";	
 if(time() - $first_failed_login > $lockout_time) {
 // first unsuccessful login since $lockout_time on the last one expired
-$con->query("update users set first_failed_login = ".time()." where user_name = '".$login_user_name_or_email."'");
-$con->query("update users set failed_login_count = 1 where user_name = '".$login_user_name_or_email."'");
+custom_pdo("update users set first_failed_login = :time where user_name = :user_name_or_email or email_address = :user_name_or_email", [":time" => time(), ":user_name_or_email" => $login_user_name_or_email]);
+custom_pdo("update users set failed_login_count = 1 where user_name = :user_name_or_email or email_address = :user_name_or_email", [":user_name_or_email" => $login_user_name_or_email]);
 } 
 else {
-$con->query("update users set failed_login_count = failed_login_count + 1 where user_name = '".$login_user_name_or_email."'");
+custom_pdo("update users set failed_login_count = (failed_login_count + 1) where user_name = :user_name_or_email or email_address = :user_name_or_email", [":user_name_or_email" => $login_user_name_or_email]);
 }	
 
 }	
@@ -67,8 +67,8 @@ else {
 	
 $_SESSION["user_id"] = $login_arr["id"];
 
-if($con->query("SELECT * FROM account_states WHERE (type = 'deactivate' or type = 'delete') AND user_id = ". $login_arr["id"])->fetch()[0] != "") {
-$con->exec("DELETE FROM account_states WHERE (type = 'deactivate' or type = 'delete') AND user_id = ". $login_arr["id"]);	
+if(custom_pdo("SELECT * FROM account_states WHERE (type = 'deactivate' or type = 'delete') AND user_id = :user_id", [":user_id" => $login_arr["id"]])->fetch()[0] != "") {
+custom_pdo("DELETE FROM account_states WHERE (type = 'deactivate' or type = 'delete') AND user_id = :user_id limit 1", [":user_id" => $login_arr["id"]]);	
 }
 else {
 $echo_arr[0] = 1;	

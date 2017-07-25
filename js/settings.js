@@ -295,6 +295,7 @@ Materialize.toast("Confirmation Code Must Contain Numbers Only",3000,"red");
 return;
 }
 else {
+
 $.post({
 url:"components/confirm_email.php",
 data:{

@@ -6,7 +6,7 @@ require_once "logged_in_importants.php";
 
 if(isset($_POST["comment_id"]) && filter_var($_POST["comment_id"], FILTER_VALIDATE_INT) !== false) {
 
-$comment_arr = $con->query("select id,user_id, post_id from post_comments where id = ". $_POST["comment_id"])->fetch();
+$comment_arr = custom_pdo("select id,user_id, post_id from post_comments where id = :comment_id", [":comment_id" => $_POST["comment_id"]])->fetch();
 if($comment_arr["user_id"] != $_SESSION["user_id"]) {
 die();
 } 
@@ -19,12 +19,14 @@ $con->prepare("delete from notifications where (type = 7 or type = 8) and extra 
 $con->prepare("delete from reply_upvotes_and_downvotes  WHERE comment_id in (select id from comment_replies where comment_id = :comment_id)")->execute([":comment_id" => $_POST["comment_id"]]);
 $con->prepare("delete from comment_upvotes_and_downvotes where comment_id = :comment_id")->execute([":comment_id" => $_POST["comment_id"]]);
 $con->prepare("delete from comment_replies where comment_id = :comment_id")->execute([":comment_id" => $_POST["comment_id"]]);
-$con->exec("delete from post_comments where id = :comment_id limit 1")->execute([":comment_id" => $_POST["comment_id"]]);	
+$con->prepare("delete from post_comments where id = :comment_id limit 1")->execute([":comment_id" => $_POST["comment_id"]]);	
 
 
 echo "1";	
 }
 
 
+
+unset($con);
 
 ?>
