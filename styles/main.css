@@ -582,10 +582,14 @@ font-size:200% !important;
 }
 
 
+a {
+color:#2d8ace;	
+font-weight:500;
+}
 
 /* styling for hashtags */
 .hashtag {
-color:#2d8ace;
+color:#2d8ace;		
 font-weight:500;
 user-select:none;
 }

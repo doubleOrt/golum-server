@@ -12,11 +12,12 @@ $commenter_avatar_positions = [0,0];
 }
 
 //if the current comment is actually a comment reply inside another comment reply.
-$is_reply_to_markup = "";
+$is_reply_to = [];
 if(isset($comment_arr["is_reply_to"])) {
 if($comment_arr["is_reply_to"] != 0) {
-$is_reply_to_user_arr = custom_pdo("select first_name, last_name from users where id = :is_reply_to", $comment_arr["is_reply_to"])->fetch();
-$is_reply_to_markup = "<a href='#modal1' class='replyToFullname modal-trigger showUserModal view-user' data-user-id='". $comment_arr["is_reply_to"] ."'>". $is_reply_to_user_arr["first_name"] . " " . $is_reply_to_user_arr["last_name"] ."</a> ";	
+$is_reply_to_user_arr = custom_pdo("select id,first_name, last_name from users where id = :is_reply_to", [":is_reply_to" => $comment_arr["is_reply_to"]])->fetch();
+$is_reply_to[0] = $is_reply_to_user_arr["id"];
+$is_reply_to[1] = $is_reply_to_user_arr["first_name"] . " " . $is_reply_to_user_arr["last_name"];
 } 	
 }
 
@@ -34,6 +35,7 @@ return [
 "comment_downvotes_num" => htmlspecialchars($comment_arr["downvotes"], ENT_QUOTES, "utf-8"),
 "base_user_upvoted_comment" => ($comment_arr["base_user_opinion"] === "0" ? 1 : 0),
 "base_user_downvoted_comment" => ($comment_arr["base_user_opinion"] === "1" ? 1 : 0),
+"is_reply_to" => $is_reply_to,
 "comment_by_base_user" => htmlspecialchars($comment_by_base_user, ENT_QUOTES, "utf-8"),
 "comment_by_poster" => htmlspecialchars($comment_by_poster, ENT_QUOTES, "utf-8"),
 "comment_owner_vote" => htmlspecialchars($comment_arr["option_index"], ENT_QUOTES, "utf-8"),

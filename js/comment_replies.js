@@ -37,7 +37,7 @@ ajax_call_to_get_replies = $.get({
 url:"components/get_comment_replies.php",
 data:dataObj,
 success:function(data) {	
-
+console.log(data);
 var data_arr = JSON.parse(data);
 
 callback(data_arr)	
