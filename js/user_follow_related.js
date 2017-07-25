@@ -185,7 +185,7 @@ return `<div id='` + row_id + `' class='contactsSingleRow row showUserModal moda
 <div class='col l2 m3 s3 contactsAvatarRow'>
 <div class='contactsAvatarContainer'>
 <div class='contactsAvatarRotateContainer rotateContainer' style='margin-top:` + data["avatar_positions"][0] + `%;margin-left:` + data["avatar_positions"][1] + `%;'>
-<div class='contactsAvatarRotateDiv'>
+<div class='contactsAvatarRotateDiv' style='transform:rotate(` + (data["avatar_rotate_degree"] != "" ? data["avatar_rotate_degree"] : 0) + `deg)'>
 <img id='` + avatar_image_id + `' class='avatarImages' src='`+ (data["avatar_picture"] != "" ? data["avatar_picture"] : LetterAvatar(data["first_name"], 120)) +`' alt='Avatar'/>
 </div>
 </div>
@@ -203,9 +203,8 @@ return `<div id='` + row_id + `' class='contactsSingleRow row showUserModal moda
 <script>
 
 	$('#` + avatar_image_id + `').on('load',function(){
-		$(this).parent().css('transform','rotate("` + (data["rotate_degree"] != "" ? data["rotate_degree"] : 0) + `deg")');
 		fitToParent($(this));
-		adaptRotateWithMargin($(this),` + (data["rotate_degree"] != "" ? data["rotate_degree"] : 0) + `,false);
+		adaptRotateWithMargin($(this),` + (data["avatar_rotate_degree"] != "" ? data["avatar_rotate_degree"] : 0) + `,false);
 	});
 	
 </script>`;	
