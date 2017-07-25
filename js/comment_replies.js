@@ -102,6 +102,17 @@ var reply_comment_element = $(".singleComment[data-actual-comment-id=" + REPLIES
 
 if(data_arr[0] != "") {
 REPLIES_CONTAINER_ELEMENT.prepend(get_comment_markup(data_arr[0], 1));
+REPLIES_CONTAINER_ELEMENT.find(".singleComment[data-actual-comment-id='" + data_arr[0]["comment_id"] + "']").find(".dropdown-button").dropdown({
+inDuration: 300,
+outDuration: 225,
+constrain_width: false, // Does not change width of dropdown to that of the activator
+hover: false, // Activate on hover
+gutter: 0, // Spacing from edge
+belowOrigin: true, // Displays dropdown below the button
+alignment: 'left', // Displays dropdown with edge aligned to the left of button
+stopPropagation:true
+}
+);
 $('#replyToCommentTextarea').html("<span class='placeholder' style='color:#aaaaaa'>Type Reply...</span>");
 $('#replyToCommentTextarea').attr('data-state','0');
 // remove the empty now placeholder
@@ -285,7 +296,7 @@ clearTimeout(deleteReplyTimeout);
 });
 
 
-$(document).on("click",".deleteComment",function(){
+$(document).on("click",".deleteReply",function(){
 
 if(typeof $(this).attr("data-comment-id") == "undefined") {
 return false;	
@@ -305,6 +316,7 @@ $.post({
 url:"components/delete_reply.php",
 data:{"reply_id":replyId},
 success:function(data) {
+console.log(data);	
 if(data == "1") {
 if(typeof callback != "undefined") {
 callback();	

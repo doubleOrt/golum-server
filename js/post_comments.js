@@ -89,7 +89,6 @@ data:{
 "comment": comment
 },
 success: function(data) {
-console.log(data);	
 var data_arr = JSON.parse(data);
 callback(data_arr);
 }	
@@ -177,6 +176,17 @@ var commentSinglePostElement = $(".singlePost[data-actual-post-id=" + COMMENTS_C
 
 if(data_arr[0] != "") {
 COMMENTS_CONTAINER_ELEMENT.prepend(get_comment_markup(data_arr[0], 0));
+COMMENTS_CONTAINER_ELEMENT.find(".singleComment[data-actual-comment-id='" + data_arr[0]["comment_id"] + "']").find(".dropdown-button").dropdown({
+inDuration: 300,
+outDuration: 225,
+constrain_width: false, // Does not change width of dropdown to that of the activator
+hover: false, // Activate on hover
+gutter: 0, // Spacing from edge
+belowOrigin: true, // Displays dropdown below the button
+alignment: 'left', // Displays dropdown with edge aligned to the left of button
+stopPropagation:true
+}
+);
 $('#postCommentTextarea').html("<span class='placeholder' style='color:#aaaaaa'>Type Comment...</span>");
 $('#postCommentTextarea').attr('data-state','0');
 // remove the empty now placeholder

@@ -20,7 +20,7 @@ return `<div class='singleComment scaleHorizontallyCenteredItem row dont_change_
 `<a href='#' class='dropdown-button deleteCommentButton' data-activates='` + comment_settings_id + `'></a>
 <!-- Dropdown Structure -->
 <ul id='` + comment_settings_id + `' class='dropdown-content'>
-<li><a href='#!' class='deleteComment' data-comment-id='` + data["comment_id"] + `'>Delete</a></li>
+<li><a href='#!' class='` + (comment_or_reply == 0 ? "deleteComment" : "deleteReply") + `' data-comment-id='` + data["comment_id"] + `'>Delete</a></li>
 </ul>` : "") + `
 <div class='commenterAvatarContainerParent col l1 m1 s2'>
 <div class='avatarContainer commenterAvatarContainer dont_change_parent_background_when_clicked'>
