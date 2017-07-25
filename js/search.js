@@ -165,6 +165,7 @@ remove_secondary_loading(SEARCH_TAGS_RESULTS_CONTAINER);
 });
 
 
+
 });
 
 
@@ -307,11 +308,11 @@ var result_row_element_id = "searchResultRow" + data["id"];
 
 var user_row_markup = `
 
-<div id='` + result_row_element_id + `' class='row list_row showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["id"] + `'>
+<div id='` + result_row_element_id + `' class='row list_row showUserModal modal-trigger dont_change_parent_background_when_clicked_parent' data-target='user_modal' data-user-id='` + data["id"] + `'>
 
 <div class='col l1 m1 s2'>
 
-<div class='row_avatar_container avatarContainer'>
+<div class='row_avatar_container avatarContainer row_list_left_child dont_change_parent_background_when_clicked'>
 <div class='avatarContainerChild'>
 <div class='rotateContainer' style='position:relative;transform:none;display:inline-block;width:100%;height:100%;margin-top: ` + data["avatar_positions"][0] + `%;margin-left:` + data["avatar_positions"][1] + `%;'>
 <div class='avatarRotateDiv' style='transform: rotate(` + data["avatar_rotate_degree"] + `deg);'>
@@ -332,7 +333,7 @@ var user_row_markup = `
 </div><!-- end .row_infos_container -->
 
 <div class='col l3 m3 s5 list_row_right_container skewScaleItem'>
-<button class='row_button myBackground opacityChangeOnActive follow_user stopPropagationOnClick ` + (data["blocked_by_base_user"] != "0" ? "semi_transparent" : "") + `' ` + (data["blocked_by_base_user"] != "0" ? "disabled='disabled' data-blocked-by-base-user='1'" : "") + ` data-user-id='` + data["id"] + `'>` + (data["current_state"] == 0 ? "Follow +" : "Unfollow") + `</button>
+<button class='row_button myBackground opacityChangeOnActive follow_user dont_change_parent_background_when_clicked stopPropagationOnClick ` + (data["blocked_by_base_user"] != "0" ? "semi_transparent" : "") + `' ` + (data["blocked_by_base_user"] != "0" ? "disabled='disabled' data-blocked-by-base-user='1'" : "") + ` data-user-id='` + data["id"] + `'>` + (data["current_state"] == 0 ? "Follow +" : "Unfollow") + `</button>
 </div>
 </div>
 
@@ -343,12 +344,11 @@ var user_row_markup = `
 		adaptRotateWithMargin($(this), ` + (data["avatar_rotate_degree"] != "" ? data["avatar_rotate_degree"] : 0) + `,false);
 	});
 	
-	Waves.attach( "#` + result_row_element_id + `" , ['waves-block']);
-	Waves.init();
-
 </script>
 </div><!-- end .list_row -->`;
 	
 return user_row_markup;	
 }
+
+
 

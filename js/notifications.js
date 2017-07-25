@@ -85,7 +85,7 @@ var random_num = Math.floor(Math.random() * 1000000);
 // user reacting to your post (voting and like/disliking)
 if(notification_arr["notification_type"] == 1) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive openSinglePost modal-trigger' data-read-yet='`+ (notification_arr[`read_yet`] != `` ? `true` : `false`) +`' data-target='singlePostModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active openSinglePost modal-trigger' data-read-yet='`+ (notification_arr[`read_yet`] != `` ? `true` : `false`) +`' data-target='singlePostModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
@@ -113,7 +113,7 @@ return `
 // user commented on your post
 if(notification_arr["notification_type"] == 2) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive showPostComments modal-trigger' data-target='commentsModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra2"]  +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active showPostComments modal-trigger' data-target='commentsModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra2"]  +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
@@ -140,7 +140,7 @@ return `
 // replies
 if(notification_arr["notification_type"] == 3) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive  modal-trigger addReplyToComment' data-target='commentRepliesModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra3"]  +`' data-comment-id='`+ notification_arr["notification_extra"] +`' data-actual-post-id='`+ notification_arr["notification_extra2"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active  modal-trigger addReplyToComment' data-target='commentRepliesModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra3"]  +`' data-comment-id='`+ notification_arr["notification_extra"] +`' data-actual-post-id='`+ notification_arr["notification_extra2"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
@@ -168,7 +168,7 @@ return `
 // user sent you a post (wants to share a post with you)
 if(notification_arr["notification_type"] == 4) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive openSinglePost modal-trigger' data-target='singlePostModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active openSinglePost modal-trigger' data-target='singlePostModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
@@ -195,7 +195,7 @@ return `
 // user favorited your post
 if(notification_arr["notification_type"] == 5) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive openSinglePost modal-trigger' data-target='singlePostModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active openSinglePost modal-trigger' data-target='singlePostModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
@@ -222,7 +222,7 @@ return `
 // user started following you
 if(notification_arr["notification_type"] == 6) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive showUserModal modal-trigger' data-notification-id='`+ notification_arr["notification_id"] +`' data-target='user_modal' data-user-id='`+ notification_arr["notification_sender_info"]["id"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active showUserModal modal-trigger' data-notification-id='`+ notification_arr["notification_id"] +`' data-target='user_modal' data-user-id='`+ notification_arr["notification_sender_info"]["id"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
@@ -249,7 +249,7 @@ return `
 // user upvoted your comment to a post
 if(notification_arr["notification_type"] == 7) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive showPostComments modal-trigger' data-target='commentsModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra2"]  +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active showPostComments modal-trigger' data-target='commentsModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra2"]  +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
@@ -276,7 +276,7 @@ return `
 // user downvoted your comment to a post
 if(notification_arr["notification_type"] == 8) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive showPostComments modal-trigger' data-target='commentsModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra2"]  +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active showPostComments modal-trigger' data-target='commentsModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra2"]  +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
@@ -303,7 +303,7 @@ return `
 // user upvoted your reply to a comment or reply
 if(notification_arr["notification_type"] == 9) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive  modal-trigger addReplyToComment' data-target='commentRepliesModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra3"]  +`' data-comment-id='`+ notification_arr["notification_extra"] +`' data-actual-post-id='`+ notification_arr["notification_extra2"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active  modal-trigger addReplyToComment' data-target='commentRepliesModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra3"]  +`' data-comment-id='`+ notification_arr["notification_extra"] +`' data-actual-post-id='`+ notification_arr["notification_extra2"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
@@ -330,7 +330,7 @@ return `
 // user downvoted your reply to a comment
 if(notification_arr["notification_type"] == 10) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive  modal-trigger addReplyToComment' data-target='commentRepliesModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra3"]  +`' data-comment-id='`+ notification_arr["notification_extra"] +`' data-actual-post-id='`+ notification_arr["notification_extra2"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active  modal-trigger addReplyToComment' data-target='commentRepliesModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-pin-comment-to-top='`+ notification_arr["notification_extra3"]  +`' data-comment-id='`+ notification_arr["notification_extra"] +`' data-actual-post-id='`+ notification_arr["notification_extra2"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>
@@ -357,7 +357,7 @@ return `
 // user reacted to a post you sent to him
 if(notification_arr["notification_type"] == 11) {
 return `
-<div class='singleNotification scaleHorizontallyCenteredItem myGreyBackgroundOnActive openSinglePost modal-trigger' data-target='singlePostModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
+<div class='singleNotification scaleHorizontallyCenteredItem lightgrey_background_on_active openSinglePost modal-trigger' data-target='singlePostModal' data-notification-id='`+ notification_arr["notification_id"] +`' data-actual-post-id='`+ notification_arr["notification_extra"] +`' data-notification-extra='` + notification_arr["notification_extra"] + `' data-notification-extra2='` + notification_arr["notification_extra2"] + `' data-notification-extra3='` + notification_arr["notification_extra3"] + `'>
 <div class='notificationsAvatarContainer'>
 <div class='avatarContainer'>
 <div class='avatarContainerChild showUserModal modal-trigger' data-target='user_modal' data-user-id='` + notification_arr["notification_sender_info"]["id"] + `' ` + notification_arr[`notification_from`] + `'>

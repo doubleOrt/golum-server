@@ -208,12 +208,12 @@ opacity:.4;
 
 
 
-/* .myGreyBackgroundOnActive mostly comments, notifications and replies have this class. */
-.myGreyBackgroundOnActive {
+/* .lightgrey_background_on_active */
+.lightgrey_background_on_active {
 -webkit-transition:background-color .2s ease-out;
 }
 
-.myGreyBackgroundOnActive:active {
+.lightgrey_background_on_active:active {
 background-color:#ebeaea;	
 }
  

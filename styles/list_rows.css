@@ -15,10 +15,6 @@ user-select:none;
 border-bottom:none;	
 }
 
-.list_row:active {
-background-color:#f4f4f4;
-}
-
 .list_row .col {
 height:100%;	
 }

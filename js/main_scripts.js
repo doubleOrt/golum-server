@@ -206,5 +206,30 @@ setTimeout(function(){thisItem.removeClass("bottomTabsItemActiveColor");},30);
 });
 
 
+
+
+
+
+/* this whole thing is so that rows don't change their background color due to event 
+bubblings that would be outside of our control if we didn't implement the active things 
+with the following snippet (e.g "follow +" button would be clicked, and the event would 
+bubble to the row, which would then be :active-ed, there seemed to be no way around 
+that, event.stopPropagation() did not work, and there was no css way to do it) */
+var add_active_class_to_this_row_timeout;
+var this_row;
+$(document).on("touchstart", ".dont_change_parent_background_when_clicked_parent", function(event){
+if(!$(event.target).hasClass("dont_change_parent_background_when_clicked") && $(event.target).parents(".dont_change_parent_background_when_clicked").length < 1) {
+this_row = $(this);	
+add_active_class_to_this_row_timeout = setTimeout(function(){
+this_row.addClass("lightgrey_background_on_active");	
+}, 200);
+}
+}).on("touchend", function(){
+if(typeof this_row != "undefined") {	
+this_row.removeClass("lightgrey_background_on_active");	
+}
+});
+
+
 });
 

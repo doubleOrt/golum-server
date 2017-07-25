@@ -180,7 +180,7 @@ function get_follow_related_row_markup(data) {
 var avatar_image_id = "avatar" + Math.floor(Math.random()*1000000);
 var row_id = "contact" + Math.floor(Math.random()*1000000);
 
-return `<div id='` + row_id + `' class='contactsSingleRow row showUserModal modal-trigger' data-target='user_modal' data-user-id='` + data["id"] +`'>
+return `<div id='` + row_id + `' class='contactsSingleRow row showUserModal modal-trigger lightgrey_background_on_active' data-target='user_modal' data-user-id='` + data["id"] +`'>
 
 <div class='col l2 m3 s3 contactsAvatarRow'>
 <div class='contactsAvatarContainer'>
@@ -207,9 +207,6 @@ return `<div id='` + row_id + `' class='contactsSingleRow row showUserModal moda
 		fitToParent($(this));
 		adaptRotateWithMargin($(this),` + (data["rotate_degree"] != "" ? data["rotate_degree"] : 0) + `,false);
 	});
-	
-	Waves.attach('#` + row_id + `', ['waves-block']);
-	Waves.init();
 	
 </script>`;	
 }
@@ -280,7 +277,9 @@ remove_secondary_loading(SHOW_USER_FOLLOWINGS_CONTAINER_ELEMENT);
 
 
 // when users want to follow/unfollow another user 
-$(document).on("click",".follow_user",function(){
+$(document).on("click",".follow_user",function(e){
+
+e.stopPropagation();
 
 if(typeof $(this).attr("data-user-id") == "undefined") {
 return false;

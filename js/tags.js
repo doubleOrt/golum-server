@@ -92,10 +92,10 @@ callback(data);
 
 function generate_tag_row_mark_up(tag, total_posts, total_followers, sample_image_path, current_state) {
 
-return `<div class='row tag_row list_row getTagPosts modal-trigger' data-tag='` + tag + `' data-target='tagPostsModal'>
+return `<div class='row tag_row list_row getTagPosts modal-trigger dont_change_parent_background_when_clicked_parent' data-tag='` + tag + `' data-target='tagPostsModal'>
 
 <div class='col l1 m1 s3 tag_sample_image_container opacityChangeOnActive stopPropagationOnClick'>
-<div class='tag_sample_image fadeIn' style='background:url(\"` + sample_image_path + `\"); background-size:cover; background-position:center;'>
+<div class='tag_sample_image row_list_left_child fadeIn dont_change_parent_background_when_clicked' style='background:url(\"` + sample_image_path + `\"); background-size:cover; background-position:center;'>
 </div>
 </div>
 
@@ -109,7 +109,7 @@ return `<div class='row tag_row list_row getTagPosts modal-trigger' data-tag='` 
 </div>
 
 <div class='col l3 m3 s5 list_row_right_container skewScaleItem'>
-` + (typeof current_state != "undefined" ? (`<a href='#' class='row_button myBackground opacityChangeOnActive addTagFromTagPostsModal stopPropagationOnClick' data-tag='` + tag + `' data-current-state='` + current_state + `'>` + (current_state == 0 ? "Follow +" : "Unfollow") + `</a>`) : "") + `
+` + (typeof current_state != "undefined" ? (`<a href='#' class='row_button myBackground opacityChangeOnActive addTagFromTagPostsModal stopPropagationOnClick dont_change_parent_background_when_clicked' data-tag='` + tag + `' data-current-state='` + current_state + `'>` + (current_state == 0 ? "Follow +" : "Unfollow") + `</a>`) : "") + `
 </div>
 
 </div>
