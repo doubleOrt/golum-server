@@ -3,8 +3,13 @@
 
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
+require_once "file_upload_custom_functions.php";
+
 
 $echo_arr = [[], 0];
+
+$MAXIMUM_FILE_SIZE = 5000000;
+
 
 if(isset($_FILES["the_file"]) && isset($_POST["chat_id"]) && filter_var($_POST["chat_id"], FILTER_VALIDATE_INT) !== false) {
 
@@ -14,24 +19,25 @@ $upload_to = "../users/" . $_SESSION["user_id"] . "/sentFiles/";
 //the extension of the uploaded file 
 $upload_pathinfo = strtolower(pathinfo($upload_to . basename($_FILES["the_file"]["name"]),PATHINFO_EXTENSION));
 
-//check if file is smaller than 5mb
-if($_FILES["the_file"]["size"] < 5000000) {
-//check if file is a jpg, png, or gif.
-if($upload_pathinfo == "jpeg" || $upload_pathinfo == "jpg" || $upload_pathinfo == "png" || $upload_pathinfo == "gif") {
-	
-//move the uploaded file
-if(move_uploaded_file($_FILES["the_file"]["tmp_name"],$upload_to . basename($_FILES["the_file"]["name"]))) {
-
 //what is going to be the id of the new avatar picture ? we get this by getting the id of the last row and adding 1 to it.
 $what_id_query = custom_pdo("SELECT count(id) FROM sent_files where id_of_user = :base_user_id", [":base_user_id" => $_SESSION["user_id"]])->fetch();
-
 $what_id = $what_id_query[0] > 0 ? $what_id_query[0] + 1 : 1;
 
-//this is the new path to the avatar.
-$new_path = "users/". $_SESSION["user_id"] ."/sentFiles/" . "$what_id" . "." . $upload_pathinfo;
+$storagePath = "../users/". $_SESSION["user_id"] ."/sentFiles/"; // this is relative to this script, better use absolute path.
+$new_name = $what_id;
+$allowedMimes = array('image/png', 'image/jpg', 'image/gif', 'image/pjpeg', 'image/jpeg');
 
-//rename the file and check if it is successful
-if(rename($upload_to . basename($_FILES["the_file"]["name"]) , "../" . $new_path)) {
+$upload_result = upload($_FILES["the_file"]["tmp_name"], $storagePath, $new_name, $allowedMimes, $MAXIMUM_FILE_SIZE);
+
+
+// if upload failed
+if(!is_array($upload_result) || count($upload_result) < 2 || $upload_result[0] !== true) {
+$echo_arr[1] = $upload_result;
+} 	
+else {	
+
+//this is the new path to the avatar.
+$new_path = "users/". $_SESSION["user_id"] ."/sentFiles/" . $what_id . "." . $upload_result[1];
 
 //add a new row to the sent_files table, check if it is successful.
 $insert_into_sent_files = custom_pdo("INSERT INTO sent_files (id_of_user,path,date_of) values(:base_user_id, :new_path, :date_of)", [":base_user_id" => $_SESSION["user_id"], ":new_path" => $new_path, ":date_of" => date("Y/m/d H:i")]);
@@ -97,26 +103,10 @@ $echo_arr[1] = "Something Went Wrong, Sorry!";
 die();		
 }
 }
-else {
-$echo_arr[1] = "Something Went Wrong, Sorry!";
-die();			
+
+
 }
-}
-else {
-$echo_arr[1] = "Something Went Wrong, Sorry!";
-die();	
-}
-}
-else {
-$echo_arr[1] = "Image Type Must Be Either \"JPEG\", \"JPG\" \"PNG\" Or \"GIF\" !";
-die();
-}
-}
-else {
-$echo_arr[1] = "Image Size Must Be Smaller Than 5MB";
-die();	
-}
-}
+
 
 
 echo json_encode($echo_arr);
