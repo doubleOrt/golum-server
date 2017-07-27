@@ -112,7 +112,7 @@ $echo_arr[0] = "var info = {
 'avatar_rotate_degree': ". htmlspecialchars($avatar_rotate_degree, ENT_QUOTES, "utf-8") .",
 'personality': '". htmlspecialchars($user_is_trendy_or_grumpy, ENT_QUOTES, "utf-8") ."',
 'gender': '". htmlspecialchars($user_modal_info_arr["gender"], ENT_QUOTES, "utf-8") ."',
-'country': '". htmlspecialchars($user_modal_info_arr["country"], ENT_QUOTES, "utf-8") ."',
+'country': '". htmlspecialchars($user_modal_info_arr["country"], ENT_QUOTES, "utf-8") ."', 
 'birthdate': '". htmlspecialchars($user_modal_info_arr["birthdate"], ENT_QUOTES, "utf-8") ."',
 'age_in_years': '". htmlspecialchars($user_age_in_years, ENT_QUOTES, "utf-8") ."',
 'sign_up_date': '". htmlspecialchars($user_modal_info_arr["sign_up_date"], ENT_QUOTES, "utf-8") ."',

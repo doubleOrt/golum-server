@@ -25,7 +25,7 @@ if(isset($_POST["country"])) {
 if($_POST["country"] != "") {		
 $new_country = $_POST["country"];
 $prepared = $con->prepare("update users set country = :country where id = ".$_SESSION["user_id"]);
-$prepared->bindParam(":country",$new_country);
+$prepared->bindParam(":country", $new_country);
 $prepared->execute();
 }
 }
