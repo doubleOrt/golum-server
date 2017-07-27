@@ -1,8 +1,10 @@
 <?php
 require_once "common_requires.php";
 
+
 // deal with session fixation
 session_regenerate_id(true);
+$_SESSION["nein"] = "meh";
 
 $echo_arr = [0,""];
 

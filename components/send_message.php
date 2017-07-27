@@ -72,7 +72,7 @@ array_push($echo_arr[0],[
 "id" => htmlspecialchars($messager_arr["id"], ENT_QUOTES, "utf-8"),
 "first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
 "last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
-"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar" => ($messager_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
 "avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
 "avatar_positions" => $messager_avatar_positions
 ]

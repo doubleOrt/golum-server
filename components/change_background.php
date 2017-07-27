@@ -50,7 +50,7 @@ $update_users = custom_pdo("UPDATE USERS SET background_path = :new_path where i
 //if query was successful
 if($update_users->rowCount() > 0) {
 // set the first index of $echo_arr to the path of the uploaded image.	
-$echo_arr[0] = htmlspecialchars($new_path, ENT_QUOTES, "utf-8");
+$echo_arr[0] = htmlspecialchars($SERVER_URL . $new_path, ENT_QUOTES, "utf-8");
 }	
 else {
 $echo_arr[1] = "Something Went Wrong, Sorry!";

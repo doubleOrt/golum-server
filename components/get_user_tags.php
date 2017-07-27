@@ -23,7 +23,7 @@ array_push($echo_arr, [
 "tag" => htmlspecialchars($row["tag"], ENT_QUOTES, "utf-8"),
 "total_posts" => htmlspecialchars($row["total_posts"], ENT_QUOTES, "utf-8"),
 "total_followers" => htmlspecialchars($row["total_followers"], ENT_QUOTES, "utf-8"),
-"sample_image_path" => htmlspecialchars($sample_image_path, ENT_QUOTES, "utf-8"),
+"sample_image_path" => $SERVER_URL . htmlspecialchars($sample_image_path, ENT_QUOTES, "utf-8"),
 ]);
 }
 

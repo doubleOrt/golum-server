@@ -147,16 +147,14 @@ var imagesContainerChildren = "";
 if(data["post_type"] != 1) {	
 for(x = 0; x < data["post_type"]; x++) {
 	
-var image_src = "posts/" + data["post_id"] + "-" + x + "." + data["post_file_types"][x];
-
 var random_num1 = Math.floor(Math.random()*1000000);
 var image_id = "image" + random_num1;
 
 imagesContainerChildren += `
-<div class='col ` + container_grids[x] + ` postSingleImageContainer' data-option-index='` + x + `' style='` + required_height + `' data-image-path='` + image_src + `'>
-<img class='postSingleImageContainerImage' id='` + image_id + `' src='` + image_src + `' alt='Photo ` + x + `'/>
+<div class='col ` + container_grids[x] + ` postSingleImageContainer' data-option-index='` + x + `' style='` + required_height + `' data-image-path='` + data["post_images"][i] + `'>
+<img class='postSingleImageContainerImage' id='` + image_id + `' src='` + data["post_images"][i] + `' alt='Photo ` + x + `'/>
 </div><!-- end .postSingleImageContainer -->
-<div class='col ` + container_grids[x] + ` postSingleImageContainer vote_holder' data-option-index='` + x + `' style='` + required_height + `position:absolute;left:` + ((x == 1 || x == 3) ? "50%" : "0%") + `;top:` + ((x == 2 || x == 3) ? "50%" : "0%") + `' data-image-path='` + image_src + `'>
+<div class='col ` + container_grids[x] + ` postSingleImageContainer vote_holder' data-option-index='` + x + `' style='` + required_height + `position:absolute;left:` + ((x == 1 || x == 3) ? "50%" : "0%") + `;top:` + ((x == 2 || x == 3) ? "50%" : "0%") + `' data-image-path='` + data["post_images"][i] + `'>
 </div>
 <script>
 
@@ -171,19 +169,17 @@ fitToParent('#` + image_id + `');
 // need to bend some rules and such for those type 1 posts. (the ones that you can like or dislike instead of choose)
 else {
 
-image_src = "posts/" + data["post_id"] + "-0." + data["post_file_types"][0];
-
 var image_id = "image" + random_num;
 
 imagesContainerChildren += `
-<div class='col ` + container_grids[0] + ` postSingleImageContainer' style='` + required_height + `' data-image-path='` + image_src + `'>
-<img class='postSingleImageContainerImage' id='` + image_id + `' src='` + image_src + `' alt='Photo 0'/>
+<div class='col ` + container_grids[0] + ` postSingleImageContainer' style='` + required_height + `' data-image-path='` + data["post_images"][0] + `'>
+<img class='postSingleImageContainerImage' id='` + image_id + `' src='` + data["post_images"][0] + `' alt='Photo 0'/>
 </div><!-- end .postSingleImageContainer -->
-<div class='col l6 m6 s6 postSingleImageContainer vote_holder' data-option-index='` + 0 + `' style='` + required_height + `position:absolute;left:0%;top:0%;' data-image-path='` + image_src + `'>
+<div class='col l6 m6 s6 postSingleImageContainer vote_holder' data-option-index='` + 0 + `' style='` + required_height + `position:absolute;left:0%;top:0%;' data-image-path='` + data["post_images"][0] + `'>
 </div>
-<div class='col l6 m6 s6 postSingleImageContainer' data-option-index='0' data-image-path='` + image_src +`' style='height:100%;transform:translate(0,-100%);background:transparent'>
+<div class='col l6 m6 s6 postSingleImageContainer' data-option-index='0' data-image-path='` + data["post_images"][0] +`' style='height:100%;transform:translate(0,-100%);background:transparent'>
 </div><!-- end .postSingleImageContainer -->
-<div class='col l6 m6 s6 postSingleImageContainer vote_holder' data-option-index='` + 1 + `' style='` + required_height + `position:absolute;left:50%;top:0%;' data-image-path='` + image_src + `'>
+<div class='col l6 m6 s6 postSingleImageContainer vote_holder' data-option-index='` + 1 + `' style='` + required_height + `position:absolute;left:50%;top:0%;' data-image-path='` + data["post_images"][0] + `'>
 </div><!-- end .postSingleImageContainer -->
 <script>
 

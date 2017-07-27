@@ -5,10 +5,7 @@ require_once "db_connection.php";
 session_start();
 
 
-//without this snippet, nothing would be pushed into the "toasts" session on the first push because it would be equal to null and you can't push to null. 
-if(!isset($_SESSION["toasts"])) {
-$_SESSION["toasts"] = [];	 	
-}
+$SERVER_URL = "http://192.168.1.100/golum/";
 
 
 function time_to_string($time) {
@@ -50,7 +47,12 @@ global $con;
 try {
 $prepared = $con->prepare($query);
 foreach($params as $key => &$value) {
+if(filter_var($value, FILTER_VALIDATE_INT) !== false) {
+$prepared->bindValue($key, $value, PDO::PARAM_INT);	
+}
+else {
 $prepared->bindParam($key, $value);	
+}
 }
 $prepared->execute();
 return $prepared;	

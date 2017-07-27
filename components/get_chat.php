@@ -50,7 +50,7 @@ if(count($chat_recipient_info_arr) > 0) {
 	
 $current_status_string	= "Online";
 
-$messages_arr = custom_pdo("select id,message_from,message,read_yet,date_of,message_type from messages where chat_id = :chat_id order by id desc limit 15 OFFSET :row_offset", [":chat_id" => $chat_id, ":row_offset" => $_GET["row_offset"]])->fetchAll();
+$messages_arr = custom_pdo("select id,message_from,message,read_yet,date_of,message_type from messages where chat_id = :chat_id order by id desc limit 15 OFFSET :row_offset", [":chat_id" => $chat_id, ":row_offset" => ((int) $_GET["row_offset"])])->fetchAll();
 
 $messager_arr = custom_pdo("select id,first_name,last_name,avatar_picture from  users where id = :recipient_id", [":recipient_id" => $chat_recipient_id])->fetch();
 $messager_avatar_arr = custom_pdo("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = :messager_id order by id desc limit 1", [":messager_id" => $messager_arr["id"]])->fetch();
@@ -87,7 +87,7 @@ $sender_info = [
 "id" => $messager_arr["id"],
 "first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
 "last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
-"avatar" => htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar" => ($messager_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
 "avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
 "avatar_positions" => $messager_avatar_positions
 ];	
@@ -118,7 +118,7 @@ array_push($echo_arr[0], [
 else if($messages_arr[$x]["message_type"] == "file-message") {
 $file_arr = $con->query("select * from sent_files where id = ". intval($messages_arr[$x]["message"]))->fetch();
 array_push($echo_arr[0], [
-"message" => $file_arr["path"],
+"message" => $SERVER_URL . $file_arr["path"],
 "message_id" => $messages_arr[$x]["id"],
 "message_type" => 2,
 "read_yet" => htmlspecialchars($messages_arr[$x]["read_yet"], ENT_QUOTES, "utf-8"), 

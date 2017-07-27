@@ -53,7 +53,7 @@ $update_users = custom_pdo("UPDATE USERS SET avatar_picture = :new_path where id
 
 //if query was successful
 if($update_users->rowCount() > 0) {
-$echo_arr[0] = htmlspecialchars($new_path, ENT_QUOTES, "utf-8");
+$echo_arr[0] = htmlspecialchars($SERVER_URL . $new_path, ENT_QUOTES, "utf-8");
 }	
 else {
 $echo_arr[1] = "Something Went Wrong, Sorry :(";

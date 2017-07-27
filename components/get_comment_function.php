@@ -1,7 +1,10 @@
 <?php
+require_once "common_requires.php";
+
+
 
 function get_comment($comment_arr) {
-global $con;
+global $con, $SERVER_URL;
 
 $commenter_arr = custom_pdo("select id,first_name, last_name, avatar_picture from users where id = :user_id", [":user_id" => $comment_arr["user_id"]])->fetch();
 $commenter_avatar_arr = custom_pdo("SELECT positions, rotate_degree FROM avatars WHERE id_of_user = :user_id order by id desc limit 1", [":user_id" => $comment_arr["user_id"]])->fetch();
@@ -43,7 +46,7 @@ return [
 	"id" => htmlspecialchars($commenter_arr["id"], ENT_QUOTES, "utf-8"),
 	"first_name" => htmlspecialchars($commenter_arr["first_name"], ENT_QUOTES, "utf-8"),
 	"last_name" => htmlspecialchars($commenter_arr["last_name"], ENT_QUOTES, "utf-8"),
-	"avatar_picture" => htmlspecialchars($commenter_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+	"avatar_picture" => ($commenter_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($commenter_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
 	"avatar_rotate_degree" => ($commenter_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($commenter_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0),
 	"avatar_positions" => $commenter_avatar_positions
 	]

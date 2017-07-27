@@ -39,7 +39,7 @@ array_push($echo_arr, [
 "id" => htmlspecialchars($friend_arr["id"], ENT_QUOTES, "utf-8"),
 "first_name" => htmlspecialchars($friend_arr["first_name"], ENT_QUOTES, "utf-8"),
 "last_name" => htmlspecialchars($friend_arr["last_name"], ENT_QUOTES, "utf-8"),
-"avatar_picture" => htmlspecialchars($friend_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+"avatar_picture" => ($friend_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($friend_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
 "avatar_rotate_degree" => htmlspecialchars($friend_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8"),
 "avatar_positions" => $friend_avatar_positions,
 "current_state" => $friend_arr["current_state"]

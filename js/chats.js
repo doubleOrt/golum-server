@@ -36,7 +36,6 @@ url:"components/get_chat.php",
 data:dataObj,
 type:"get",
 success: function(data) {	
-console.log(data);
 var data_arr = JSON.parse(data);
 callback(data_arr);
 chat_prevent_multiple_calls = false;
