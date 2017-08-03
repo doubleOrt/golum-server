@@ -61,6 +61,7 @@ return array(
 'ips'=>'application/x-ipscript',
 'ipx'=>'application/x-ipix',
 'jpg'=>'image/jpeg',
+'jpeg'=>'image/jpeg',
 'js'=>'application/x-javascript',
 'kar'=>'audio/midi',
 'latex'=>'application/x-latex',
@@ -191,10 +192,13 @@ finfo_close($finfo);
 return $mime;
 }
 
+
+
+
+
 function upload($filePath, $destinationDir, $file_name, array $allowedMimes = array(), $maximum_file_size = 5000000) {
 
 $extMapping = getExtensionToMimeTypeMapping();
-
 
 if (!is_file($filePath) || !is_dir($destinationDir)) {
 return "Sorry, something went wrong :(";
@@ -254,7 +258,7 @@ unlink($newFilePath);
 return "Uploaded files cannot be larger than ". $maximum_file_size/1000000 ."MB";
 }
 
-if($mime == "jpg" || $mime == "jpeg") {
+if($mime == "image/jpeg" || $mime == "image/pjpeg") {
 $exif = exif_read_data($newFilePath);
 
 if(isset($exif["Orientation"])) {
@@ -266,7 +270,6 @@ resample($newFilePath,$image_width,$orientation);
 
 return [true, $ext];
 }
-
 
 
 
