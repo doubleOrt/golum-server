@@ -6,7 +6,8 @@ require_once "initialization.php";
 $echo_arr = [0,""];
 
 // the google console api project client ID
-$CLIENT_ID = "154556605033-dnrn5oc0hub7gslgl61aa2qpeo0rctmc.apps.googleusercontent.com";
+$CLIENT_ID = "567008101486-pq9v5tecvnvk1fehkk2g9hmqh4pti30q.apps.googleusercontent.com";
+
 
 if(isset($_POST["id"])) {
 
@@ -101,6 +102,12 @@ $user_id = $con->lastInsertId();
 cannot have an avatar image in the users table without a corresponding row in 
 the avatars table. */
 if($con->prepare("insert into avatars (id_of_user, avatar_path, date_of, positions, rotate_degree) values (:user_id, :avatar_path, :date_of, '0,0', '0')")->execute([":user_id" => $user_id, ":avatar_path" => $avatar_picture, ":date_of" => $sign_up_date])) {
+
+// here we create a directory for the user which has the user's id, later we will put all media of a user inside this directory.
+mkdir("../users/" . $user_id);
+mkdir("../users/" . $user_id . "/media");
+mkdir("../users/" . $user_id . "/media/backgrounds");
+mkdir("../users/" . $user_id . "/sentFiles");
 
 // everything was successful, return the newly created user's user_id.
 return $user_id;

@@ -61,13 +61,14 @@ $prepared->bindParam(":sign_up_date", $sign_up_date);
 
 
 if($prepared->execute()) {
-// here we create a directory for the user which has the user's id, later we will put all media of a user inside this directory.
-mkdir("../users/" . $con->lastInsertId());
-mkdir("../users/" . $con->lastInsertId() . "/media");
-mkdir("../users/" . $con->lastInsertId() . "/media/backgrounds");
-mkdir("../users/" . $con->lastInsertId() . "/sentFiles");
-
+	
 $last_id = $con->lastInsertId();
+	
+// here we create a directory for the user which has the user's id, later we will put all media of a user inside this directory.
+mkdir("../users/" . $last_id);
+mkdir("../users/" . $last_id . "/media");
+mkdir("../users/" . $last_id . "/media/backgrounds");
+mkdir("../users/" . $last_id . "/sentFiles");
 
 // set the user_id session to the user's id in our database, this is required in order for our app to identify that the user is logged in.
 $_SESSION["user_id"] = $last_id;
