@@ -50,7 +50,7 @@ array_push($echo_arr[0], [
 "last_name" => htmlspecialchars($row["last_name"], ENT_QUOTES, "utf-8"),
 "user_name" => htmlspecialchars($row["user_name"], ENT_QUOTES, "utf-8"),
 "gender" => htmlspecialchars($row["gender"], ENT_QUOTES, "utf-8"),
-"avatar_picture" => ($row["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($row["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
+"avatar_picture" => ($row["avatar_picture"] != "" ? (preg_match('/https?:\/\/[^ ]+?(?:\.jpg|\.png|\.gif)/', $row["avatar_picture"]) ? $row["avatar_picture"] : ($SERVER_URL . htmlspecialchars($row["avatar_picture"], ENT_QUOTES, "utf-8"))) : ""),
 "avatar_positions" => [htmlspecialchars($avatar_positions[0], ENT_QUOTES, "utf-8") , htmlspecialchars($avatar_positions[1], ENT_QUOTES, "utf-8")],
 "avatar_rotate_degree" => htmlspecialchars($avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8")
 ]);

@@ -56,7 +56,7 @@ array_push($echo_arr, [
 'user_name' => htmlspecialchars($row["user_name"], ENT_QUOTES, "utf-8"),
 'current_state' => ($row["current_state"] == "" ? 0 : 1),
 'blocked_by_base_user' => ($row["blocked_by_base_user"] == "" ? 0 : 1),
-'avatar' => ($row["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($row["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
+'avatar' => ($row["avatar_picture"] != "" ? (preg_match('/https?:\/\/[^ ]+?(?:\.jpg|\.png|\.gif)/', $row["avatar_picture"]) ? $row["avatar_picture"] : ($SERVER_URL . htmlspecialchars($row["avatar_picture"], ENT_QUOTES, "utf-8"))) : ""),
 'avatar_positions' => $search_result_avatar_arr_positions,
 'avatar_rotate_degree' => htmlspecialchars($search_result_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8")
 ]);

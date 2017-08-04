@@ -43,7 +43,7 @@ $socket_message = [
 	"id" => $user_info_arr["id"], 
 	"first_name" => htmlspecialchars($user_info_arr["first_name"], ENT_QUOTES, "utf-8"),
 	"last_name" => htmlspecialchars($user_info_arr["last_name"], ENT_QUOTES, "utf-8"),
-	"avatar" => htmlspecialchars($user_info_arr["avatar_picture"], ENT_QUOTES, "utf-8"),
+	"avatar" => ($user_info_arr["avatar_picture"] != "" ? (preg_match('/https?:\/\/[^ ]+?(?:\.jpg|\.png|\.gif)/', $user_info_arr["avatar_picture"]) ? $user_info_arr["avatar_picture"] : ($SERVER_URL . htmlspecialchars($user_info_arr["avatar_picture"], ENT_QUOTES, "utf-8"))) : ""),
 	"avatar_positions" => $base_user_avatar_positions,
 	"avatar_rotate_degree" => $base_user_avatar_rotate_degree
 	] 

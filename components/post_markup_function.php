@@ -45,7 +45,7 @@ return [
 		"id" => htmlspecialchars($post_arr["posted_by"], ENT_QUOTES, "utf-8"),
 		"first_name" => htmlspecialchars($poster_arr["first_name"], ENT_QUOTES, "utf-8"),
 		"last_name" => htmlspecialchars($poster_arr["last_name"], ENT_QUOTES, "utf-8"),
-		"avatar_picture" => ($poster_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($poster_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
+		"avatar_picture" => ($poster_arr["avatar_picture"] != "" ? (preg_match('/https?:\/\/[^ ]+?(?:\.jpg|\.png|\.gif)/', $poster_arr["avatar_picture"]) ? $poster_arr["avatar_picture"] : ($SERVER_URL . htmlspecialchars($poster_arr["avatar_picture"], ENT_QUOTES, "utf-8"))) : ""),
 		"avatar_rotate_degree" => ($poster_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($poster_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0),
 		"avatar_positions" => $poster_avatar_positions
 	]

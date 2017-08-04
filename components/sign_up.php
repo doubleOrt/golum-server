@@ -61,7 +61,7 @@ $prepared->bindParam(":sign_up_date", $sign_up_date);
 
 
 if($prepared->execute()) {
-	
+
 $last_id = $con->lastInsertId();
 	
 // here we create a directory for the user which has the user's id, later we will put all media of a user inside this directory.

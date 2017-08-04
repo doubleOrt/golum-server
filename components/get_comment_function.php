@@ -46,7 +46,7 @@ return [
 	"id" => htmlspecialchars($commenter_arr["id"], ENT_QUOTES, "utf-8"),
 	"first_name" => htmlspecialchars($commenter_arr["first_name"], ENT_QUOTES, "utf-8"),
 	"last_name" => htmlspecialchars($commenter_arr["last_name"], ENT_QUOTES, "utf-8"),
-	"avatar_picture" => ($commenter_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($commenter_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
+	"avatar_picture" => ($commenter_arr["avatar_picture"] != "" ? (preg_match('/https?:\/\/[^ ]+?(?:\.jpg|\.png|\.gif)/', $commenter_arr["avatar_picture"]) ? $commenter_arr["avatar_picture"] : ($SERVER_URL . htmlspecialchars($commenter_arr["avatar_picture"], ENT_QUOTES, "utf-8"))) : ""),
 	"avatar_rotate_degree" => ($commenter_avatar_arr["rotate_degree"] != "" ? htmlspecialchars($commenter_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8") : 0),
 	"avatar_positions" => $commenter_avatar_positions
 	]

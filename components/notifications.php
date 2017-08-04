@@ -58,7 +58,7 @@ array_push($echo_arr, [
 	"id" => htmlspecialchars($notification["notification_from"], ENT_QUOTES, "utf-8"), 
 	"first_name" => htmlspecialchars($sender_arr["first_name"], ENT_QUOTES, "utf-8"),
 	"last_name" => htmlspecialchars($sender_arr["last_name"], ENT_QUOTES, "utf-8"),
-	"avatar" => ($sender_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($sender_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
+	"avatar" => ($sender_arr["avatar_picture"] != "" ? (preg_match('/https?:\/\/[^ ]+?(?:\.jpg|\.png|\.gif)/', $sender_arr["avatar_picture"]) ? $sender_arr["avatar_picture"] : ($SERVER_URL . htmlspecialchars($sender_arr["avatar_picture"], ENT_QUOTES, "utf-8"))) : ""),
 	"avatar_positions" => $sender_avatar_positions,
 	"avatar_rotate_degree" => htmlspecialchars($sender_avatar_arr["rotate_degree"], ENT_QUOTES, "utf-8")
 	] 

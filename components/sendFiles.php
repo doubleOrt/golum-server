@@ -82,7 +82,7 @@ array_push($echo_arr[0],[
 "id" => htmlspecialchars($messager_arr["id"], ENT_QUOTES, "utf-8"),
 "first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
 "last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
-"avatar" => ($messager_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
+"avatar" => ($messager_arr["avatar_picture"] != "" ? (preg_match('/https?:\/\/[^ ]+?(?:\.jpg|\.png|\.gif)/', $messager_arr["avatar_picture"]) ? $messager_arr["avatar_picture"] : ($SERVER_URL . htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"))) : ""),
 "avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
 "avatar_positions" => $messager_avatar_positions
 ]
@@ -99,7 +99,7 @@ $socket->connect("tcp://localhost:5555");
 $socket->send(json_encode($socket_message));
 }
 else {
-$echo_arr[1] = "Something Went Wrong, Sorry!";
+$echo_arr[1] = "Something Went Wrong, Sorry :(";
 die();		
 }
 }

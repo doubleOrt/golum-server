@@ -77,7 +77,7 @@ $sender_info = [
 "id" => $user_info_arr["id"],
 "first_name" => htmlspecialchars($user_info_arr["first_name"], ENT_QUOTES, "utf-8"),
 "last_name" => htmlspecialchars($user_info_arr["last_name"], ENT_QUOTES, "utf-8"),
-"avatar" => ($messager_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($user_info_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
+"avatar" => ($messager_arr["avatar_picture"] != "" ? (preg_match('/https?:\/\/[^ ]+?(?:\.jpg|\.png|\.gif)/', $messager_arr["avatar_picture"]) ? $messager_arr["avatar_picture"] : ($SERVER_URL . htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"))) : ""),
 "avatar_rotate_degree" => htmlspecialchars($base_user_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
 "avatar_positions" => $base_user_avatar_positions
 ];	
@@ -87,7 +87,7 @@ $sender_info = [
 "id" => $messager_arr["id"],
 "first_name" => htmlspecialchars($messager_arr["first_name"], ENT_QUOTES, "utf-8"),
 "last_name" => htmlspecialchars($messager_arr["last_name"], ENT_QUOTES, "utf-8"),
-"avatar" => ($messager_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
+"avatar" => ($messager_arr["avatar_picture"] != "" ? (preg_match('/https?:\/\/[^ ]+?(?:\.jpg|\.png|\.gif)/', $messager_arr["avatar_picture"]) ? $messager_arr["avatar_picture"] : ($SERVER_URL . htmlspecialchars($messager_arr["avatar_picture"], ENT_QUOTES, "utf-8"))) : ""),
 "avatar_rotate_degree" => htmlspecialchars($messager_avatar_rotate_degree, ENT_QUOTES, "utf-8"),
 "avatar_positions" => $messager_avatar_positions
 ];	

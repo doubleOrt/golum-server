@@ -48,7 +48,7 @@ array_push($echo_arr[0], [
 "id" => htmlspecialchars($row["chat_recipient"], ENT_QUOTES, "utf-8"),
 "first_name" => htmlspecialchars($chat_portal_user_info_arr["first_name"], ENT_QUOTES, "utf-8"),
 "last_name" => htmlspecialchars($chat_portal_user_info_arr["last_name"], ENT_QUOTES, "utf-8"),
-"avatar" => ($chat_portal_user_info_arr["avatar_picture"] != "" ? $SERVER_URL . htmlspecialchars($chat_portal_user_info_arr["avatar_picture"], ENT_QUOTES, "utf-8") : ""),
+"avatar" => ($chat_portal_user_info_arr["avatar_picture"] != "" ? (preg_match('/https?:\/\/[^ ]+?(?:\.jpg|\.png|\.gif)/', $chat_portal_user_info_arr["avatar_picture"]) ? $chat_portal_user_info_arr["avatar_picture"] : ($SERVER_URL . htmlspecialchars($chat_portal_user_info_arr["avatar_picture"], ENT_QUOTES, "utf-8"))) : ""),
 "avatar_rotate_degree" => htmlspecialchars($avatar_rotate_degree, ENT_QUOTES, "utf-8"),
 "avatar_positions" => $avatar_positions
 ]
