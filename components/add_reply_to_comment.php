@@ -125,7 +125,6 @@ $socket->send(json_encode($socket_message));
 
 echo json_encode($echo_arr);
 
-
 unset($con);
 
 ?>
