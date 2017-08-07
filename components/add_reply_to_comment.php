@@ -3,7 +3,7 @@
 
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
-require_once "get_comment_function.php";
+require_once "get_comment_data_function.php";
 
 $MAXIMUM_COMMENT_LENGTH = 800;
 
@@ -48,7 +48,7 @@ $poster_id = custom_pdo("select posted_by from posts where id = :post_id", [":po
 $reply_arr = custom_pdo("SELECT * FROM (SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE is_reply_to = comment_replies.id) AS replies, (SELECT type FROM reply_upvotes_and_downvotes WHERE user_id = :base_user_id AND comment_id = comment_replies.id) as base_user_opinion, (SELECT post_id from post_comments where id = :comment_id) as reply_owner_post_id FROM comment_replies) comment_replies LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON comment_replies.user_id = post_votes.user_id2 AND reply_owner_post_id = post_votes.post_id2 WHERE comment_replies.id = :reply_id", [":base_user_id" => $GLOBALS["base_user_id"], ":comment_id" => $_POST["comment_id"], ":reply_id" => $reply_id])->fetch();
 $reply_arr["original_post_by"] = $poster_id;
 	
-$echo_arr[0] = get_comment($reply_arr);	
+$echo_arr[0] = get_comment_data($reply_arr);	
 
 
 // if replier is not a user replying to his own comment, send them a notification.

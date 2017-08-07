@@ -3,7 +3,7 @@ require_once "common_requires.php";
 
 
 
-function get_comment($comment_arr) {
+function get_comment_data($comment_arr) {
 global $con, $SERVER_URL;
 
 $commenter_arr = custom_pdo("select id,first_name, last_name, avatar_picture from users where id = :user_id", [":user_id" => $comment_arr["user_id"]])->fetch();

@@ -9,7 +9,7 @@ $echo_arr = [];
 
 if(isset($_GET["post_id"]) && isset($_GET["post_type"]) && filter_var($_GET["post_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["post_type"], FILTER_VALIDATE_INT) !== false) {
 
-$post_votes_info_arr = get_post_votes($_GET["post_id"], $_GET["post_type"]);
+$post_votes_info_arr = get_post_votes_data($_GET["post_id"], $_GET["post_type"]);
 
 $post_votes = $post_votes_info_arr[0];
 $user_vote_index = $post_votes_info_arr[1];
@@ -43,7 +43,7 @@ unset($con);
 
 
 
-function get_post_votes($post_id, $post_type) {
+function get_post_votes_data($post_id, $post_type) {
 global $con;	
 	
 $all_votes = custom_pdo("select post_id, user_id, option_index from post_votes where post_id = :post_id", [":post_id" => $post_id])->fetchAll();

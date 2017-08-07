@@ -3,7 +3,7 @@
 
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
-require_once "get_comment_function.php";
+require_once "get_comment_data_function.php";
 
 $echo_arr = [[]];
 
@@ -33,7 +33,7 @@ $poster_id = custom_pdo("select posted_by from posts where id = :post_id", [":po
 for( $i = 0; $i < count($post_comments_arr); $i++ )	{
 if($post_comments_arr[$i][0] != "") {	
 $post_comments_arr[$i]["original_post_by"] = $poster_id;	
-array_push($echo_arr[0], get_comment($post_comments_arr[$i],0));	
+array_push($echo_arr[0], get_comment_data($post_comments_arr[$i],0));	
 }
 }
 

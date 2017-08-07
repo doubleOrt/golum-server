@@ -2,7 +2,7 @@
 
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
-require_once "get_comment_function.php";
+require_once "get_comment_data_function.php";
 
 $MAXIMUM_COMMENT_LENGTH = 800;
 
@@ -33,7 +33,7 @@ $poster_id = custom_pdo("select posted_by from posts where id = :post_id", [":po
 $comment_arr = custom_pdo("SELECT *, (SELECT COUNT(id) FROM comment_replies WHERE comment_id = post_comments.id) AS replies, (SELECT type FROM comment_upvotes_and_downvotes WHERE user_id = ". $GLOBALS["base_user_id"] ." AND comment_id = post_comments.id) as base_user_opinion FROM post_comments LEFT JOIN (SELECT user_id AS user_id2,post_id AS post_id2,option_index FROM post_votes) post_votes ON post_comments.user_id = post_votes.user_id2 AND post_comments.post_id = post_votes.post_id2 WHERE post_comments.id = :comment_id", [":comment_id" => $comment_id])->fetch();	
 $comment_arr["original_post_by"] = $poster_id;
 
-$echo_arr[0] = get_comment($comment_arr);	
+$echo_arr[0] = get_comment_data($comment_arr);	
 
 // if commenter is not a user commenting on his own post, send them a notification.
 if($poster_id != $GLOBALS["base_user_id"]) {

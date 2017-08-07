@@ -4,7 +4,7 @@
 
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
-require_once "post_markup_function.php";
+require_once "get_post_data_function.php";
 
 $echo_arr = [[]];	
 
@@ -33,7 +33,7 @@ if($posts_arr[$i]["disabled"] === "true") {
 continue;	
 }		
 	
-array_push($echo_arr[0], get_post_markup($posts_arr[$i]));
+array_push($echo_arr[0], get_post_data($posts_arr[$i]));
 }
 
 }

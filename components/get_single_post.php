@@ -3,7 +3,7 @@
 
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
-require_once "post_markup_function.php";
+require_once "get_post_data_function.php";
 
 
 $echo_arr = [];	
@@ -15,7 +15,7 @@ $single_post_arr = $single_post_arr_prepared->fetch();
 
 // just in case the post was deleted
 if($single_post_arr !== false && $single_post_arr["disabled"] !== "true") {
-array_push($echo_arr, get_post_markup($single_post_arr));
+array_push($echo_arr, get_post_data($single_post_arr));
 }
 
 }

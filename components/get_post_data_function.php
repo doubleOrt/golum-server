@@ -3,7 +3,7 @@ require_once "common_requires.php";
 
 
 // you need this function to retrieve the markup of a post, you just need to pass the post's array (from the database) as the first argument and you are good to go.
-function get_post_markup($post_arr) {
+function get_post_data($post_arr) {
 global $con, $SERVER_URL;
 
 // a call to this function means that the post is being viewed by 1 more user, so we need to update the post's total views.
