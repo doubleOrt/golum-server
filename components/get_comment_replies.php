@@ -37,9 +37,11 @@ array_unshift($post_comments_arr,custom_pdo("SELECT * FROM (SELECT *, (SELECT CO
 // this serves one purpose only, to add a background to comments and replies by original posters.
 $poster_id = custom_pdo("select posted_by from posts where id in (select post_id from post_comments where id = :comment_id)", [":comment_id" => $_GET["comment_id"]])->fetch()[0];	
 		
-for( $i = 0; $i < count($post_comments_arr); $i++ )	{		
+for( $i = 0; $i < count($post_comments_arr); $i++ )	{	
+if($post_comments_arr[$i][0] != "") {	
 $post_comments_arr[$i]["original_post_by"] = $poster_id;
 array_push($echo_arr[0], get_comment($post_comments_arr[$i],1));	
+}
 }
 
 $comment_replies_total_num_prepared = $con->prepare("select count(id) from comment_replies where comment_id = :comment_id and comment_replies.user_id not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and comment_replies.user_id not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and comment_replies.user_id not in (SELECT user_id from account_states)");

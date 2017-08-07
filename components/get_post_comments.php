@@ -31,8 +31,10 @@ array_unshift($post_comments_arr,custom_pdo("SELECT *, (SELECT COUNT(id) FROM co
 $poster_id = custom_pdo("select posted_by from posts where id = :post_id", [":post_id" => $_GET["post_id"]])->fetch()[0];		
 
 for( $i = 0; $i < count($post_comments_arr); $i++ )	{
+if($post_comments_arr[$i][0] != "") {	
 $post_comments_arr[$i]["original_post_by"] = $poster_id;	
 array_push($echo_arr[0], get_comment($post_comments_arr[$i],0));	
+}
 }
 
 $post_comments_total_num_prepared = $con->prepare("select count(id) from post_comments where post_id = :post_id and post_comments.user_id not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and post_comments.user_id not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and post_comments.user_id not in (SELECT user_id from account_states)");

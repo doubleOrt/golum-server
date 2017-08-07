@@ -25,7 +25,7 @@ $posted_by_base_user = ($post_arr["posted_by"] == $GLOBALS["base_user_id"] ? tru
 $base_user_already_voted = custom_pdo("select id from post_votes where post_id = :post_id and user_id = :base_user_id", [":post_id" => $post_arr["id"], ":base_user_id" => $GLOBALS["base_user_id"]])->fetch();
 
 
-$post_images_dir_path = $SERVER_URL . "posts/" ;
+$post_images_dir_path = $SERVER_URL . "users/" . $GLOBALS["base_user_id"] . "/posts/" ;
 $post_file_types_arr = explode(",", htmlspecialchars($post_arr["file_types"], ENT_QUOTES, "utf-8"));	
 $post_images = [];
 for($i = 0; $i < count($post_file_types_arr); $i++) {

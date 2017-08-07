@@ -40,7 +40,7 @@ else {
 $new_path = "users/". $GLOBALS["base_user_id"] ."/sentFiles/" . $what_id . "." . $upload_result[1];
 
 //add a new row to the sent_files table, check if it is successful.
-$insert_into_sent_files = custom_pdo("INSERT INTO sent_files (id_of_user,path,date_of) values(:base_user_id, :new_path, :date_of)", [":base_user_id" => $GLOBALS["base_user_id"], ":new_path" => $new_path, ":date_of" => date("Y/m/d H:i")]);
+$insert_into_sent_files = custom_pdo("INSERT INTO sent_files (chat_id, id_of_user,path,date_of) values(:chat_id, :base_user_id, :new_path, :date_of)", [":chat_id" => $_POST["chat_id"], ":base_user_id" => $GLOBALS["base_user_id"], ":new_path" => $new_path, ":date_of" => date("Y/m/d H:i")]);
 
 // insert a new row into the messages table, note that we insert the id of the sent file (from the sent_files table) into the "message" column instead of an actual message.
 $insert_into_messages = custom_pdo("INSERT INTO messages (chat_id,message_from,message,date_of,message_type) values(:chat_id, :base_user_id, :sent_files_id, :date_of, 'file-message')", [":chat_id" => $_POST["chat_id"], ":base_user_id" => $GLOBALS["base_user_id"], ":sent_files_id" => $con->lastInsertId(), ":date_of" => date("Y/m/d H:i")]);

@@ -114,6 +114,7 @@ mkdir("../users/" . $user_id);
 mkdir("../users/" . $user_id . "/media");
 mkdir("../users/" . $user_id . "/media/backgrounds");
 mkdir("../users/" . $user_id . "/sentFiles");
+mkdir("../users/" . $user_id . "/posts");
 
 // everything was successful, return the newly created user's user_id.
 return $user_id;

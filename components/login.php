@@ -67,14 +67,27 @@ custom_pdo("update users set failed_login_count = (failed_login_count + 1) where
 }	
 else {
 	
-$session->set("user_id", $login_arr["id"]);
-
-if(custom_pdo("SELECT * FROM account_states WHERE (type = 'deactivate' or type = 'delete') AND user_id = :user_id", [":user_id" => $login_arr["id"]])->fetch()[0] != "") {
+$account_state = custom_pdo("SELECT * FROM account_states WHERE user_id = :user_id", [":user_id" => $login_arr["id"]])->fetch();	
+if($account_state["id"] != "") {
+/* the user is logging in after having deactivated their account, or they are 
+logging in after having requested to delete their account but before 2 weeks
+have passed, in these 2 cases, we just activate the user's account again and 
+log them in. */
+if($account_state["type"] == "deactivate" || ($account_state["type"] == "delete" && time() - $account_state["time"] < 1209600)) {	
 custom_pdo("DELETE FROM account_states WHERE (type = 'deactivate' or type = 'delete') AND user_id = :user_id limit 1", [":user_id" => $login_arr["id"]]);	
 }
-else {
-$echo_arr[0] = 1;	
+/* the user has requested to delete their account and they are trying to login after a period 
+of 2 weeks, in this case, instead of logging the user in, we delete their account. */
+else if($account_state["type"] == "delete" && time() - $account_state["time"] >= 1209600) {
+delete_user($login_arr["id"]);
+echo json_encode($echo_arr);
+unset($con);
+die();	
 }
+}
+
+$session->set("user_id", $login_arr["id"]);	
+$echo_arr[0] = 1;	
 
 }
 

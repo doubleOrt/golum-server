@@ -10,7 +10,7 @@ the db_connection.php file after the autoload file, the $con
 variable will be undefined, which is why i must require 
 it before the autoload file or it won't work. */
 require_once "db_connection.php";
-require_once '../composer_things/vendor/autoload.php';
+require_once '/../composer_things/vendor/autoload.php';
 
 $pdo_session_handler =  new PDOSessionHandler($con, ['lock_mode' => 0]);
 /* remember that this $storage always needs to exist as an independent 
@@ -77,6 +77,22 @@ catch(PDOException $e) {
 $errorMsg = $e->getMessage();
 return $errorMsg;
 }
+}
+
+
+// call this function on a path to remove the directory itself along with everything inside of it (Do note that this function does not work with URLs, only paths).
+function deleteDir($dir) {
+$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+$files = new RecursiveIteratorIterator($it,
+RecursiveIteratorIterator::CHILD_FIRST);
+foreach($files as $file) {
+if ($file->isDir()){
+rmdir($file->getRealPath());
+} else {
+unlink($file->getRealPath());
+}
+}
+rmdir($dir);
 }
 
 

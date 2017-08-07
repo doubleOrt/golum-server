@@ -7,8 +7,6 @@ require_once "file_upload_custom_functions.php";
 
 if(isset($_POST["title"]) && isset($_POST["type"]) && filter_var($_POST["type"], FILTER_VALIDATE_INT) !== false && count($_FILES) > 0) {
 
-//this is the path of the images after upload
-$upload_to = "../posts/";
 $counter = 0;
 $file_types = "";
 
@@ -18,7 +16,7 @@ $what_id = $what_id_query["Auto_increment"];
 
 foreach($_FILES as $file) {
 
-$storagePath = '../posts/'; // this is relative to this script, better use absolute path.
+$storagePath = "../users/" . $GLOBALS["base_user_id"] . "/posts/"; // this is relative to this script, better use absolute path.
 $new_name = $what_id . "-" . $counter;
 $allowedMimes = array('image/png', 'image/jpg', 'image/gif', 'image/pjpeg', 'image/jpeg');
 

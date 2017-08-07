@@ -69,6 +69,7 @@ mkdir("../users/" . $last_id);
 mkdir("../users/" . $last_id . "/media");
 mkdir("../users/" . $last_id . "/media/backgrounds");
 mkdir("../users/" . $last_id . "/sentFiles");
+mkdir("../users/" . $last_id . "/posts");
 
 // set the user_id session to the user's id in our database, this is required in order for our app to identify that the user is logged in.
 $session->set("user_id", $last_id);
