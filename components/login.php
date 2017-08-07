@@ -1,10 +1,8 @@
 <?php
 require_once "common_requires.php";
 
-
-// deal with session fixation
-session_regenerate_id(true);
-$_SESSION["nein"] = "meh";
+// deals with session fixation
+$storage->regenerate(true);
 
 $echo_arr = [0,""];
 
@@ -69,7 +67,7 @@ custom_pdo("update users set failed_login_count = (failed_login_count + 1) where
 }	
 else {
 	
-$_SESSION["user_id"] = $login_arr["id"];
+$session->set("user_id", $login_arr["id"]);
 
 if(custom_pdo("SELECT * FROM account_states WHERE (type = 'deactivate' or type = 'delete') AND user_id = :user_id", [":user_id" => $login_arr["id"]])->fetch()[0] != "") {
 custom_pdo("DELETE FROM account_states WHERE (type = 'deactivate' or type = 'delete') AND user_id = :user_id limit 1", [":user_id" => $login_arr["id"]]);	

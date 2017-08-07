@@ -17,20 +17,20 @@ $comment_arr = $comment_arr_prepared->fetch();
 
 echo "thisUpvotesObject.removeClass('upvoteOrDownvoteActive');thisDownvotesObject.removeClass('upvoteOrDownvoteActive');";
 
-if(custom_pdo("select id from comment_upvotes_and_downvotes where comment_id = :comment_id and user_id = :base_user_id", [":comment_id" => $_POST["comment_id"], ":base_user_id" => $_SESSION["user_id"]])->fetch()["id"] != "") {
+if(custom_pdo("select id from comment_upvotes_and_downvotes where comment_id = :comment_id and user_id = :base_user_id", [":comment_id" => $_POST["comment_id"], ":base_user_id" => $GLOBALS["base_user_id"]])->fetch()["id"] != "") {
 
 // delete the notification
-custom_pdo("delete from notifications where notification_from = :base_user_id and notification_to = :user_id and (type = 7 or type = 8) and extra = :post_id and extra2 = :comment_id", [":base_user_id" => $_SESSION["user_id"], ":user_id" => $comment_arr["user_id"], ":post_id" => $comment_arr["post_id"], ":comment_id" => $_POST["comment_id"]]);
+custom_pdo("delete from notifications where notification_from = :base_user_id and notification_to = :user_id and (type = 7 or type = 8) and extra = :post_id and extra2 = :comment_id", [":base_user_id" => $GLOBALS["base_user_id"], ":user_id" => $comment_arr["user_id"], ":post_id" => $comment_arr["post_id"], ":comment_id" => $_POST["comment_id"]]);
 
-if($action_type == custom_pdo("select type from comment_upvotes_and_downvotes where comment_id = :comment_id and user_id = :base_user_id", [":comment_id" => $_POST["comment_id"], ":base_user_id" => $_SESSION["user_id"]])->fetch()["type"]) {
-custom_pdo("delete from comment_upvotes_and_downvotes where comment_id = :comment_id and user_id = :base_user_id", [":comment_id" => $_POST["comment_id"], ":base_user_id" => $_SESSION["user_id"]]);	
+if($action_type == custom_pdo("select type from comment_upvotes_and_downvotes where comment_id = :comment_id and user_id = :base_user_id", [":comment_id" => $_POST["comment_id"], ":base_user_id" => $GLOBALS["base_user_id"]])->fetch()["type"]) {
+custom_pdo("delete from comment_upvotes_and_downvotes where comment_id = :comment_id and user_id = :base_user_id", [":comment_id" => $_POST["comment_id"], ":base_user_id" => $GLOBALS["base_user_id"]]);	
 }
 else {
-custom_pdo("update comment_upvotes_and_downvotes set type = :action_type, time = :time where comment_id = :comment_id and user_id = :base_user_id", [":action_type" => $action_type, ":time" => time(), ":comment_id" => $_POST["comment_id"], ":base_user_id" => $_SESSION["user_id"]]);
+custom_pdo("update comment_upvotes_and_downvotes set type = :action_type, time = :time where comment_id = :comment_id and user_id = :base_user_id", [":action_type" => $action_type, ":time" => time(), ":comment_id" => $_POST["comment_id"], ":base_user_id" => $GLOBALS["base_user_id"]]);
 echo ($action_type == 0 ? "thisUpvotesObject.addClass('upvoteOrDownvoteActive');" : "thisDownvotesObject.addClass('upvoteOrDownvoteActive');");
-if($_SESSION["user_id"] != $comment_arr["user_id"]) {
+if($GLOBALS["base_user_id"] != $comment_arr["user_id"]) {
 // insert a notification	
-custom_pdo("insert into notifications (notification_from,notification_to,time,type,extra,extra2) values (:base_user_id, :commenter_id, :time, :notification_type, :post_id, :comment_id)", [":base_user_id" => $_SESSION["user_id"], ":commenter_id" => $comment_arr["user_id"], ":time" => time(), ":notification_type" => $notification_type, ":post_id" => $comment_arr["post_id"], ":comment_id" => $_POST["comment_id"]]);		
+custom_pdo("insert into notifications (notification_from,notification_to,time,type,extra,extra2) values (:base_user_id, :commenter_id, :time, :notification_type, :post_id, :comment_id)", [":base_user_id" => $GLOBALS["base_user_id"], ":commenter_id" => $comment_arr["user_id"], ":time" => time(), ":notification_type" => $notification_type, ":post_id" => $comment_arr["post_id"], ":comment_id" => $_POST["comment_id"]]);		
 }
 }
 
@@ -42,15 +42,15 @@ echo "thisDownvotesNumberObject.html('". ($new_downvotes_number > 0 ? ("(" . htm
 }
 else {
 	
-custom_pdo("insert into comment_upvotes_and_downvotes (comment_id,user_id,time,type) values(:comment_id, :base_user_id, :time, :action_type)", [":comment_id" => $_POST["comment_id"], ":base_user_id" => $_SESSION["user_id"], ":time" => time(), ":action_type" => $action_type]);
+custom_pdo("insert into comment_upvotes_and_downvotes (comment_id,user_id,time,type) values(:comment_id, :base_user_id, :time, :action_type)", [":comment_id" => $_POST["comment_id"], ":base_user_id" => $GLOBALS["base_user_id"], ":time" => time(), ":action_type" => $action_type]);
 
 update_comment($_POST["comment_id"]);
 $new_upvotes_number = custom_pdo("select upvotes from post_comments where id = :comment_id", [":comment_id" => $_POST["comment_id"]])->fetch()["upvotes"];
 $new_downvotes_number = custom_pdo("select downvotes from post_comments where id = :comment_id", [":comment_id" => $_POST["comment_id"]])->fetch()["downvotes"];
 
 // insert a notification
-if($comment_arr["user_id"] != $_SESSION["user_id"]) {
-custom_pdo("insert into notifications (notification_from,notification_to,time,type,extra,extra2) values (:base_user_id, :commenter_id, :time, :notification_type, :post_id, :comment_id)", [":base_user_id" => $_SESSION["user_id"], ":commenter_id" => $comment_arr["user_id"], ":time" => time(), ":notification_type" => $notification_type, ":post_id" => $comment_arr["post_id"], ":comment_id" => $_POST["comment_id"]]);		
+if($comment_arr["user_id"] != $GLOBALS["base_user_id"]) {
+custom_pdo("insert into notifications (notification_from,notification_to,time,type,extra,extra2) values (:base_user_id, :commenter_id, :time, :notification_type, :post_id, :comment_id)", [":base_user_id" => $GLOBALS["base_user_id"], ":commenter_id" => $comment_arr["user_id"], ":time" => time(), ":notification_type" => $notification_type, ":post_id" => $comment_arr["post_id"], ":comment_id" => $_POST["comment_id"]]);		
 $notification_id = $con->lastInsertId();
 
 

@@ -1,7 +1,12 @@
 <?php
 
-require_once __DIR__ . "/../composer_things/vendor/autoload.php";
+/* i don't know why, but for some weird reason, if i include 
+the initialization.php file after the autoload file, the $con 
+variable which is in turn required in common_requires.php from 
+db_connection.php will be undefined, which is why i must require 
+it before the autoload file. */
 require_once "initialization.php";
+require_once __DIR__ . "/../composer_things/vendor/autoload.php";
 
 $echo_arr = [0,""];
 
@@ -31,7 +36,7 @@ $account_associated_with_email_id = $prepared->fetch()[0];
 /* if the user already has an account, then just set the user_id 
 session to the id field of that account's row in the database  */
 if(!is_null($account_associated_with_email_id)) {
-$_SESSION["user_id"] = $account_associated_with_email_id;
+$session->set("user_id", $account_associated_with_email_id);
 // so that the client redirects the user to the logged_in.html page.
 $echo_arr[0] = 1;
 }
@@ -43,7 +48,7 @@ returns the user's id on success and an error message on failure. */
 $register_user = register_external_user($user_google_id, "GOOGLE", $user_google_email, $user_google_first_name, $user_google_last_name, $user_google_avatar);	
 // if user account was created successfully
 if(filter_var($register_user, FILTER_VALIDATE_INT) !== false) {
-$_SESSION["user_id"] = $register_user;
+$session->set("user_id", $register_user);
 // so that the client redirects the user to the logged_in.html page.
 $echo_arr[0] = 1;	
 }
@@ -77,14 +82,14 @@ global $con;
 /* we generate a username since Google does not give us 
 one, and i don't think Facebook does either. */
 $user_name = $first_name . rand(1000,1000000);	
-$sign_up_date = date("Y/m/d H:i",time());
+$time = date("Y/m/d H:i",time());
 
 // check if the username we randomly created doesn't already exist
 if(check_if_username_already_exists($user_name) === false) {
 if($con->prepare("update users set email_address = '', activated = '' where email_address = :email_address and activated != 'true'")->execute([":email_address" => $email_address])) { 		
 	
 // this is the big thing, the row that creates the actual user account.	
-$prepared = $con->prepare("INSERT INTO users (external_id, external_type, user_name, email_address, activated, first_name, last_name, avatar_picture, sign_up_date) VALUES (:external_id, :external_type, :user_name, :email_address, :activated, :first_name, :last_name, :avatar_picture, :sign_up_date)");
+$prepared = $con->prepare("INSERT INTO users (external_id, external_type, user_name, email_address, activated, first_name, last_name, avatar_picture, sign_up_date, last_seen) VALUES (:external_id, :external_type, :user_name, :email_address, :activated, :first_name, :last_name, :avatar_picture, :sign_up_date, :last_seen)");
 $prepared->bindParam(":external_id", $external_id);
 $prepared->bindParam(":external_type", $external_type);
 $prepared->bindParam(":user_name", $user_name);
@@ -93,7 +98,8 @@ $prepared->bindValue(":activated", "true");
 $prepared->bindParam(":first_name", $first_name);
 $prepared->bindParam(":last_name", $last_name);
 $prepared->bindParam(":avatar_picture", $avatar_picture);
-$prepared->bindParam(":sign_up_date", $sign_up_date);
+$prepared->bindParam(":sign_up_date", $time);
+$prepared->bindParam(":last_seen", $time);
 
 // if the account was created successfully
 if($prepared->execute()) {	
@@ -101,7 +107,7 @@ $user_id = $con->lastInsertId();
 /* we need to insert a row into the avatars field since Google gives us one and we 
 cannot have an avatar image in the users table without a corresponding row in 
 the avatars table. */
-if($con->prepare("insert into avatars (id_of_user, avatar_path, date_of, positions, rotate_degree) values (:user_id, :avatar_path, :date_of, '0,0', '0')")->execute([":user_id" => $user_id, ":avatar_path" => $avatar_picture, ":date_of" => $sign_up_date])) {
+if($con->prepare("insert into avatars (id_of_user, avatar_path, date_of, positions, rotate_degree) values (:user_id, :avatar_path, :date_of, '0,0', '0')")->execute([":user_id" => $user_id, ":avatar_path" => $avatar_picture, ":date_of" => $time])) {
 
 // here we create a directory for the user which has the user's id, later we will put all media of a user inside this directory.
 mkdir("../users/" . $user_id);

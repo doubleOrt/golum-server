@@ -12,12 +12,12 @@ $time = time();
 $type = 4;
 
 // if the user has already sent this post to the target user by some hacking trick perhaps, die.
-if(custom_pdo("select id from notifications where notification_from = :base_user_id and notification_to = :friend_id and type = 4 and extra = :post_id", [":base_user_id" => $_SESSION["user_id"], ":friend_id" => $_POST["friend_id"], ":post_id" => $_POST["post_id"]])->fetch()[0] != "") {
+if(custom_pdo("select id from notifications where notification_from = :base_user_id and notification_to = :friend_id and type = 4 and extra = :post_id", [":base_user_id" => $GLOBALS["base_user_id"], ":friend_id" => $_POST["friend_id"], ":post_id" => $_POST["post_id"]])->fetch()[0] != "") {
 die();
 }
 
 $prepared = $con->prepare("insert into notifications (notification_from,notification_to,time,type,extra) values (:notification_from,:notification_to,:time,:type,:extra)");
-$prepared->bindParam(":notification_from",$_SESSION["user_id"]);	
+$prepared->bindParam(":notification_from",$GLOBALS["base_user_id"]);	
 $prepared->bindParam(":notification_to",$_POST["friend_id"]);	
 $prepared->bindParam(":time",$time);	
 $prepared->bindParam(":type",$type);	

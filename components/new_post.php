@@ -50,7 +50,7 @@ $prepared->bindParam(":tags",$post_tags);
 $prepared->bindParam(":type",$_POST["type"]);
 $prepared->bindParam(":file_types",$file_types);
 $prepared->bindParam(":time",$post_time);
-$prepared->bindParam(":posted_by",$_SESSION["user_id"]);
+$prepared->bindParam(":posted_by",$GLOBALS["base_user_id"]);
 
 if($prepared->execute()) {
 echo $con->lastInsertId();	

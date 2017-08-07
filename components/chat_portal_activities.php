@@ -41,7 +41,7 @@ return date("j, M Y",$time);
 
 
 
-if(isset($_SESSION["user_id"])) {
+if(isset($GLOBALS["base_user_id"])) {
 	
 	
 	
@@ -50,7 +50,7 @@ $echo_arr = [];
 
 // in this page we give our js file key value pairs of chat ids and new messages from each one.
 
-$chats_arr = custom_pdo("select id, (select count(id) from messages where chat_id = chats.id and message_from != :base_user_id and read_yet = false) as chat_unread_messages from chats where chatter_ids like concat('%', :base_user_id, '%')", [":base_user_id" => $_SESSION["user_id"]])->fetchAll(); 		
+$chats_arr = custom_pdo("select id, (select count(id) from messages where chat_id = chats.id and message_from != :base_user_id and read_yet = false) as chat_unread_messages from chats where chatter_ids like concat('%', :base_user_id, '%')", [":base_user_id" => $GLOBALS["base_user_id"]])->fetchAll(); 		
 
 
 for($i = 0;$i < count($chats_arr);$i++) {
@@ -65,7 +65,7 @@ $latest_message_date = "";
 
 for($x = 0;$x < count($new_messages_arr);$x++) {
 	
-if($new_messages_arr[$x]["message_from"] != $_SESSION["user_id"]) {	
+if($new_messages_arr[$x]["message_from"] != $GLOBALS["base_user_id"]) {	
 $new_messages_num++;
 }
 if($x == count($new_messages_arr)-1) {

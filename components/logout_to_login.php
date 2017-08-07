@@ -2,7 +2,7 @@
 
 require_once "common_requires.php";
 
-if(isset($_SESSION["user_id"])) {
+if(!is_null($session->get("user_id"))) {
 echo "1";	
 }
 

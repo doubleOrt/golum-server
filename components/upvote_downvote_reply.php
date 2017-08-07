@@ -23,7 +23,7 @@ $post_id = $post_id_prepared->fetch()[0];
 
 $already_upvoted_downvoted_prepared = $con->prepare("select id from reply_upvotes_and_downvotes where comment_id = :reply_id and user_id = :user_id");
 $already_upvoted_downvoted_prepared->bindParam(":reply_id", $_POST["reply_id"]);
-$already_upvoted_downvoted_prepared->bindParam(":user_id", $_SESSION["user_id"]);
+$already_upvoted_downvoted_prepared->bindParam(":user_id", $GLOBALS["base_user_id"]);
 $already_upvoted_downvoted_prepared->execute();
 $already_upvoted_downvoted = $already_upvoted_downvoted_prepared->fetch()[0];
 
@@ -32,26 +32,26 @@ $time = time();
 if($already_upvoted_downvoted != "") {
 
 //delete the previous notification
-$con->prepare("delete from notifications where notification_from = :user_id and notification_to = :notification_to and (type = 9 or type = 10) and extra = :comment_id and extra2 = :post_id and extra3 = :reply_id")->execute([":user_id" => $_SESSION["user_id"], ":notification_to" => $reply_arr["user_id"], ":comment_id" => $reply_arr["comment_id"], ":post_id" => $post_id, ":reply_id" => $_POST["reply_id"]]);
+$con->prepare("delete from notifications where notification_from = :user_id and notification_to = :notification_to and (type = 9 or type = 10) and extra = :comment_id and extra2 = :post_id and extra3 = :reply_id")->execute([":user_id" => $GLOBALS["base_user_id"], ":notification_to" => $reply_arr["user_id"], ":comment_id" => $reply_arr["comment_id"], ":post_id" => $post_id, ":reply_id" => $_POST["reply_id"]]);
 
-$con->prepare("select type from reply_upvotes_and_downvotes where comment_id = ". $_POST["reply_id"] ." and user_id = ". $_SESSION["user_id"])->fetch()["type"];
+$con->prepare("select type from reply_upvotes_and_downvotes where comment_id = ". $_POST["reply_id"] ." and user_id = ". $GLOBALS["base_user_id"])->fetch()["type"];
 
 $previous_action_type_prepared = $con->prepare("select type from reply_upvotes_and_downvotes where comment_id = :reply_id and user_id = :user_id");
 $previous_action_type_prepared->bindParam(":reply_id", $_POST["reply_id"]);
-$previous_action_type_prepared->bindParam(":user_id", $_SESSION["user_id"]);
+$previous_action_type_prepared->bindParam(":user_id", $GLOBALS["base_user_id"]);
 $previous_action_type_prepared->execute();
 $previous_action_type = $previous_action_type_prepared->fetch()[0];
 // if the new action type is equal to the previous one, it means that the user wants to remove their upvote/downvote
 if($action_type == $previous_action_type) {	
-$con->prepare("delete from reply_upvotes_and_downvotes where comment_id = :reply_id and user_id = :user_id")->execute([ ":reply_id" => $_POST["reply_id"], ":user_id" => $_SESSION["user_id"] ]);	
+$con->prepare("delete from reply_upvotes_and_downvotes where comment_id = :reply_id and user_id = :user_id")->execute([ ":reply_id" => $_POST["reply_id"], ":user_id" => $GLOBALS["base_user_id"] ]);	
 }
 else {	
-$con->prepare("update reply_upvotes_and_downvotes set type = :type, time = :time where comment_id = :reply_id and user_id = :user_id")->execute([ ":type" => $action_type, ":time" => $time, ":reply_id" => $_POST["reply_id"], ":user_id" => $_SESSION["user_id"] ]);
+$con->prepare("update reply_upvotes_and_downvotes set type = :type, time = :time where comment_id = :reply_id and user_id = :user_id")->execute([ ":type" => $action_type, ":time" => $time, ":reply_id" => $_POST["reply_id"], ":user_id" => $GLOBALS["base_user_id"] ]);
 
 echo ($action_type == 0 ? "thisUpvotesObject.addClass('upvoteOrDownvoteActive');" : "thisDownvotesObject.addClass('upvoteOrDownvoteActive');");
 
-if($_SESSION["user_id"] != $reply_arr["user_id"]) {
-$con->prepare("insert into notifications (notification_from,notification_to,time,type,extra,extra2,extra3) values (:notification_from, :notification_to, :time, :type, :comment_id, :post_id, :reply_id)")->execute([ ":notification_from" => $_SESSION["user_id"], ":notification_to" => $reply_arr["user_id"], ":time" => $time, ":type" => $notification_type, ":comment_id" => $reply_arr["comment_id"], ":post_id" => $post_id, ":reply_id" => $_POST["reply_id"] ]);	
+if($GLOBALS["base_user_id"] != $reply_arr["user_id"]) {
+$con->prepare("insert into notifications (notification_from,notification_to,time,type,extra,extra2,extra3) values (:notification_from, :notification_to, :time, :type, :comment_id, :post_id, :reply_id)")->execute([ ":notification_from" => $GLOBALS["base_user_id"], ":notification_to" => $reply_arr["user_id"], ":time" => $time, ":type" => $notification_type, ":comment_id" => $reply_arr["comment_id"], ":post_id" => $post_id, ":reply_id" => $_POST["reply_id"] ]);	
 }
 }
 
@@ -69,7 +69,7 @@ echo "thisUpvotesNumberObject.html('". ($new_upvotes_number > 0 ? ("(" . htmlspe
 echo "thisDownvotesNumberObject.html('". ($new_downvotes_number > 0 ? ("(" . htmlspecialchars($new_downvotes_number, ENT_QUOTES, "utf-8") . ")") : "") ."');";
 }
 else {
-custom_pdo("insert into reply_upvotes_and_downvotes (comment_id,user_id,time,type) values(:reply_id, :base_user_id, :time, :action_type)", [":reply_id" => $_POST["reply_id"], ":base_user_id" => $_SESSION["user_id"], ":time" => time(), ":action_type" => $action_type]);
+custom_pdo("insert into reply_upvotes_and_downvotes (comment_id,user_id,time,type) values(:reply_id, :base_user_id, :time, :action_type)", [":reply_id" => $_POST["reply_id"], ":base_user_id" => $GLOBALS["base_user_id"], ":time" => time(), ":action_type" => $action_type]);
 
 update_reply($_POST["reply_id"]);
 $new_upvotes_downvotes_number_prepared = $con->prepare("select upvotes, downvotes from comment_replies where id = :reply_id");
@@ -81,8 +81,8 @@ $new_upvotes_number = $new_upvotes_downvotes_number_arr["upvotes"];
 $new_downvotes_number = $new_upvotes_downvotes_number_arr["downvotes"];
 
 // insert a notification
-if($_SESSION["user_id"] != $reply_arr["user_id"]) {
-$con->prepare("insert into notifications (notification_from,notification_to,time,type,extra,extra2,extra3) values (:notification_from, :notification_to, :time, :type, :comment_id, :post_id, :reply_id)")->execute([ ":notification_from" => $_SESSION["user_id"], ":notification_to" => $reply_arr["user_id"], ":time" => $time, ":type" => $notification_type, ":comment_id" => $reply_arr["comment_id"], ":post_id" => $post_id, ":reply_id" => $_POST["reply_id"] ]);		
+if($GLOBALS["base_user_id"] != $reply_arr["user_id"]) {
+$con->prepare("insert into notifications (notification_from,notification_to,time,type,extra,extra2,extra3) values (:notification_from, :notification_to, :time, :type, :comment_id, :post_id, :reply_id)")->execute([ ":notification_from" => $GLOBALS["base_user_id"], ":notification_to" => $reply_arr["user_id"], ":time" => $time, ":type" => $notification_type, ":comment_id" => $reply_arr["comment_id"], ":post_id" => $post_id, ":reply_id" => $_POST["reply_id"] ]);		
 $notification_id = $con->lastInsertId();
 
 $socket_message = [

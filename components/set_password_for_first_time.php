@@ -17,7 +17,7 @@ $check_password = new ValidateItem($_POST["password"],'/^(?=.*[A-Za-z])(?=.*\d)(
 
 if($check_password->validate() === true) {
 $hashed_password = password_hash($_POST["password"],PASSWORD_BCRYPT);
-$con->prepare("update users set password = :password where id = :user_id")->execute([":password" => $hashed_password, ":user_id" => $_SESSION["user_id"]]);
+$con->prepare("update users set password = :password where id = :user_id")->execute([":password" => $hashed_password, ":user_id" => $GLOBALS["base_user_id"]]);
 $echo_arr[0] = 1;	
 }
 else {

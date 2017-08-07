@@ -7,7 +7,7 @@ require_once "logged_in_importants.php";
 if(isset($_POST["comment_id"]) && filter_var($_POST["comment_id"], FILTER_VALIDATE_INT) !== false) {
 
 $comment_arr = custom_pdo("select id,user_id, post_id from post_comments where id = :comment_id", [":comment_id" => $_POST["comment_id"]])->fetch();
-if($comment_arr["user_id"] != $_SESSION["user_id"]) {
+if($comment_arr["user_id"] != $GLOBALS["base_user_id"]) {
 die();
 } 
 	

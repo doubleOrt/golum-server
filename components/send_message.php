@@ -10,7 +10,7 @@ if(isset($_POST["message"]) && isset($_POST["chat_id"]) && filter_var($_POST["ch
 
 $chat_id = intval($_POST["chat_id"]);
 // we are not using this directly because you can't pass valued to pdo prepare directly.
-$from = intval($_SESSION["user_id"]);	
+$from = intval($GLOBALS["base_user_id"]);	
 $date_of = date("Y/m/d H:i");
 $read_yet = false;
 $message = openssl_encrypt($_POST["message"],"aes-128-cbc","georgedies",OPENSSL_RAW_DATA,"dancewithdragons");
@@ -44,8 +44,8 @@ $message_type = 1;
 }
 
 
-$messager_arr = custom_pdo("select id,first_name,last_name,avatar_picture from  users where id = :base_user_id", [":base_user_id" => $_SESSION["user_id"]])->fetch();
-$messager_avatar_arr = custom_pdo("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = :base_user_id order by id desc limit 1", [":base_user_id" => $_SESSION["user_id"]])->fetch();
+$messager_arr = custom_pdo("select id,first_name,last_name,avatar_picture from  users where id = :base_user_id", [":base_user_id" => $GLOBALS["base_user_id"]])->fetch();
+$messager_avatar_arr = custom_pdo("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = :base_user_id order by id desc limit 1", [":base_user_id" => $GLOBALS["base_user_id"]])->fetch();
 
 if($messager_avatar_arr[0] != "") {
 $messager_avatar_rotate_degree = $messager_avatar_arr["rotate_degree"];

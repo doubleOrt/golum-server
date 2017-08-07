@@ -2,7 +2,7 @@
 
 require_once "common_requires.php";
 
-if(isset($_SESSION["user_id"])) {
+if(isset($GLOBALS["base_user_id"])) {
 
 require_once "logged_in_importants.php";
 	

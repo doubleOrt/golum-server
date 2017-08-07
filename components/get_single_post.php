@@ -10,7 +10,7 @@ $echo_arr = [];
 
 if(isset($_GET["post_id"]) && filter_var($_GET["post_id"], FILTER_VALIDATE_INT) !== false) {
 $single_post_arr_prepared = $con->prepare("select * from posts where id = :post_id and (posted_by not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and posted_by not in (SELECT user_id from account_states))");	
-$single_post_arr_prepared->execute([":post_id" => $_GET["post_id"], ":base_user_id" => $_SESSION["user_id"]]);
+$single_post_arr_prepared->execute([":post_id" => $_GET["post_id"], ":base_user_id" => $GLOBALS["base_user_id"]]);
 $single_post_arr = $single_post_arr_prepared->fetch();
 
 // just in case the post was deleted

@@ -30,9 +30,9 @@ if(isset($_POST["deactivate_or_delete"]) && $_POST["deactivate_or_delete"] != ""
 
 # if user wants to deactivate his/her account.
 if($_POST["deactivate_or_delete"] == "deactivate") {
-custom_pdo("insert into account_states (user_id,type,time) values(:base_user_id, 'deactivate', :time)", [":base_user_id" => $_SESSION["user_id"], ":time" => time()]);
+custom_pdo("insert into account_states (user_id,type,time) values(:base_user_id, 'deactivate', :time)", [":base_user_id" => $GLOBALS["base_user_id"], ":time" => time()]);
 array_push($_SESSION["toasts"],"<script>Materialize.toast('Your Account Is Currently Deactivated, You Can Activate It Again By Simply Logging In.',25000,'green');</script>");
-unset($_SESSION["user_id"]);
+unset($GLOBALS["base_user_id"]);
 $echo_arr[0] .= "window.location.href =  'login_and_sign_up.html'";
 $echo_arr[1] = "false";
 echo json_encode($echo_arr);	
@@ -40,9 +40,9 @@ die();
 }
 # if user wants to delete his/her account.
 else if($_POST["deactivate_or_delete"] == "delete") {
-custom_pdo("insert into account_states (user_id,type,time) values(:user_id, 'delete', :time)", [":base_user_id" => $_SESSION["user_id"], ":time" => time()]);
+custom_pdo("insert into account_states (user_id,type,time) values(:user_id, 'delete', :time)", [":base_user_id" => $GLOBALS["base_user_id"], ":time" => time()]);
 array_push($_SESSION["toasts"],"<script>Materialize.toast('Your Account Will Be Deleted If You Don\'t Log In In The Next 2 Weeks',25000,'red');</script>");
-unset($_SESSION["user_id"]);
+unset($GLOBALS["base_user_id"]);
 $echo_arr[0] .= "window.location.href =  'login_and_sign_up.html'";
 $echo_arr[1] = "false";
 echo json_encode($echo_arr);	
@@ -87,7 +87,7 @@ $change_user_name = $_POST["change_user_name"];
 
 $check_if_username_already_exists = $con->prepare("select id from users where user_name = :user_name and id != :id");
 $check_if_username_already_exists->bindParam(":user_name",$_POST["change_user_name"]);
-$check_if_username_already_exists->bindParam(":id",$_SESSION["user_id"]);
+$check_if_username_already_exists->bindParam(":id",$GLOBALS["base_user_id"]);
 $check_if_username_already_exists->execute();
 if($check_if_username_already_exists->fetch()["id"] != "") {
 $echo_arr[0] .= "Materialize.toast('Username Already Exists',6000,'red');";
@@ -100,7 +100,7 @@ die();
 $change_password = ($_POST["change_password"] != "" ? password_hash($_POST["change_password"],PASSWORD_BCRYPT) : $user_info_arr["password"]);
 $add_email = ($_POST["add_email"] != "" ? $_POST["add_email"] : $user_info_arr["email_address"]);
 
-$prepare_changes = $con->prepare("update users set first_name = :first_name, last_name = :last_name, user_name = :user_name, password = :password, email_address = :email_address where id = ". $_SESSION["user_id"]);
+$prepare_changes = $con->prepare("update users set first_name = :first_name, last_name = :last_name, user_name = :user_name, password = :password, email_address = :email_address where id = ". $GLOBALS["base_user_id"]);
 $prepare_changes->bindParam(":first_name",$change_first_name);
 $prepare_changes->bindParam(":last_name",$change_last_name);
 $prepare_changes->bindParam(":user_name",$change_user_name);
@@ -117,7 +117,7 @@ if(count($check_if_email_exists_already_arr) == 0) {
 	
 $prepare_changes->bindParam(":email_address",$add_email);
 
-if(send_confirmation_code($_SESSION["user_id"], $add_email, $user_info_arr["user_name"]) === true) {
+if(send_confirmation_code($GLOBALS["base_user_id"], $add_email, $user_info_arr["user_name"]) === true) {
 $echo_arr[0] .= "Materialize.toast('Verification Email Sent To Your Email Address, Please Verify Your Email To Complete The Email Linking Process.',5000,'green');";
 }
 else {

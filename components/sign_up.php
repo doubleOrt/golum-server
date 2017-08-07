@@ -2,14 +2,13 @@
 require_once "common_requires.php";
 
 
-
 //if chat clicked the submit button, call the sign up function.
 if(isset($_POST["first_name"]) && isset($_POST["last_name"]) && isset($_POST["user_name"]) && isset($_POST["password"])) {
 sign_up();	
 }
 
 function sign_up() {
-global $con; 
+global $con, $session; 
 	 
 // check if any of the values from post are empty, if they are, then echo a toast and die(). 
 foreach($_POST as $i) {
@@ -49,15 +48,16 @@ if($prepare_availability_check->fetch()[0] < 1) {
 #we are creating a variable for this only because we can't directly bind it with a pdo value.	
 $logged_in = true;	
 
-$sign_up_date = date("Y/m/d H:i");	
+$time = date("Y/m/d H:i");	
 	
 // prepare, bind and execute.
-$prepared = $con->prepare("INSERT INTO users (user_name, first_name, last_name, password,sign_up_date) VALUES (:user_name, :first_name, :last_name, :password,:sign_up_date)");
+$prepared = $con->prepare("INSERT INTO users (user_name, first_name, last_name, password,sign_up_date, last_seen) VALUES (:user_name, :first_name, :last_name, :password,:sign_up_date, :last_seen)");
 $prepared->bindParam(":user_name", $sign_up_user_name);
 $prepared->bindParam(":first_name", $sign_up_first_name);
 $prepared->bindParam(":last_name", $sign_up_last_name);
 $prepared->bindParam(":password", $sign_up_password);
-$prepared->bindParam(":sign_up_date", $sign_up_date);
+$prepared->bindParam(":sign_up_date", $time);
+$prepared->bindParam(":last_seen", $time);
 
 
 if($prepared->execute()) {
@@ -71,7 +71,7 @@ mkdir("../users/" . $last_id . "/media/backgrounds");
 mkdir("../users/" . $last_id . "/sentFiles");
 
 // set the user_id session to the user's id in our database, this is required in order for our app to identify that the user is logged in.
-$_SESSION["user_id"] = $last_id;
+$session->set("user_id", $last_id);
 
 echo "success";
 die();

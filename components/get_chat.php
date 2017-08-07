@@ -13,10 +13,10 @@ $chat_recipient_id = $_GET["user_id"];
 	
 # if this is the first time the users are chatting, then add a new row to the chats table (the table mainly associated with the chatPortals).
 $start_date = date("Y/m/d H:i");	
-$chatter_ids = $_SESSION["user_id"] . "-" . $_GET["user_id"]; 
+$chatter_ids = $GLOBALS["base_user_id"] . "-" . $_GET["user_id"]; 
 $latest_activity = time();
 
-$chat_arr = custom_pdo("select * from chats where chatter_ids = concat(:base_user_id, '-', :user_id) or chatter_ids = concat(:user_id, '-', :base_user_id)", [":base_user_id" => $_SESSION["user_id"], ":user_id" => $_GET["user_id"]])->fetch();
+$chat_arr = custom_pdo("select * from chats where chatter_ids = concat(:base_user_id, '-', :user_id) or chatter_ids = concat(:user_id, '-', :base_user_id)", [":base_user_id" => $GLOBALS["base_user_id"], ":user_id" => $_GET["user_id"]])->fetch();
 $chat_id = $chat_arr["id"];
 # if this is the first time the users are chatting, then add a new row to the chats table (the table mainly associated with the chatPortals).
 if($chat_id == "") {
@@ -35,7 +35,7 @@ else if(isset($_GET["chat_id"]) && filter_var($_GET["chat_id"], FILTER_VALIDATE_
 $chat_id = $_GET["chat_id"];	
 
 $chat_arr = custom_pdo("select * from chats where id = :chat_id", [":chat_id" => $chat_id])->fetch();	
-$chat_recipient_id = explode("-",$chat_arr["chatter_ids"])[0] == $_SESSION["user_id"] ? explode("-",$chat_arr["chatter_ids"])[1] :  explode("-",$chat_arr["chatter_ids"])[0];	
+$chat_recipient_id = explode("-",$chat_arr["chatter_ids"])[0] == $GLOBALS["base_user_id"] ? explode("-",$chat_arr["chatter_ids"])[1] :  explode("-",$chat_arr["chatter_ids"])[0];	
 	
 $chat_recipient_info_arr = custom_pdo("select * from users where id = :recipient_id", [":recipient_id" => $chat_recipient_id])->fetch();
 }
@@ -43,7 +43,7 @@ $chat_recipient_info_arr = custom_pdo("select * from users where id = :recipient
 
 // unhide the chat if the chat is hidden. (we don't do this all the time, only when the user is opening the chat by clicking the startChat button in the recipient's user modal.)
 if($_GET["unhide_chat_if_hidden"] == "true") {
-custom_pdo("delete from hidden_chats where chat_id = :chat_id and user_id = :base_user_id", [":chat_id" => $chat_id, ":base_user_id" => $_SESSION["user_id"]]);		
+custom_pdo("delete from hidden_chats where chat_id = :chat_id and user_id = :base_user_id", [":chat_id" => $chat_id, ":base_user_id" => $GLOBALS["base_user_id"]]);		
 }
 
 if(count($chat_recipient_info_arr) > 0) {
@@ -70,7 +70,7 @@ for($x = 0;$x < count($messages_arr);$x++) {
 $message_raw = openssl_decrypt($messages_arr[$x]["message"],"aes-128-cbc","georgedies",OPENSSL_RAW_DATA,"dancewithdragons");
 
 //if this message is a sent by this user to someone else, then set this variable to true, else set it to false.
-$sent_message = ($messages_arr[$x]["message_from"] == $_SESSION["user_id"] ? 1 : 0);		
+$sent_message = ($messages_arr[$x]["message_from"] == $GLOBALS["base_user_id"] ? 1 : 0);		
 
 if($sent_message == 1) {
 $sender_info = [
@@ -131,7 +131,7 @@ array_push($echo_arr[0], [
 }
 
 #set all messages's read_yet to true
-custom_pdo("update messages set read_yet = true where chat_id = :chat_id and message_from != :base_user_id", [":chat_id" => $chat_id, ":base_user_id" => $_SESSION["user_id"]]);
+custom_pdo("update messages set read_yet = true where chat_id = :chat_id and message_from != :base_user_id", [":chat_id" => $chat_id, ":base_user_id" => $GLOBALS["base_user_id"]]);
 
 
 if($current_status_string == "Online") {

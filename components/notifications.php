@@ -11,12 +11,12 @@ if(isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE
 
 if($_GET["type"] === "0") {
 $notifications_arr_prepared = $con->prepare("select * from (select *, (count(*) - 1) as and_others from (select * from notifications) t1 where notification_to = :base_user_id and read_yet = 0 group by type, extra, read_yet) t3 where notification_from not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and notification_from not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and notification_from not in (SELECT user_id from account_states) order by id desc limit 15 OFFSET ". $_GET["row_offset"]);
-$notifications_arr_prepared->execute([":base_user_id" => $_SESSION["user_id"]]);
+$notifications_arr_prepared->execute([":base_user_id" => $GLOBALS["base_user_id"]]);
 $notifications_arr = $notifications_arr_prepared->fetchAll();	
 }
 else if($_GET["type"] === "1") {
 $notifications_arr_prepared = $con->prepare("select * from (select *, (count(*) - 1) as and_others from (select * from notifications) t1 where notification_to = :base_user_id group by type, extra, read_yet) t3 where notification_from not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and notification_from not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and notification_from not in (SELECT user_id from account_states) order by id desc limit 15 OFFSET ". $_GET["row_offset"]);
-$notifications_arr_prepared->execute([":base_user_id" => $_SESSION["user_id"]]);
+$notifications_arr_prepared->execute([":base_user_id" => $GLOBALS["base_user_id"]]);
 $notifications_arr = $notifications_arr_prepared->fetchAll();		
 }
 
@@ -31,7 +31,7 @@ $notification_where .= " or ";
 $notification_where .= "(type = ". $notifications_arr[$i]["type"] ." and extra = ". $notifications_arr[$i]["extra"] .")";
 }
 
-custom_pdo("update notifications set read_yet = :time where read_yet = 0 and notification_to = :base_user_id and (". $notification_where .")", [":time" => time(), ":base_user_id" => $_SESSION["user_id"]]);
+custom_pdo("update notifications set read_yet = :time where read_yet = 0 and notification_to = :base_user_id and (". $notification_where .")", [":time" => time(), ":base_user_id" => $GLOBALS["base_user_id"]]);
 
 for($i = 0;$i<count($notifications_arr);$i++) {
 $notification = $notifications_arr[$i];

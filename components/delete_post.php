@@ -6,7 +6,7 @@ require_once "logged_in_importants.php";
 
 if(isset($_POST["post_id"]) && filter_var($_POST["post_id"], FILTER_VALIDATE_INT) !== false) {
 
-if(custom_pdo("select posted_by from posts where id = :post_id", [":post_id" => $_POST["post_id"]])->fetch()["posted_by"] == $_SESSION["user_id"]) {
+if(custom_pdo("select posted_by from posts where id = :post_id", [":post_id" => $_POST["post_id"]])->fetch()["posted_by"] == $GLOBALS["base_user_id"]) {
 
 foreach (glob("../posts/" . $_POST["post_id"] . "-*.*") as $filename) {
 unlink($filename);

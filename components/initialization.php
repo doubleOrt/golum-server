@@ -1,9 +1,25 @@
 <?php
 
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\PDOSessionHandler;
+
+/* i don't know why, but for some weird reason, if i include 
+the db_connection.php file after the autoload file, the $con 
+variable will be undefined, which is why i must require 
+it before the autoload file or it won't work. */
 require_once "db_connection.php";
+require_once '../composer_things/vendor/autoload.php';
 
-session_start();
+$pdo_session_handler =  new PDOSessionHandler($con, ['lock_mode' => 0]);
+/* remember that this $storage always needs to exist as an independent 
+variable since we are using it to call .regenerate(true) in the login.php file. */
+$storage = new NativeSessionStorage(array(), $pdo_session_handler);
+$session = new Session($storage);
+$session->start();
 
+$GLOBALS["base_user_id"] = $session->get("user_id");
 
 $SERVER_URL = "http://192.168.1.100/golum/";
 

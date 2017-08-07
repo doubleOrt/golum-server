@@ -1,6 +1,6 @@
 <?php
 
-if(isset($_SESSION["user_id"])) {
+if(isset($GLOBALS["base_user_id"])) {
 header("location:chat.php");	
 }
 

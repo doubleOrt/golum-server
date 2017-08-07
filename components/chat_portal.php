@@ -8,16 +8,16 @@ require_once "logged_in_importants.php";
 
 $echo_arr = [[]];
 	
-if(isset($_SESSION["user_id"]) && isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {
+if(isset($GLOBALS["base_user_id"]) && isset($_GET["row_offset"]) && filter_var($_GET["row_offset"], FILTER_VALIDATE_INT) !== false) {
 
 $chat_portals_arr_prepared = $con->prepare("select * from (select *, case SUBSTRING_INDEX(chatter_ids, '-', 1) when :base_user_id then SUBSTRING_INDEX(chatter_ids, '-', -1) else SUBSTRING_INDEX(chatter_ids, '-', 1) end as chat_recipient from chats where chatter_ids like concat('%', :base_user_id, '%')) t1 where chat_recipient not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and chat_recipient not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and chat_recipient not in (SELECT user_id from account_states) order by latest_activity desc limit 15 offset :row_offset");
-$chat_portals_arr_prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
+$chat_portals_arr_prepared->bindParam(":base_user_id", $GLOBALS["base_user_id"]);
 $chat_portals_arr_prepared->bindValue(":row_offset", (int) $_GET["row_offset"], PDO::PARAM_INT);
 $chat_portals_arr_prepared->execute();
 $chat_portals_arr = $chat_portals_arr_prepared->fetchAll();
 
 $hidden_chats_arr_prepared = $con->prepare("select * from hidden_chats where user_id = :base_user_id");
-$hidden_chats_arr_prepared->execute([":base_user_id" => $_SESSION["user_id"]]);
+$hidden_chats_arr_prepared->execute([":base_user_id" => $GLOBALS["base_user_id"]]);
 $hidden_chats_arr = $hidden_chats_arr_prepared->fetchAll();
 
 foreach($chat_portals_arr as $row) {

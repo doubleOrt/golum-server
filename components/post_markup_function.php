@@ -21,8 +21,8 @@ $poster_avatar_positions = [0,0];
 }
 
 
-$posted_by_base_user = ($post_arr["posted_by"] == $_SESSION["user_id"] ? true : false);
-$base_user_already_voted = custom_pdo("select id from post_votes where post_id = :post_id and user_id = :base_user_id", [":post_id" => $post_arr["id"], ":base_user_id" => $_SESSION["user_id"]])->fetch();
+$posted_by_base_user = ($post_arr["posted_by"] == $GLOBALS["base_user_id"] ? true : false);
+$base_user_already_voted = custom_pdo("select id from post_votes where post_id = :post_id and user_id = :base_user_id", [":post_id" => $post_arr["id"], ":base_user_id" => $GLOBALS["base_user_id"]])->fetch();
 
 
 $post_images_dir_path = $SERVER_URL . "posts/" ;

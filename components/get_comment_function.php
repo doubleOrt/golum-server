@@ -25,7 +25,7 @@ $is_reply_to[1] = $is_reply_to_user_arr["first_name"] . " " . $is_reply_to_user_
 }
 
 
-$comment_by_base_user = ($comment_arr["user_id"] == $_SESSION["user_id"]);
+$comment_by_base_user = ($comment_arr["user_id"] == $GLOBALS["base_user_id"]);
 $comment_by_poster = ($comment_arr["user_id"] == $comment_arr["original_post_by"]);
 
 

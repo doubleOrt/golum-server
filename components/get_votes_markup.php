@@ -68,7 +68,7 @@ $post_votes[1][1] = 0;
 
 
 for($i = 0;$i<count($all_votes);$i++) {
-if($all_votes[$i]["user_id"] == $_SESSION["user_id"]) {
+if($all_votes[$i]["user_id"] == $GLOBALS["base_user_id"]) {
 $user_vote_index = $all_votes[$i]["option_index"];
 }	
 for($x = 0;$x < count($post_votes);$x++) {

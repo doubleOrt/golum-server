@@ -10,9 +10,9 @@ $echo_arr = [];
 //check if the request actually has the requested user's id for us, if not, then do nothing.
 if(isset($_GET["user_id"]) && filter_var($_GET["user_id"], FILTER_VALIDATE_INT) !== false) {
 
-/* if we sent a "0" $_GET["user_id"], it means that this request is from a user who wants to view their own profile. so we set it to the $_SESSION["user_id"] 
+/* if we sent a "0" $_GET["user_id"], it means that this request is from a user who wants to view their own profile. so we set it to the $GLOBALS["base_user_id"] 
 because "0" is not the id of any user,  it is just something we send that this page understands. */
-$user_id = (intval($_GET["user_id"]) === 0 ? $_SESSION["user_id"] : $_GET["user_id"]);
+$user_id = (intval($_GET["user_id"]) === 0 ? $GLOBALS["base_user_id"] : $_GET["user_id"]);
 
 $prepared = $con->prepare("select *, (select count(id) from following_tags where id_of_user = :user_id) as following_tags_num from users where id = :user_id");
 $prepared->bindParam(":user_id", $user_id);
@@ -37,13 +37,13 @@ $avatar_positions = [0,0];
 
 $user_followed_by_num_prepared = $con->prepare("select count(id) from contacts where contact = :user_id and contact_of not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and contact_of not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and contact_of not in (SELECT user_id from account_states)");
 $user_followed_by_num_prepared->bindParam(":user_id", $user_id);
-$user_followed_by_num_prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
+$user_followed_by_num_prepared->bindParam(":base_user_id", $GLOBALS["base_user_id"]);
 $user_followed_by_num_prepared->execute();
 $user_followed_by_num = $user_followed_by_num_prepared->fetch()[0];
 
 $user_following_num_prepared = $con->prepare("select count(id) from contacts where contact_of = :user_id and contact not in (SELECT SUBSTRING_INDEX(user_ids, '-', -1) as blocked_user FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', 1) = :base_user_id) and contact not in (SELECT SUBSTRING_INDEX(user_ids, '-', 1) as blocker FROM blocked_users WHERE SUBSTRING_INDEX(user_ids, '-', -1) = :base_user_id) and contact not in (SELECT user_id from account_states)");
 $user_following_num_prepared->bindParam(":user_id", $user_id);
-$user_following_num_prepared->bindParam(":base_user_id", $_SESSION["user_id"]);
+$user_following_num_prepared->bindParam(":base_user_id", $GLOBALS["base_user_id"]);
 $user_following_num_prepared->execute();
 $user_following_num = $user_following_num_prepared->fetch()[0];
 
@@ -86,13 +86,13 @@ $user_is_trendy_or_grumpy = 0;
 $followed_by_base_user = "";
 $user_blocked_state = "";
 // if the user is not the base user viewing his own profile
-if($user_id != $_SESSION["user_id"]) {
+if($user_id != $GLOBALS["base_user_id"]) {
 // check if base user has already added this person	
-$followed_by_base_user_prepared = $con->prepare("select * from contacts where contact_of = ". $_SESSION["user_id"] ." and contact = :user_id");
+$followed_by_base_user_prepared = $con->prepare("select * from contacts where contact_of = ". $GLOBALS["base_user_id"] ." and contact = :user_id");
 $followed_by_base_user_prepared->bindParam(":user_id", $user_id);
 $followed_by_base_user_prepared->execute();
 $followed_by_base_user = $followed_by_base_user_prepared->fetch()[0] != "" ? 1 : 0;
-$user_blocked_state_prepared = $con->prepare("select id from blocked_users where user_ids = concat(". $_SESSION["user_id"] .", '-', :user_id) or user_ids = concat(:user_id, '-', ". $_SESSION["user_id"] .")");
+$user_blocked_state_prepared = $con->prepare("select id from blocked_users where user_ids = concat(". $GLOBALS["base_user_id"] .", '-', :user_id) or user_ids = concat(:user_id, '-', ". $GLOBALS["base_user_id"] .")");
 $user_blocked_state_prepared->bindParam(":user_id", $user_id);
 $user_blocked_state_prepared->execute();
 $user_blocked_state = $user_blocked_state_prepared->fetch()[0] != "" ? 1 : 0;		
@@ -101,7 +101,7 @@ $user_blocked_state = $user_blocked_state_prepared->fetch()[0] != "" ? 1 : 0;
 
 $echo_arr[0] = "var info = {
 'id': ". htmlspecialchars($user_id, ENT_QUOTES, "utf-8") .",	
-'is_base_user': ". ($user_id == $_SESSION["user_id"] ? "1" : "0") .",
+'is_base_user': ". ($user_id == $GLOBALS["base_user_id"] ? "1" : "0") .",
 'first_name': '". htmlspecialchars($user_modal_info_arr["first_name"], ENT_QUOTES, "utf-8") ."',
 'last_name': '". htmlspecialchars($user_modal_info_arr["last_name"], ENT_QUOTES, "utf-8") ."',
 'user_name': '". htmlspecialchars($user_modal_info_arr["user_name"], ENT_QUOTES, "utf-8") ."',

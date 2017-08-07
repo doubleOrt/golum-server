@@ -10,11 +10,11 @@ if(isset($_POST["post_id"]) && filter_var($_POST["post_id"], FILTER_VALIDATE_INT
 
 $poster_id = custom_pdo("select posted_by from posts where id = :post_id", [":post_id" => $_POST["post_id"]])->fetch()["posted_by"];
 
-if(custom_pdo("select id from favorites where post_id = :post_id and user_id = :base_user_id", [":post_id" => $_POST["post_id"], ":base_user_id" => $_SESSION["user_id"]])->fetch()["id"] == "") {
-custom_pdo("insert into favorites (post_id, user_id, time) values (:post_id, :base_user_id, :time)", [":post_id" => $_POST["post_id"], ":base_user_id" => $_SESSION["user_id"], ":time" => time()]);
+if(custom_pdo("select id from favorites where post_id = :post_id and user_id = :base_user_id", [":post_id" => $_POST["post_id"], ":base_user_id" => $GLOBALS["base_user_id"]])->fetch()["id"] == "") {
+custom_pdo("insert into favorites (post_id, user_id, time) values (:post_id, :base_user_id, :time)", [":post_id" => $_POST["post_id"], ":base_user_id" => $GLOBALS["base_user_id"], ":time" => time()]);
 // if the current favorite is not a user favoriting their own post, send them a notification.
-if($poster_id != $_SESSION["user_id"]) {
-custom_pdo("insert into notifications (notification_from,notification_to,time,type,extra) values (:base_user_id, :poster_id, :time, 5, :post_id)", [":base_user_id" => $_SESSION["user_id"], ":poster_id" => $poster_id, ":time" => time(), ":post_id" => $_POST["post_id"]]);	
+if($poster_id != $GLOBALS["base_user_id"]) {
+custom_pdo("insert into notifications (notification_from,notification_to,time,type,extra) values (:base_user_id, :poster_id, :time, 5, :post_id)", [":base_user_id" => $GLOBALS["base_user_id"], ":poster_id" => $poster_id, ":time" => time(), ":post_id" => $_POST["post_id"]]);	
 $notification_id = $con->lastInsertId();
 
 $socket_message = [
@@ -47,10 +47,10 @@ $socket->send(json_encode($socket_message));
 echo "1";	
 }
 else {
-custom_pdo("delete from favorites where post_id = :post_id and user_id = :base_user_id", [":post_id" => $_POST["post_id"], ":base_user_id" => $_SESSION["user_id"]]);	
+custom_pdo("delete from favorites where post_id = :post_id and user_id = :base_user_id", [":post_id" => $_POST["post_id"], ":base_user_id" => $GLOBALS["base_user_id"]]);	
 // remove the notification sent to the user when you favorited the post.
-if($poster_id != $_SESSION["user_id"]) {
-custom_pdo("delete from notifications where notification_from = :base_user_id and notification_to = :poster_id and type = 5 and extra = :post_id", [":base_user_id" => $_SESSION["user_id"], ":poster_id" => $poster_id, ":post_id" => $_POST["post_id"]]);
+if($poster_id != $GLOBALS["base_user_id"]) {
+custom_pdo("delete from notifications where notification_from = :base_user_id and notification_to = :poster_id and type = 5 and extra = :post_id", [":base_user_id" => $GLOBALS["base_user_id"], ":poster_id" => $poster_id, ":post_id" => $_POST["post_id"]]);
 }
 echo "0";
 }
