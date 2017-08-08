@@ -39,7 +39,7 @@ $this->subscribedTopics[$topic->getId()] = $topic;
 public function server_side_publish($entry) {
 $data = json_decode($entry, true);
 
-// update_type 0 means new message
+// update_type 0 is a new message
 if($data["update_type"] == "0") {
 for($i = 0; $i < count($data["chatter_ids"]); $i++) {
 	
@@ -71,6 +71,7 @@ $push_notification_message = "File";
 
 send_push_notification("user_" . $data["chatter_ids"][$i], 1, $push_notification_title, $push_notification_message, [$this->user_registration_ids[$user_topic]], $data);
 }
+
 }
 }
 // update_type 1 means new notifications
