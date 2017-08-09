@@ -25,7 +25,9 @@ $payload = $client->verifyIdToken($id_token);
 if ($payload) {
 $user_google_id = $payload["sub"];
 $user_google_email = $payload["email"];
-$user_google_first_name = $payload["given_name"];
+/* we are using this explode to deal with first names that contain more than one name, 
+such as "John Doe Doe", where "John Doe" is the first name and "Doe" is the last name. */
+$user_google_first_name = explode(" ", $payload["given_name"])[0];
 $user_google_last_name = $payload["family_name"];
 $user_google_avatar = $payload["picture"];
 

@@ -25,7 +25,7 @@ $echo_arr[1] = "Materialize.toast('Please Try Again In ". date("i:s", (($first_f
 else {	
 
 // initialize the login regex checks
-$check_login_user_name_or_email = new ValidateItem($login_user_name_or_email,"/^([a-zA-Z]+[0-9 ]*){6,36}$/i","Wrong info"); 
+$check_login_user_name_or_email = new ValidateItem($login_user_name_or_email,"/^([a-zA-Z0-9_]+){6,36}$/i","Wrong info"); 
 $check_login_email_address = new ValidateItem(
 $login_user_name_or_email,
 <<<'EOT'

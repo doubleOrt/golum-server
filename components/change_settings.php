@@ -59,7 +59,7 @@ die();
 $checks_arr = [
 "change_first_name"=>new ValidateItem($_POST["change_first_name"],'/^[a-zA-Z\s]{3,18}$/i',"First Name Must Only Contain Letters And Spaces And Must Be Longer Than 3 And Shorter Than 18 Characters"),
 "change_last_name"=>new ValidateItem($_POST["change_last_name"],'/^[a-zA-Z\s]{3,18}$/i',"Last Name Must Only Contain Letters And Spaces And Must Be Longer Than 3 And Shorter Than 18 Characters"),
-"change_user_name"=>new ValidateItem($_POST["change_user_name"],'/^([a-zA-Z]+[0-9 ]*){6,36}$/i',"Username Must Be A Combination Of Letters, Numbers And Spaces And Muse Be Between 6-36 Characters In Length"),
+"change_user_name"=>new ValidateItem($_POST["change_user_name"],'/^([a-zA-Z0-9_]+){6,36}$/i',"Username May Include Letters, Numbers, And Underscores, And Must Be Between 6-36 Characters In Length"),
 "change_password"=>new ValidateItem($_POST["change_password"],'/^(?=.*[A-Za-z])(?=.*\d)(?=.*([$@$!%*#?& ]*))[A-Za-z\d($@$!%*#?& )*]{8,50}$/i',"Password Must Contain At Least 1 Digit And Must Be Between 8-50 Characters, Special Characters And Spaces Are Optional"),
 "add_email"=>new ValidateItem($_POST["add_email"],'/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/',"Your Email Address Is Invalid"),
 ];

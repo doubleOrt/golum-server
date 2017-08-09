@@ -56,6 +56,8 @@ $number_of_posts_shared_by_this_user = $number_of_posts_shared_by_this_user_prep
 
 
 
+// keep in mind that Grumpy VS Trendy VS Average is determined by the user's votes being in the majority/minority rather than the user's votes being negative/positive.
+
 $user_is_trendy_or_grumpy_arr_prepared = $con->prepare("select count(post_id0) as agreed_with_others_votes, (select count(id) from post_votes where user_id = :user_id) as total_votes from (select t1.post_id0, t1.option_index0, t2.user_option_index from (select distinct post_id as post_id0, option_index as option_index0, (select count(id) from post_votes where post_id = post_id0 and option_index = option_index0) as option_votes from post_votes where post_id in (select post_id from post_votes where user_id = :user_id) order by option_votes desc) t1 left join (select post_id as post_id0, option_index as user_option_index from post_votes where user_id = :user_id ) t2 on t1.post_id0 = t2.post_id0 group by t1.post_id0) t3 where option_index0 = user_option_index");
 $user_is_trendy_or_grumpy_arr_prepared->bindParam(":user_id", $user_id);
 $user_is_trendy_or_grumpy_arr_prepared->execute();
