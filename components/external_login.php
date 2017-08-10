@@ -27,7 +27,7 @@ $user_google_id = $payload["sub"];
 $user_google_email = $payload["email"];
 /* we are using this explode to deal with first names that contain more than one name, 
 such as "John Doe Doe", where "John Doe" is the first name and "Doe" is the last name. */
-$user_google_first_name = explode(" ", $payload["given_name"])[0];
+$user_google_first_name = $payload["given_name"];
 $user_google_last_name = $payload["family_name"];
 $user_google_avatar = $payload["picture"];
 
@@ -47,7 +47,7 @@ we need to create a new one. */
 else {
 /* make a call to this function to create the user's account with the date Google gave you, 
 returns the user's id on success and an error message on failure. */
-$register_user = register_external_user($user_google_id, "GOOGLE", $user_google_email, $user_google_first_name, $user_google_last_name, $user_google_avatar);	
+$register_user = register_external_user($user_google_id, "GOOGLE", $user_google_email, explode(" ", $user_google_first_name)[0], $user_google_last_name, $user_google_avatar);	
 // if user account was created successfully
 if(filter_var($register_user, FILTER_VALIDATE_INT) !== false) {
 $session->set("user_id", $register_user);
@@ -106,6 +106,14 @@ $prepared->bindParam(":last_seen", $time);
 // if the account was created successfully
 if($prepared->execute()) {	
 $user_id = $con->lastInsertId();
+
+/* if a user had requested to link their account with the email address that we just 
+registered to the database but they hadn't confirmed the email (if they had confirmed 
+their email, we would just log them in), we just empty that user's "email_address" 
+and "activated" fields. We do this to avoid inconsistencies and such, since we don't 
+want to have multiple users using the same email_address. */
+$con->prepare("update users set email_address = '', activated = '' where id != :registered_user_id and email_address = :email_address and activated != 'true'")->execute([":registered_user_id" => $user_id, ":email_address" => $email_address]);
+
 /* we need to insert a row into the avatars field since Google gives us one and we 
 cannot have an avatar image in the users table without a corresponding row in 
 the avatars table. */

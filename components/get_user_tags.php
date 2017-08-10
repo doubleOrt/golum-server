@@ -16,14 +16,17 @@ $all_search_results = $search_prepare->fetchAll(PDO::FETCH_ASSOC);
 
 
 foreach($all_search_results as $row) {	
-/* we need the conditional because of the 10 initial tags that exist regardless of having a post of their own, 
-so without this conditional, since their sample_post_id_and_file_type index would be empty, it would cause an error... */
-$sample_image_path = "users/" . $row["sample_image_posted_by"] . "/posts/" . explode("-", $row["sample_post_id_and_file_type"])[0] . "-0." . explode(",", explode("-", $row["sample_post_id_and_file_type"])[1])[0];
+if($row["sample_post_id_and_file_type"] != "") {
+$sample_image_path = $SERVER_URL . "users/" . $row["sample_image_posted_by"] . "/posts/" . explode("-", $row["sample_post_id_and_file_type"])[0] . "-0." . explode(",", explode("-", $row["sample_post_id_and_file_type"])[1])[0];
+}
+else {
+$sample_image_path = "icons/default_tag_image.png";
+}
 array_push($echo_arr, [
 "tag" => htmlspecialchars($row["tag"], ENT_QUOTES, "utf-8"),
 "total_posts" => htmlspecialchars($row["total_posts"], ENT_QUOTES, "utf-8"),
 "total_followers" => htmlspecialchars($row["total_followers"], ENT_QUOTES, "utf-8"),
-"sample_image_path" => $SERVER_URL . htmlspecialchars($sample_image_path, ENT_QUOTES, "utf-8"),
+"sample_image_path" => htmlspecialchars($sample_image_path, ENT_QUOTES, "utf-8"),
 ]);
 }
 

@@ -106,16 +106,20 @@ $prepare_changes->bindParam(":last_name",$change_last_name);
 $prepare_changes->bindParam(":user_name",$change_user_name);
 $prepare_changes->bindParam(":password",$change_password);
 
-$check_if_email_exists_already = $con->prepare("SELECT * FROM users where email_address = :email_address");
+$check_if_email_exists_already = $con->prepare("SELECT count(id) FROM users where email_address = :email_address");
 $check_if_email_exists_already->bindParam(":email_address",$add_email);
 $check_if_email_exists_already->execute();
-$check_if_email_exists_already_arr = $check_if_email_exists_already->fetchAll();
+$check_if_email_exists_already_arr = $check_if_email_exists_already->fetch();
 
 if($add_email != "" && $add_email != $user_info_arr["email_address"]) {
 
-if(count($check_if_email_exists_already_arr) == 0) {
+if($check_if_email_exists_already_arr[0] == "0") {
 	
 $prepare_changes->bindParam(":email_address",$add_email);
+
+if($user_info_arr["external_type"] != "") {
+$con->prepare("update users set external_id = '', external_type = '' where id = :base_user_id")->execute([":base_user_id" => $user_info_arr["id"]]);
+}
 
 if(send_confirmation_code($GLOBALS["base_user_id"], $add_email, $user_info_arr["user_name"]) === true) {
 $echo_arr[0] .= "Materialize.toast('Verification Email Sent To Your Email Address, Please Verify Your Email To Complete The Email Linking Process.',5000,'green');";

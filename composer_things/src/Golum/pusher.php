@@ -119,7 +119,7 @@ public function onClose(ConnectionInterface $conn) {
 
 /* iterate through all the topics and unsubscribe 
 the user from everything they have subscribed to.*/
-foreach($this->subscribedTopics as $topic) {	
+foreach($this->subscribedTopics as $topic) {
 if($topic->getIterator()->contains($conn)) {
 $topic->getIterator()->detach($conn);	
 }
