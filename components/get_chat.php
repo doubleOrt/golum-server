@@ -128,8 +128,8 @@ array_push($echo_arr[0], [
 
 }
 
-#set all messages's read_yet to true
-custom_pdo("update messages set read_yet = true where chat_id = :chat_id and message_from != :base_user_id", [":chat_id" => $chat_id, ":base_user_id" => $GLOBALS["base_user_id"]]);
+#set all messages's read_yet to 1
+custom_pdo("update messages set read_yet = 1 where chat_id = :chat_id and message_from != :base_user_id", [":chat_id" => $chat_id, ":base_user_id" => $GLOBALS["base_user_id"]]);
 
 
 array_push($echo_arr, [

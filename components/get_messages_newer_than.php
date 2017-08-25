@@ -1,5 +1,5 @@
 <?php
-#we make a call to this page everytime a user wants to chat with someone.
+# this is supposed to give you all the messages newer than the newer_than field.
 
 require_once "common_requires.php";
 require_once "logged_in_importants.php";
@@ -7,14 +7,15 @@ require_once "logged_in_importants.php";
 $echo_arr = [[]];
 
 
-if(isset($_GET["chat_id"]) && filter_var($_GET["chat_id"], FILTER_VALIDATE_INT) !== false) {
+if(isset($_GET["chat_id"]) && isset($_GET["newer_than"]) && filter_var($_GET["chat_id"], FILTER_VALIDATE_INT) !== false && filter_var($_GET["newer_than"], FILTER_VALIDATE_INT) !== false) {
 
 $chat_id = $_GET["chat_id"];
+$newer_than = $_GET["newer_than"];
 
 $chat_arr = custom_pdo("select id, chatter_ids from chats where id = :chat_id", [":chat_id" => $chat_id])->fetch();	
 $chat_recipient_id = explode("-",$chat_arr["chatter_ids"])[0] == $GLOBALS["base_user_id"] ? explode("-",$chat_arr["chatter_ids"])[1] :  explode("-",$chat_arr["chatter_ids"])[0];	
 	
-$messages_arr = custom_pdo("select id,message_from,message,read_yet,date_of,message_type from messages where chat_id = :chat_id and read_yet != 1", [":chat_id" => $chat_id])->fetchAll();
+$messages_arr = custom_pdo("select id, message_from, message, read_yet, date_of, message_type from messages where chat_id = :chat_id and id > :newer_than", [":chat_id" => $chat_id, ":newer_than" => $newer_than])->fetchAll();
 
 $messager_arr = custom_pdo("select id,first_name,last_name,avatar_picture from  users where id = :recipient_id", [":recipient_id" => $chat_recipient_id])->fetch();
 $messager_avatar_arr = custom_pdo("SELECT positions,rotate_degree FROM avatars WHERE id_of_user = :messager_id order by id desc limit 1", [":messager_id" => $messager_arr["id"]])->fetch();
@@ -94,7 +95,7 @@ array_push($echo_arr[0], [
 }
 
 #set all messages's read_yet to true
-custom_pdo("update messages set read_yet = true where chat_id = :chat_id and message_from != :base_user_id", [":chat_id" => $chat_id, ":base_user_id" => $GLOBALS["base_user_id"]]);
+custom_pdo("update messages set read_yet = true where chat_id = :chat_id and id > :newer_than", [":chat_id" => $chat_id, ":newer_than" => $newer_than]);
 }
 
 

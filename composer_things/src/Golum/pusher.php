@@ -8,11 +8,13 @@ class Pusher implements WampServerInterface, MessageComponentInterface {
 
 private $connection;
 public $user_registration_ids;
+public $user_statuses;
 
 public function __construct() {
 global $con;		
 $this->connection = $con;
 $this->user_registration_ids = [];
+$this->user_statuses = [];
 }
 
 /**
@@ -28,6 +30,13 @@ $user_id = $topic_arr[count($topic_arr) - 1];
 // so that the user cannot impersonate another user, therefore receiving their sensitive information such as their messages.
 if(count($topic_arr) == 2 && $topic_arr[0] == "user" && $user_id != $conn->Session->get("user_id")) {
 return false;	
+}
+
+if($topic_arr[0] == "user" && count($topic_arr) === 2) {
+if(isset($this->subscribedTopics[$topic->getId()]))	{
+// remove the user's subscriptions from a previous connection, just in case they are still there.	
+$this->remove_connection_subscriptions($this->subscribedTopics[$topic->getId()]->getIterator()->getInfo());	
+}
 }
 
 $this->subscribedTopics[$topic->getId()] = $topic;
@@ -109,6 +118,29 @@ public function onUnSubscribe(ConnectionInterface $conn, $topic) {
 }
 
 public function onOpen(ConnectionInterface $conn) {
+$user_id = $conn->Session->get("user_id");	
+/* this conditional takes care of garbage collecting the 
+topics that the user that just connected had subscribed to
+previously, and had somehow managed to disconnect without 
+triggering our onClose event, this snippet is basically the 
+same in concept as the snippet that does the same thing 
+in the onPublish method. Except that this one will evaluate
+to true only if that one doesn't. */
+if(isset($this->subscribedTopics["user_" . $user_id])) {
+$user_topic_subscribers = $this->subscribedTopics["user_" . $user_id]->getIterator();	
+if($user_topic_subscribers->count() > 0) {	
+/* this is just to get an instance of the leftover connection 
+of the user that just opened the connection, so that we can 
+ultimately pass it as the first argument for 
+remove_connection_subscriptions(). */
+$user_topic_subscribers->rewind();
+$user_connection = $user_topic_subscribers->current();
+$this->remove_connection_subscriptions($user_connection);	
+}
+else {
+unset($this->subscribedTopics["user_" . $user_id]);	
+}	
+}
 }
 
 // need this method solely because it is a must since we are implementing MessageComponentInterface.
@@ -116,26 +148,7 @@ public function onMessage(ConnectionInterface $from, $msg){
 }
 	
 public function onClose(ConnectionInterface $conn) {
-
-/* iterate through all the topics and unsubscribe 
-the user from everything they have subscribed to.*/
-foreach($this->subscribedTopics as $topic) {
-if($topic->getIterator()->contains($conn)) {
-$topic->getIterator()->detach($conn);	
-}
-if(count($topic->getIterator()) < 1) {
-unset($this->subscribedTopics[$topic->getId()]);
-}
-}
-
-/* if anyone has subscribed to the user_state of the user whose websocket connection is 
-currently being closed, we need to tell them that this user just went offline. */
-if(isset($this->subscribedTopics["user_state_" . $conn->Session->get("user_id")])) {
-$this->subscribedTopics["user_state_" . $conn->Session->get("user_id")]->broadcast(json_encode(["current_state" => "Just went offline"]));
-}
-
-// update this user's "last_seen" field in the database.
-$this->update_user_last_seen($conn->Session->get("user_id"));
+$this->remove_connection_subscriptions($conn);	
 }
 
 public function onCall(ConnectionInterface $conn, $id, $topic, array $params) {
@@ -146,10 +159,61 @@ public function onPublish(ConnectionInterface $conn, $topic, $event, array $excl
 if(count($event) >= 3 && filter_var($event[2], FILTER_VALIDATE_INT) !== false) {
 // if event type is 0, then it means that the client is querying a user's online/offline state
 if($event[0] === 0) {
+		
 if(substr($event[1], 0, 4) === "user") {
 $user_id = explode("_",$event[1])[1];
 if(filter_var($user_id, FILTER_VALIDATE_INT) !== false) {
-$is_user_online = $this->is_user_online($event[1], $user_id);
+	
+if(isset($this->user_statuses["user_" . $user_id])) {
+	
+$is_user_online = (time() - $this->user_statuses["user_" . $user_id]["last_ping"] <= 5 ? true : $this->user_statuses["user_" . $user_id]["last_ping"]);	
+if($is_user_online !== true && $this->user_statuses["user_" . $user_id]["subscriptions_removed_yet"] === false) {
+		
+/* this conditional takes care of garbage collecting the 
+topics that the inquired user had subscribed to, just in 
+case they had gotten disconnected in a way which did not 
+trigger our onClose event (in my experience, this occurs 
+if they change their WIFI from online to offline). */
+if(isset($this->subscribedTopics["user_" . $user_id])) {
+$user_topic_subscribers = $this->subscribedTopics["user_" . $user_id]->getIterator();
+if($user_topic_subscribers->count() > 0) {	
+/* this is just to get an instance of the leftover connection 
+of the user we are talking about, so that we can ultimately 
+pass it as the first argument for remove_connection_subscriptions(). */
+$user_topic_subscribers->rewind();
+$user_connection = $user_topic_subscribers->current();
+$this->remove_connection_subscriptions($user_connection);	
+}
+else {
+unset($this->subscribedTopics["user_" . $user_id]);	
+}
+}
+
+$this->user_statuses["user_" . $user_id]["subscriptions_removed_yet"] = true;
+
+/* if the user has gone offline, we want to insert their 
+last seen into the database, so that it can be retrieved 
+later, if the websocket server gets restarted for some 
+reason. */
+if($is_user_online !== true) {
+$this->set_db_user_last_seen($user_id);	
+}
+
+}
+
+}	
+/* no last seen field exists here, should 
+exist in the database then, so we try to 
+get it. */
+else {	
+$user_db_last_seen = $this->get_db_user_last_seen($user_id);
+/* if the last_seen field in the database actually 
+contained a timestamp, then set is_user_online to 
+that, else just set it to 0 so that the string 
+"offline" is sent back to the inquirer. */
+$is_user_online = $user_db_last_seen != "" ? $user_db_last_seen : 0;
+}
+
 if($is_user_online === true) {
 $user_state_arr = json_encode([
 "type" => "0", 
@@ -168,7 +232,7 @@ $user_state_arr = json_encode([
 "request_type" => "0", 
 "request_id" => $event[2],
 "user_id" => $user_id, 
-"current_state" => $is_user_online
+"current_state" => last_online($is_user_online)
 ]
 ]);
 }
@@ -215,34 +279,52 @@ unset($this->user_registration_ids[$key]);
 }
 
 }
-if(count($event) >= 2) {
-// event 2 means that we want to send a "online now" message to all the people who are want to receive it.
+if(count($event) >= 1) {
+// event 2 is just a client pinging us to make us aware that they are still connected.
 if($event[0] === 2) {
-if(isset($this->subscribedTopics[$event[1]])) {
-$this->subscribedTopics[$event[1]]->broadcast(json_encode(["current_state" => "Online"]));
+$topic_id_arr = explode("_", $topic->getId());
+$user_id = $topic_id_arr[1];
+// this conditional makes sure that user's cannot impersonate one another, and that the topic id is the exact same one we expect.
+if($user_id == $conn->Session->get("user_id") && count($topic_id_arr) === 2 && filter_var($user_id, FILTER_VALIDATE_INT) !== false) {
+$this->user_statuses[$topic->getId()] = ["last_ping" => time(), "subscriptions_removed_yet" => false];	
 }
-}
-}
+}	
+} 
 
 }
 
 public function onError(ConnectionInterface $conn, \Exception $e) {
 }
 
+public function remove_connection_subscriptions($conn) {
 
-public function is_user_online($user_channel_id, $user_id) {
-if (array_key_exists($user_channel_id, $this->subscribedTopics)) {
-return true;			
+
+/* iterate through all the topics and unsubscribe 
+the user from everything they have subscribed to.*/
+foreach($this->subscribedTopics as $topic) {
+if($topic->getIterator()->contains($conn)) {
+$topic->getIterator()->detach($conn);	
+}
+if(count($topic->getIterator()) < 1) {
+unset($this->subscribedTopics[$topic->getId()]);
+}
+}
+
+}
+
+public function get_db_user_last_seen($user_id) {
+$prepared = $this->connection->prepare("select last_seen from users where id = :user_id");
+$prepared->execute([":user_id" => $user_id]);
+return $prepared->fetch()[0];	
+}
+
+public function set_db_user_last_seen($user_id) {
+if($this->connection->prepare("update users set last_seen = :time where id = :user_id")->execute([":time" => time(), ":user_id" => $user_id])) {
+return true;	
 }
 else {
-$get_user_last_seen_prepared = $this->connection->prepare("select last_seen from users where id = :user_id");
-$get_user_last_seen_prepared->execute([":user_id" => $user_id]);
-return last_online($get_user_last_seen_prepared->fetch()[0]);
+return false;	
 }
-}
-
-public function update_user_last_seen($user_id) {
-$this->connection->prepare("update users set last_seen = :last_seen where id = :user_id")->execute([":last_seen" => time(), ":user_id" => $user_id]);
 }
 
 }
@@ -260,7 +342,6 @@ $pushed_category_notifications_key_name = "pushed_category_1_notifications";
 }
 
 $API_KEY = "AIzaSyCKmj22oWTw5L6qaDmI9PIHGa5Jb-asEB4";
-
 
 $REMOVE_ENTRIES_OLDER_THAN = 259200;
 
@@ -409,7 +490,7 @@ return $notification_from_full_name . "Reacted To The Post You Sent Him";
 function last_online($time) {
 
 if($time == 0) {
-return $time;	
+return "Offline";	
 }
 
 $time = intval($time);	
