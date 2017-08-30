@@ -7,11 +7,11 @@ require_once "logged_in_importants.php";
 
 if(isset($_POST["post_id"]) && isset($_POST["option_index"]) && isset($_POST["already_voted"]) && isset($_POST["poster_id"]) && filter_var($_POST["post_id"], FILTER_VALIDATE_INT) !== false && filter_var($_POST["option_index"], FILTER_VALIDATE_INT) !== false && filter_var($_POST["poster_id"], FILTER_VALIDATE_INT) !== false) {
 
+$time = time();	
+
 // if the user is not voting on his own post, we want to send a notification
 if($_POST["poster_id"] != $GLOBALS["base_user_id"]) {
-	
-$time = time();	
-	
+		
 if($_POST["already_voted"] === "true") {	
 // if the user has already voted, we just update the notification's time.
 $prepared = $con->prepare("update notifications set time = :new_time where notification_from = :notification_from and notification_to = :notification_to and type = 1 and extra = :extra");
@@ -59,14 +59,18 @@ $socket->send(json_encode($socket_message));
 
 }
 
-$vote_time = time();
-
 $post_was_sent_to_me_prepared = $con->prepare("select notification_from from notifications where type = 4 and notification_to = :notification_to and extra = :extra");
 $post_was_sent_to_me_prepared->bindParam(":notification_to", $GLOBALS["base_user_id"]);
 $post_was_sent_to_me_prepared->bindParam(":extra", $_POST["post_id"]);
 $post_was_sent_to_me_prepared->execute();
 $post_was_sent_to_me = $post_was_sent_to_me_prepared->fetch();
-if($post_was_sent_to_me[0] != "") {
+if($post_was_sent_to_me["notification_from"] != "") {
+	
+/* if the person who sent base-user the post is also the one who shared the post in the first place, then there is 
+no need to send a notification to tell them "that guy voted on the post you sent him" because a voted-on-your-post 
+notification will be sent anyways. Remember, this conditional should be removed if we stop sending OPs notifications 
+when people vote on their posts. */	
+if($post_was_sent_to_me["notification_from"] != $_POST["poster_id"]) {
 $prepared = $con->prepare("insert into notifications (notification_from, notification_to, time, type, extra) values (:notification_from, :notification_to, :time, 11, :extra)");
 $prepared->bindParam(":notification_from", $GLOBALS["base_user_id"]);
 $prepared->bindParam(":notification_to", $post_was_sent_to_me["notification_from"]);
@@ -99,7 +103,12 @@ $context = new ZMQContext();
 $socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
 $socket->connect("tcp://localhost:5555");
 $socket->send(json_encode($socket_message));
+
 }
+}
+
+
+$vote_time = time();
 
 if($_POST["already_voted"] == "true") {
 $new_time = time();	
