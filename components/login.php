@@ -88,7 +88,6 @@ die();
 
 $session->set("user_id", $login_arr["id"]);	
 $echo_arr[0] = 1;	
-
 }
 
 }

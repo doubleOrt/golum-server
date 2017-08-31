@@ -9,12 +9,14 @@ class Pusher implements WampServerInterface, MessageComponentInterface {
 private $connection;
 public $user_registration_ids;
 public $user_statuses;
+public $user_ping_seconds;
 
 public function __construct() {
 global $con;		
 $this->connection = $con;
 $this->user_registration_ids = [];
 $this->user_statuses = [];
+$this->user_ping_seconds = 5;
 }
 
 /**
@@ -32,14 +34,16 @@ if(count($topic_arr) == 2 && $topic_arr[0] == "user" && $user_id != $conn->Sessi
 return false;	
 }
 
-if($topic_arr[0] == "user" && count($topic_arr) === 2) {
-if(isset($this->subscribedTopics[$topic->getId()]))	{
-// remove the user's subscriptions from a previous connection, just in case they are still there.	
-$this->remove_connection_subscriptions($this->subscribedTopics[$topic->getId()]->getIterator()->getInfo());	
-}
-}
 
-$this->subscribedTopics[$topic->getId()] = $topic;
+if(!isset($this->subscribedTopics[$topic->getId()])) {
+$this->subscribedTopics[$topic->getId()] = $topic;	
+}
+else {
+if(!$this->subscribedTopics[$topic->getId()]->has($conn)) {	
+$this->subscribedTopics[$topic->getId()]->add($conn);	
+}
+}	
+
 }
 
 /**
@@ -52,13 +56,17 @@ $data = json_decode($entry, true);
 if($data["update_type"] == "0") {
 for($i = 0; $i < count($data["chatter_ids"]); $i++) {
 	
-if($data["chatter_ids"][$i] == $data["sender_info"]["id"]) {
-continue;	
-}	
-
 $user_topic = "user_" . $data["chatter_ids"][$i];
 
 if(array_key_exists($user_topic, $this->subscribedTopics)) {
+	
+if($data["chatter_ids"][$i] == $data["sender_info"]["id"]) {
+$data["message_sent_by_base_user"] = "1";
+}		
+else {
+$data["message_sent_by_base_user"] = "0";	
+}
+	
 $this->subscribedTopics[$user_topic]->broadcast(json_encode([
 "type" => "1",
 "data" => $data
@@ -111,6 +119,7 @@ send_push_notification("user_" . $data["notification_to"], 0, $push_notification
 }
 }
 
+
 }
 
 
@@ -135,12 +144,13 @@ ultimately pass it as the first argument for
 remove_connection_subscriptions(). */
 $user_topic_subscribers->rewind();
 $user_connection = $user_topic_subscribers->current();
-$this->remove_connection_subscriptions($user_connection);	
+$this->remove_connection_subscriptions($user_connection, true);	
 }
 else {
 unset($this->subscribedTopics["user_" . $user_id]);	
 }	
 }
+
 }
 
 // need this method solely because it is a must since we are implementing MessageComponentInterface.
@@ -148,7 +158,7 @@ public function onMessage(ConnectionInterface $from, $msg){
 }
 	
 public function onClose(ConnectionInterface $conn) {
-$this->remove_connection_subscriptions($conn);	
+$this->remove_connection_subscriptions($conn, false);	
 }
 
 public function onCall(ConnectionInterface $conn, $id, $topic, array $params) {
@@ -166,7 +176,7 @@ if(filter_var($user_id, FILTER_VALIDATE_INT) !== false) {
 	
 if(isset($this->user_statuses["user_" . $user_id])) {
 	
-$is_user_online = (time() - $this->user_statuses["user_" . $user_id]["last_ping"] <= 5 ? true : $this->user_statuses["user_" . $user_id]["last_ping"]);	
+$is_user_online = (time() - $this->user_statuses["user_" . $user_id]["last_ping"] <= $this->user_ping_seconds ? true : $this->user_statuses["user_" . $user_id]["last_ping"]);	
 if($is_user_online !== true && $this->user_statuses["user_" . $user_id]["subscriptions_removed_yet"] === false) {
 		
 /* this conditional takes care of garbage collecting the 
@@ -182,7 +192,7 @@ of the user we are talking about, so that we can ultimately
 pass it as the first argument for remove_connection_subscriptions(). */
 $user_topic_subscribers->rewind();
 $user_connection = $user_topic_subscribers->current();
-$this->remove_connection_subscriptions($user_connection);	
+$this->remove_connection_subscriptions($user_connection, false);	
 }
 else {
 unset($this->subscribedTopics["user_" . $user_id]);	
@@ -296,8 +306,18 @@ $this->user_statuses[$topic->getId()] = ["last_ping" => time(), "subscriptions_r
 public function onError(ConnectionInterface $conn, \Exception $e) {
 }
 
-public function remove_connection_subscriptions($conn) {
+public function remove_connection_subscriptions($conn, $only_if_inactive) {
 
+if($only_if_inactive === true) {
+if(!is_null($conn->Session->get("user_id"))) {	
+$user_id = $conn->Session->get("user_id");	
+if(isset($this->user_statuses["user_" . $user_id])) {
+if(time() - $this->user_statuses["user_" . $user_id]["last_ping"] <= $this->user_ping_seconds) {
+return false;
+}	
+}	
+}
+}
 
 /* iterate through all the topics and unsubscribe 
 the user from everything they have subscribed to.*/
@@ -478,7 +498,7 @@ else if($notification_type == 10) {
 return $notification_from_full_name . " Downvoted Your Reply";		
 }
 else if($notification_type == 11) {
-return $notification_from_full_name . "Reacted To The Post You Sent Him";		
+return $notification_from_full_name . " Reacted To The Post You Sent Him";		
 }	
 
 }

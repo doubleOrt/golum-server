@@ -10,6 +10,7 @@
     "require": {
         "cboden/ratchet": "0.3.*",
         "react/zmq": "0.2.*|0.3.*",
-        "google/apiclient": "^2.0"
+        "google/apiclient": "2.2.0",
+		"firebase/php-jwt": "<5.0"
     }
 }

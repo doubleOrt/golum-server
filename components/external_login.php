@@ -62,7 +62,8 @@ $echo_arr[1] = $register_user;
 else {
 $echo_arr[1] = "Sorry, something went wrong :(";	
 }
-} else {
+} 
+else {
 $echo_arr[1] = "Sorry, something went wrong :(";	
 }	
 	

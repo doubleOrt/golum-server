@@ -123,7 +123,8 @@ $echo_arr[0] = "var info = {
 'followed_by_base_user': '". htmlspecialchars($followed_by_base_user, ENT_QUOTES, "utf-8") ."',
 'following_tags_num': '". htmlspecialchars($user_modal_info_arr["following_tags_num"], ENT_QUOTES, "utf-8") ."',
 'user_blocked_state': '". htmlspecialchars($user_blocked_state, ENT_QUOTES, "utf-8") ."',
-'total_posts_num': ". htmlspecialchars($number_of_posts_shared_by_this_user, ENT_QUOTES, "utf-8") ."
+'total_posts_num': ". htmlspecialchars($number_of_posts_shared_by_this_user, ENT_QUOTES, "utf-8") .",
+'wowow': ". $GLOBALS["base_user_id"] ."
 }";
 
 echo json_encode($echo_arr);	

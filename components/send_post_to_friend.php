@@ -11,7 +11,7 @@ $time = time();
 // type for notification is when users send their friends posts.
 $type = 4;
 
-// if the user has already sent this post to the target user by some hacking trick perhaps, die.
+// if the user has already sent this post to the target user, and has come this far via some hacking trick perhaps, die.
 if(custom_pdo("select id from notifications where notification_from = :base_user_id and notification_to = :friend_id and type = 4 and extra = :post_id", [":base_user_id" => $GLOBALS["base_user_id"], ":friend_id" => $_POST["friend_id"], ":post_id" => $_POST["post_id"]])->fetch()[0] != "") {
 die();
 }
