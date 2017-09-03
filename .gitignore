@@ -1,9 +1,5 @@
-dependencies/
-
 posts/*
 !posts/.gitkeep
 
 users/*
 !users/.gitkeep
-
-composer_things/vendor
