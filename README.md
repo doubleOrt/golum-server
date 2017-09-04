@@ -13,3 +13,4 @@ Just in case you end up editing `composer_things/composer.json`, don't edit the 
 	
 Note that i don't use the built-in PHP sessions, instead, i use Symfony's "PDO session handler". I use this because it is necessary to do so if you want Ratchet to attach a session to each connection object with READ-ONLY access, so we are doing this merely because we want to get the session data for each connection in our websocket server. 
 	
+Oh and you will have to replace the webclient-id in `components/external_login.php` with your own credentials, generated with the Google APIs Console.
